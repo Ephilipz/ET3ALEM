@@ -4,9 +4,12 @@
 - ### Search
 - ### Google Maps
 ## DEV
-- ### Client :
+- ### Client - Mobile :
     - Language : Dart (Flutter)
     - Platform : IOS & Android
+- ### Client - Web :
+    - Language : Typescript (Angular)
+    - Platform : Web
 - ### Server :
     - Language : C# (.NET CORE)
 - ### DB :
