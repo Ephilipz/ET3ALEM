@@ -1,0 +1,19 @@
+.display-1 {
+    font-size: 6vw;
+    letter-spacing: 3px;
+    font-weight: bolder;
+    line-height: normal;
+}
+
+.mat-flat-button {
+    width: 40%;
+    font-size: 1.7em;
+}
+
+.mat-flat-button.blue {
+    background-color: #5F8EBA;
+}
+
+.mat-flat-button.red {
+    background-color: #CF6868;
+}

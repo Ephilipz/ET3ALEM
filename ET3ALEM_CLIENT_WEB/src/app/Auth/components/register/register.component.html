@@ -1,0 +1,59 @@
+<div class="container-fluid p-5">
+    <h1 class="display-1 mb-5">
+        Register
+    </h1>
+    <mat-tab-group mat-stretch-tabs class="remove-border-bottom" class="p-4 mt-5">
+        <mat-tab label="Student" class="p-5">
+            <div class="container p-5">
+                <form [formGroup]="studentForm" class="text-center">
+                    <mat-form-field>
+                        <mat-label>Enter your full name</mat-label>
+                        <input matInput formControlName="fullName" required>
+                        <mat-error *ngIf="errorHandling('studentForm','fullName','')">Enter a valid full name
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Enter your email</mat-label>
+                        <input matInput formControlName="email" required>
+                        <mat-error *ngIf="errorHandling('studentForm','email','')">Enter a valid email
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="row mx-auto" style="width: 50vw;">
+                        <div class="col-md text-center">
+                            <mat-form-field class="password">
+                                <mat-label>Enter your password</mat-label>
+                                <input matInput formControlName="password" class="password" required type="password">
+                                <mat-error *ngIf="errorHandling('studentForm','password','')">Enter a valid password
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md text-center">
+                            <mat-form-field class="password">
+                                <mat-label>Re-enter you password</mat-label>
+                                <input matInput formControlName="password" class="password" required type="password">
+                                <mat-error *ngIf="errorHandling('studentForm','password','')">Enter a valid password
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md text-center">
+                        <mat-form-field>
+                            <mat-label>Enter the class code</mat-label>
+                            <input matInput #classCode formControlName="code" required maxlength="8" minlength="8">
+                            <mat-hint align="end">{{classCode.value?.length || 0}}/7</mat-hint>
+                            <mat-error *ngIf="errorHandling('studentForm','code','')">Enter a valid code
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </form>
+            </div>
+
+        </mat-tab>
+        <mat-tab label="Teacher" class="p-5"> Content 2 </mat-tab>
+    </mat-tab-group>
+</div>

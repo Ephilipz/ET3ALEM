@@ -1,0 +1,9 @@
+.nav-link {
+    font-weight: bold;
+    font-size: medium;
+}
+
+.nav-item.active {
+    border-bottom: 2px solid black;
+    bottom: -10px;
+}

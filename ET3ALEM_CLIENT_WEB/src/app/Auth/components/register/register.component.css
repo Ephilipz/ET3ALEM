@@ -1,0 +1,25 @@
+/* Styles for tab labels */
+
+.mat-tab-label {
+    background-color: transparent;
+    font-size: 2em;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    height: 3px;
+    background-color: black;
+}
+
+h1.display-1 {
+    font-size: 6vw;
+    text-align: center;
+}
+
+mat-form-field.mat-form-field.password {
+    width: 100%;
+}
+
+mat-form-field.mat-form-field {
+    font-size: 1.8em;
+    width: 50vw;
+}

@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ahmed Adel\\source\\repos\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\Server_Application.csproj": {}
+    "D:\\dev\\projects\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\Server_Application.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ahmed Adel\\source\\repos\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\Server_Application.csproj": {
+    "D:\\dev\\projects\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\Server_Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ahmed Adel\\source\\repos\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\Server_Application.csproj",
+        "projectUniqueName": "D:\\dev\\projects\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\Server_Application.csproj",
         "projectName": "Server_Application",
-        "projectPath": "C:\\Users\\Ahmed Adel\\source\\repos\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\Server_Application.csproj",
-        "packagesPath": "C:\\Users\\Ahmed Adel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ahmed Adel\\source\\repos\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\obj\\",
+        "projectPath": "D:\\dev\\projects\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\Server_Application.csproj",
+        "packagesPath": "C:\\Users\\eesab\\.nuget\\packages\\",
+        "outputPath": "D:\\dev\\projects\\ET3ALEM\\ET3ALEM_SERVER\\Server_Application\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Ahmed Adel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\eesab\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -90,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
         }
       }
     }
