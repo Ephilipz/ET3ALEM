@@ -10,7 +10,26 @@ body {
 }
 
 /* Used to override bootstrap styling on angular material buttons */
+
 .mat-flat-button:focus, .mat-flat-button:active:focus, .mat-flat-button.active:focus {
     outline: none !important;
     outline-style: none !important;
+}
+
+.mat-flat-button.grey {
+    background-color: lightgray;
+    color: black;
+}
+
+.mat-flat-button{
+    border-radius: 10px !important;
+    color: white;
+}
+
+.mat-flat-button.blue {
+    background-color: #5F8EBA;
+}
+
+.mat-flat-button.red {
+    background-color: #CF6868;
 }

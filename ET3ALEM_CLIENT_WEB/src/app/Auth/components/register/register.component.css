@@ -1,25 +1,101 @@
-/* Styles for tab labels */
+.blueSec {
+    background-color: #5F8EBA;
+    color: white;
+}
 
-.mat-tab-label {
-    background-color: transparent;
+h1 {
+    font-size: 3.2em;
+    letter-spacing: 0.8em;
+    font-weight: 500;
+    margin-bottom: 0.8em;
+}
+
+.secondTitle {
+    font-size: 2.5em;
+    font-weight: 100;
+}
+
+p.loginButtonLabel {
+    font-size: 2.2em;
+    color: black;
+}
+
+p.RecoverButtonLabel{
+    font-size: 2.2em;
+    margin-bottom: 1em;
+    color: black;
+}
+
+.mat-flat-button {
+    padding: 0.5em 4em;
+    font-size: 2.2em;
+}
+
+.mat-flat-button.recoverButton{
+    font-size: 2.2em;
+    padding: 0.5em 1.5em;
+}
+
+.registerTitle {
+    font-size: 2.2em;
+    color: #5F8EBA;
+}
+
+.largeHorizontalPadding{
+    padding: 0em 2vw;
+}
+
+mat-form-field{
+    width: 30vw;
     font-size: 2em;
 }
 
-.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
-    height: 3px;
-    background-color: black;
+.formSection{
+    margin-top: 10vh;
 }
 
-h1.display-1 {
-    font-size: 6vw;
-    text-align: center;
+@media (max-width: 990px) {
+    .smallerMobileCol {
+        height: 20%;
+    }
+    .fullHeightMobile {
+        height: 100%;
+    }
+    .hideMobile {
+        display: none;
+    }
+    .LargerMobileCol {
+        flex: auto;
+    }
+    .mat-flat-button.grey {
+        font-size: 1.5em;
+    }
+    p.loginButtonLabel {
+        font-size: 1.8em;
+        color: black;
+    }
+    .largeHorizontalPadding{
+        padding: 0em 1em;
+    }
+    mat-form-field{
+        width: 50vw;
+        font-size: 2em;
+    }
+    .formSection{
+        margin-top: 5vh;
+    }
 }
 
-mat-form-field.mat-form-field.password {
-    width: 100%;
-}
+@media (max-width: 768px){
+    mat-form-field{
+        width: 70vw;
+        font-size: 1.5em;
+    }
+    .blueSec{
+        padding-top: 1.5em;
+    }
 
-mat-form-field.mat-form-field {
-    font-size: 1.8em;
-    width: 50vw;
+    .registerButton{
+        font-size: 0.8em;
+    }
 }

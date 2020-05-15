@@ -9,8 +9,9 @@ import { RegisterComponent } from './Auth/components/register/register.component
 import { HomeComponent } from './General/components/home/home.component';
 import { ContactComponent } from './General/components/contact/contact.component';
 import { NotFoundComponent } from './General/components/not-found/not-found.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from './Shared/modules/material.module';
+import { PasswordRecoverComponent } from './Auth/components/password-recover/password-recover.component';
 
 
 
@@ -21,13 +22,15 @@ import { AngularMaterialModule } from './Shared/modules/material.module';
     RegisterComponent,
     HomeComponent,
     ContactComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    PasswordRecoverComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    FormsModule,
     AngularMaterialModule
   ],
   providers: [],
