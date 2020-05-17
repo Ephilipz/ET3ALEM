@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-password-recover',
@@ -9,7 +10,7 @@ import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions'
 })
 export class PasswordRecoverComponent extends ExtraFormOptions implements OnInit {
 
-  constructor() { 
+  constructor(private AuthService : AuthService) { 
     super();
   }
 
@@ -19,7 +20,7 @@ export class PasswordRecoverComponent extends ExtraFormOptions implements OnInit
   }
 
   sendRecoveryMail(){
-    let email = this.email.value;
+    
   }
 
 }

@@ -2,6 +2,9 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions';
 import { confirmPasswordErrorStateMatcher } from 'src/app/Shared/Classes/forms/confirmPasswordErrorStateMatcher';
+import { AuthService } from '../../services/auth.service';
+import { RegisterUser } from '../../Model/User';
+import { Role } from '../../Model/UserEnums';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +22,7 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
 
   matcher = new confirmPasswordErrorStateMatcher();
 
-  constructor() {
+  constructor(private AuthService: AuthService) {
     super();
   }
 
@@ -33,7 +36,15 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
     return _original.value === _confirm.value ? null : { notSame: true };
   }
 
-  register(){
+  register() {
+    let registerUserObject: RegisterUser = new RegisterUser(
+      this.studentForm.get('name').value,
+      this.studentForm.get('email').value,
+      this.studentForm.get('password').value,
+      Role.Student
+    );
+      this.AuthService.register(registerUserObject);
+
 
   }
 

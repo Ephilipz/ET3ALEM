@@ -12,6 +12,8 @@ import { NotFoundComponent } from './General/components/not-found/not-found.comp
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from './Shared/modules/material.module';
 import { PasswordRecoverComponent } from './Auth/components/password-recover/password-recover.component';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './Shared/services/auth.interceptor';
 
 
 
@@ -30,10 +32,13 @@ import { PasswordRecoverComponent } from './Auth/components/password-recover/pas
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     FormsModule,
     AngularMaterialModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
