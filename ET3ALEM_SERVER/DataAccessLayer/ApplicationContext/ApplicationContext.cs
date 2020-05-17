@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Server_Application.BusinessEntities.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Server_Application.Models
+namespace Server_Application.Data
 {
     public class ApplicationContext: IdentityDbContext
     {
