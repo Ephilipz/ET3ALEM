@@ -4,6 +4,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccessLayer.QuestionDataAccess;
+using DataAccessLayer.TestDataAccess;
+using DataServiceLayer.QuestionDataService;
+using DataServiceLayer.TestDataService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Server_Application.Data;
 using Server_Application.Models;
 
 namespace Server_Application
@@ -31,7 +36,11 @@ namespace Server_Application
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IQuestionDal, QuestionDal>();
+            services.AddScoped<ITestDal, TestDal>();
+            services.AddScoped<IQuestionDsl, QuestionDsl>();
+            services.AddScoped<ITestDsl, TestDsl>();
+            services.AddDbContext<ApplicationContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 3;
