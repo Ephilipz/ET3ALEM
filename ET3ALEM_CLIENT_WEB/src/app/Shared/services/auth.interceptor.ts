@@ -10,10 +10,12 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor() { }
+  constructor() { 
+  }
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
+    debugger;
     //get jwt from local storage
     const idToken = localStorage.getItem('id_token');
 

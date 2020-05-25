@@ -40,10 +40,10 @@ namespace Server_Application.Controllers
             var result = await _userManager.CreateAsync(user, registerVM.Password);
             if (!result.Succeeded)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.TryAddModelError(error.Code, error.Description);
-                }
+                //foreach (var error in result.Errors)
+                //{
+                ModelState.TryAddModelError(result.Errors.First().Code, result.Errors.First().Description);
+                // }
 
                 return BadRequest(ModelState);
             }
@@ -84,18 +84,18 @@ namespace Server_Application.Controllers
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Authentication:JwtExpireDays"]));
+            //var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Authentication:JwtExpireDays"]));
 
             var token = new JwtSecurityToken(
                 _configuration["Authentication:JwtIssuer"],
                 _configuration["Authentication:JwtIssuer"],
                 claims,
-                expires: expires,
+                expires: DateTime.Now.AddMinutes(60) ,
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
 
+        }
     }
 }

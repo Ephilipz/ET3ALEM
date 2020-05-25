@@ -1,24 +1,23 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './Auth/components/login/login.component';
-import { RegisterComponent } from './Auth/components/register/register.component';
 import { HomeComponent } from './General/components/home/home.component';
 import { ContactComponent } from './General/components/contact/contact.component';
 import { NotFoundComponent } from './General/components/not-found/not-found.component';
-import { PasswordRecoverComponent } from './Auth/components/password-recover/password-recover.component';
+import { AuthModule } from './auth/auth.module';
+
 
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'passwordRecover', component: PasswordRecoverComponent },
+  {path: 'auth', loadChildren : './auth/auth.module#AuthModule'},
+  {path: 'quiz', loadChildren : './quiz/quiz.module#QuizModule'},
   { path: 'contact', component: ContactComponent },
   { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

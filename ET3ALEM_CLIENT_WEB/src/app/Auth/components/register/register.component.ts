@@ -43,7 +43,7 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
       this.studentForm.get('password').value,
       Role.Student
     );
-      this.AuthService.register(registerUserObject);
+      this.AuthService.register(registerUserObject)
 
 
   }

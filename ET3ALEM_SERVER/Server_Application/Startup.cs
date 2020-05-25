@@ -26,6 +26,8 @@ namespace Server_Application
 {
     public class Startup
     {
+        readonly string AllowCORS = "_AllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,6 +38,20 @@ namespace Server_Application
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //enables CORS for HTTP : note on deployment the site must be configured to use https
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: AllowCORS,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:4200")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      .AllowCredentials();
+                                  });
+            });
+
             services.AddScoped<IQuestionDal, QuestionDal>();
             services.AddScoped<ITestDal, TestDal>();
             services.AddScoped<IQuestionDsl, QuestionDsl>();
@@ -83,7 +99,11 @@ namespace Server_Application
                 app.UseDeveloperExceptionPage();
             }
 
+
             app.UseRouting();
+
+            app.UseCors(AllowCORS);
+
             app.UseAuthentication();
             app.UseAuthorization();
 

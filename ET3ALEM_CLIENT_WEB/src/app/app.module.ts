@@ -4,38 +4,34 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LoginComponent } from './Auth/components/login/login.component';
-import { RegisterComponent } from './Auth/components/register/register.component';
 import { HomeComponent } from './General/components/home/home.component';
 import { ContactComponent } from './General/components/contact/contact.component';
 import { NotFoundComponent } from './General/components/not-found/not-found.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from './Shared/modules/material.module';
-import { PasswordRecoverComponent } from './Auth/components/password-recover/password-recover.component';
-import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './Shared/services/auth.interceptor';
+import { RouterModule } from '@angular/router';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    RegisterComponent,
     HomeComponent,
     ContactComponent,
     NotFoundComponent,
-    PasswordRecoverComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    RouterModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
-    AngularMaterialModule
-  ],
+    RouterModule,
+    AngularMaterialModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
