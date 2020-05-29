@@ -1,5 +1,5 @@
 ﻿using DataAccessLayer.QuestionDataAccess;
-using Server_Application.BusinessEntities.Models;
+using BusinessEntities.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

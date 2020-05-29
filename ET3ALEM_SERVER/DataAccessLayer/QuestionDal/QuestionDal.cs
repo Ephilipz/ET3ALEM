@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server_Application.BusinessEntities.Models;
+using BusinessEntities.Models;
 using Server_Application.Data;
 using System;
 using System.Collections.Generic;

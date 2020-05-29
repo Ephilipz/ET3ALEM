@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Server_Application.BusinessEntities.Models;
+using BusinessEntities.Models;
 
 namespace DataServiceLayer.QuestionDataService
 {

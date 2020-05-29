@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Server_Application.BusinessEntities.Models;
+using BusinessEntities.Models;
 using Server_Application.Models;
 
 namespace Server_Application.Controllers
