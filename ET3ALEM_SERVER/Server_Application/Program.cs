@@ -16,7 +16,7 @@ namespace Server_Application
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             //CreateHostBuilder(args).Build().Run();
             var host = CreateHostBuilder(args).Build();
@@ -28,10 +28,11 @@ namespace Server_Application
                 {
                     var context = services.GetRequiredService <ApplicationContext>();
                     context.Database.Migrate();
-                    if (!context.Tests.Any())
+                    if (!context.Quizzes.Any())
                     {
-                        context.Tests.AddRange(new Test(), new Test(), new Test(), new Test());
-                        context.Questions.AddRange(new Question(), new Question(), new Question(), new Question());
+                        context.Quizzes.AddRange(new Quiz(), new Quiz(), new Quiz(), new Quiz());
+                        context.Questions.AddRange(new TrueFalseQuestion { Body = "truefalse1" }, new TrueFalseQuestion { Body = "truefalse2" }, new MultipleChoiceQuestion { Body = "truefalse3" }, new MultipleChoiceQuestion { Body = "truefalse4" }); ;
+                        await context.SaveChangesAsync();
                     }
                 }
                 catch (Exception ex)
