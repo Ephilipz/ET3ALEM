@@ -2,10 +2,14 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+const imgBBApiKey = 'c02e42eab2b387576962d8e41ebd1747';
+
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:5000'
+  baseUrl: 'http://localhost:5000',
+  postSaveRteImage: `https://api.imgbb.com/1/upload?key=${imgBBApiKey}`
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

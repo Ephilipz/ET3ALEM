@@ -11,7 +11,7 @@ body {
 
 /* Used to override bootstrap styling on angular material buttons */
 
-.mat-flat-button:focus, .mat-flat-button:active:focus, .mat-flat-button.active:focus {
+.mat-flat-button:focus, .mat-flat-button:active:focus, .mat-flat-button.active:focus, .mat-icon-button:focus, .mat-icon-button.active:focus, .mat-icon-button:active:focus{
     outline: none !important;
     outline-style: none !important;
 }
@@ -21,7 +21,7 @@ body {
     color: black;
 }
 
-.mat-flat-button{
+.mat-flat-button {
     border-radius: 10px !important;
     color: white;
 }
@@ -32,4 +32,9 @@ body {
 
 .mat-flat-button.red {
     background-color: #CF6868;
+}
+
+.mat-flat-button.large {
+    font-size: 3em;
+    padding: 0.5em 2.5em;
 }

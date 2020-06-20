@@ -1,3 +1,77 @@
-<div class="container-fluid">
-    
+<div class="container-fluid p-5 parentContainer">
+    <h1 class="blueHeader">Create Quiz</h1>
+
+    <div class="container-fluid px-5 py-3">
+
+        <!-- Quiz Basic Data -->
+        <mat-expansion-panel expanded>
+            <mat-expansion-panel-header>
+                <mat-panel-title class="boldPanelTitle">
+                    Quiz Basic Data
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="container-fluid px-4">
+                <mat-form-field class="mx-5">
+                    <mat-label>Quiz Title</mat-label>
+                    <input matInput [formControl]="quizTitle">
+                </mat-form-field>
+                <div class="row px-3">
+                    <h2 class="col-12">Quiz Instructions</h2>
+
+                    <!-- <ckeditor [editor]="Editor" (ready)="CustomImageUploadAdapterPlugin" [config]="editorConfig"
+                        [(ngModel)]="quizInstructions" style="display: none;"></ckeditor> -->
+
+                    <editor class="mx-5" apiKey="l4bcgf0ej03e38f4zeovr5r2e8nmdnq1tware8y62naasb50"
+                        [init]="tinyMCESettings">
+                    </editor>
+
+                </div>
+            </div>
+
+        </mat-expansion-panel>
+
+        <!-- Timing Settings -->
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title class="boldPanelTitle">
+                    Timing Settings
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="container-fluid px-4">
+                <h2 class="mt-4">Duration</h2>
+                <div class="row px-5 align-items-center">
+                    <mat-form-field class="smallMatInput mr-4 col-2">
+                        <input matInput placeholder="hours" [formControl]="durationHours" type="number" max="5" min="0">
+                    </mat-form-field>
+                    <mat-form-field class="smallMatInput col-2">
+                        <input matInput placeholder="minutes" [formControl]="durationMinutes" type="number" max="59" min="0">
+                    </mat-form-field>
+                    <mat-checkbox class="col-2 largeCheckBox" [formControl]="noDuration" (change)="toggleDisable($event.checked, ['durationHours', 'durationMinutes'])">Unlimited Time</mat-checkbox>
+                </div>
+                <h2 class="mt-4 mb-0 pb-0">Dates</h2>
+                <div class="row px-4 align-items-center m-0">
+                    <mat-form-field class="col-2">
+                        <input matInput [matDatepicker]="startDate" placeholder="start date" [formControl]="dueStart" [max]="dueEnd.value">
+                        <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                        <mat-datepicker #startDate></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="col-2">
+                        <input matInput [matDatepicker]="endDate" placeholder="end date" [formControl]="dueEnd" [disabled]="noDueDate.value" [min]="dueStart.value">
+                        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                        <mat-datepicker #endDate></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-checkbox class="col-2 largeCheckBox" [formControl]="noDueDate" (change)="toggleDisable($event.checked, ['dueStart', 'dueEnd'])">No Due Date</mat-checkbox>
+                </div>
+            </div>
+        </mat-expansion-panel>
+
+        <div class="d-flex justify-content-around mt-4">
+            <button mat-flat-button class="blue large">Reset</button>
+            <button mat-flat-button class="red large" type="submit">Next</button>
+        </div>
+    </div>
+
 </div>

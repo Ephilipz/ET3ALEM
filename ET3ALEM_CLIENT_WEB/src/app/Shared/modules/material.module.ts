@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -19,6 +20,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatExpansionModule} from '@angular/material/expansion';
+
 
 @NgModule({
     imports: [
@@ -40,7 +43,9 @@ import {MatTabsModule} from '@angular/material/tabs';
         MatTooltipModule,
         MatTableModule,
         MatPaginatorModule,
-        MatTabsModule
+        MatTabsModule,
+        MatExpansionModule,
+        MatCheckboxModule
     ],
     exports: [
         MatButtonModule,
@@ -59,7 +64,10 @@ import {MatTabsModule} from '@angular/material/tabs';
         MatTooltipModule,
         MatTableModule,
         MatTabsModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatExpansionModule,
+        MatCheckboxModule
+
     ],
     providers: [
         MatDatepickerModule,

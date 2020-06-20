@@ -1,0 +1,59 @@
+.boldPanelTitle {
+    font-size: 1.8em;
+    font-weight: 500;
+    padding: 30px 0;
+    line-height: 1.2em;
+}
+
+mat-form-field.smallMatInput {
+    width: 5vw;
+}
+
+mat-form-field {
+    width: 20vw;
+    font-size: 1.7em;
+}
+
+mat-expansion-panel {
+    margin-bottom: 20px;
+    padding: 10px 0;
+}
+
+ejs-richtexteditor {
+    margin: 0 30px;
+}
+
+.blueHeader {
+    font-size: 3em;
+    font-weight: 700;
+    color: #5F8EBA;
+    letter-spacing: 0.1em;
+}
+
+h2 {
+    font-size: 1.8em;
+    font-weight: normal;
+}
+
+:host ::ng-deep .ck-editor__editable_inline {
+    min-height: 500px;
+    width: 80vw;
+}
+
+.parentContainer {
+    background-color: rgb(240, 240, 240);
+    min-height: 100%;
+}
+
+.largeCheckBox {
+    font-size: 1.7em;
+}
+
+mat-checkbox ::ng-deep .mat-checkbox-inner-container {
+    width: 20px;
+    height: 20px;
+}
+
+editor{
+    width: 70%;
+}
