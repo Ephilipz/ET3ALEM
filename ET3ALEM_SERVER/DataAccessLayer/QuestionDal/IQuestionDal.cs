@@ -1,4 +1,4 @@
-﻿using Server_Application.BusinessEntities.Models;
+﻿using BusinessEntities.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,5 +9,7 @@ namespace DataAccessLayer.QuestionDataAccess
     public interface IQuestionDal
     {
         Task<List<Question>> GetQuestions();
+        Task<Question> InsertQuestion(Question question);
+
     }
 }

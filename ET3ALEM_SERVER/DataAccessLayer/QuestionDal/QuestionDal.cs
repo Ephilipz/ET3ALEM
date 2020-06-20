@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server_Application.BusinessEntities.Models;
+using BusinessEntities.Models;
 using Server_Application.Data;
 using System;
 using System.Collections.Generic;
@@ -10,14 +10,19 @@ namespace DataAccessLayer.QuestionDataAccess
 {
     public class QuestionDal : IQuestionDal
     {
-        private ApplicationContext _context;
+        private readonly ApplicationContext _context;
         public QuestionDal(ApplicationContext context)
         {
             _context = context;
         }
         public Task<List<Question>> GetQuestions()
         {
-           return _context.Questions.ToListAsync();
+            return _context.Questions.ToListAsync();
+        }
+        public async Task<Question> InsertQuestion(Question question)
+        {
+            await _context.Questions.AddAsync(question);
+            return question;
         }
     }
 }

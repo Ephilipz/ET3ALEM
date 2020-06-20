@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.QuestionDataAccess;
-using DataAccessLayer.TestDataAccess;
+using DataAccessLayer.QuizDal;
 using DataServiceLayer.QuestionDataService;
-using DataServiceLayer.TestDataService;
+using DataServiceLayer.QuizDsl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,9 +53,9 @@ namespace Server_Application
             });
 
             services.AddScoped<IQuestionDal, QuestionDal>();
-            services.AddScoped<ITestDal, TestDal>();
             services.AddScoped<IQuestionDsl, QuestionDsl>();
-            services.AddScoped<ITestDsl, TestDsl>();
+            services.AddScoped<IQuizDsl, QuizDsl>();
+            services.AddScoped<IQuizDal, QuizDal>(); 
             services.AddDbContext<ApplicationContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {

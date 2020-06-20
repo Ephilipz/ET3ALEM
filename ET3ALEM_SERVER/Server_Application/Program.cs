@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Server_Application.BusinessEntities.Models;
+using BusinessEntities.Models;
 using Server_Application.Data;
 using Server_Application.Models;
 
@@ -15,7 +16,7 @@ namespace Server_Application
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             //CreateHostBuilder(args).Build().Run();
             var host = CreateHostBuilder(args).Build();
@@ -26,11 +27,12 @@ namespace Server_Application
                 try
                 {
                     var context = services.GetRequiredService <ApplicationContext>();
-                    context.Database.EnsureCreated();
-                    if (!context.Tests.Any())
+                    context.Database.Migrate();
+                    if (!context.Quizzes.Any())
                     {
-                        context.Tests.AddRange(new Test(), new Test(), new Test(), new Test());
-                        context.Questions.AddRange(new Question(), new Question(), new Question(), new Question());
+                        //context.Quizzes.AddRange(new Quiz(), new Quiz(), new Quiz(), new Quiz());
+                        context.Questions.AddRange(new TrueFalseQuestion { Body = "truefalse1" }, new TrueFalseQuestion { Body = "truefalse2" }, new MultipleChoiceQuestion { Body = "truefalse3" }, new MultipleChoiceQuestion { Body = "truefalse4" }); ;
+                        await context.SaveChangesAsync();
                     }
                 }
                 catch (Exception ex)

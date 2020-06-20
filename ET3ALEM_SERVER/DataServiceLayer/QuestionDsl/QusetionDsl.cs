@@ -1,5 +1,5 @@
 ﻿using DataAccessLayer.QuestionDataAccess;
-using Server_Application.BusinessEntities.Models;
+using BusinessEntities.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,14 +9,19 @@ namespace DataServiceLayer.QuestionDataService
 {
     public class QuestionDsl : IQuestionDsl
     {
-        private IQuestionDal _QuestionDal;
+        private readonly IQuestionDal _IQuestionDal;
         public QuestionDsl(IQuestionDal QuestionDal)
         {
-            _QuestionDal = QuestionDal;
+            _IQuestionDal = QuestionDal;
         }
         public Task<List<Question>> GetQuestions()
         {
-            return _QuestionDal.GetQuestions();
+            return _IQuestionDal.GetQuestions();
+        }
+
+        public Task<Question> InsertQuestion(Question question)
+        {
+            return  _IQuestionDal.InsertQuestion(question);
         }
     }
 }
