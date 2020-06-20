@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.QuestionDataAccess;
+using DataAccessLayer.QuizDal;
 using DataServiceLayer.QuestionDataService;
+using DataServiceLayer.QuizDsl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -52,6 +54,8 @@ namespace Server_Application
 
             services.AddScoped<IQuestionDal, QuestionDal>();
             services.AddScoped<IQuestionDsl, QuestionDsl>();
+            services.AddScoped<IQuizDsl, QuizDsl>();
+            services.AddScoped<IQuizDal, QuizDal>(); 
             services.AddDbContext<ApplicationContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {

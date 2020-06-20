@@ -15,11 +15,12 @@ namespace BusinessEntities.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [MinimumListLength(minNumberofElements: 1)]
         public List<QuizQuestion> QuizQuestions { get; set; }
         public int TotalGrade { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public bool NoDueDate { get; set; }
+        public TimeSpan? Duration { get; set; }
+        public bool UnlimitedTime { get; set; }
     }
 }

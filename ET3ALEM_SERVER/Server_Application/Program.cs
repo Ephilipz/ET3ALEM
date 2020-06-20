@@ -30,7 +30,7 @@ namespace Server_Application
                     context.Database.Migrate();
                     if (!context.Quizzes.Any())
                     {
-                        context.Quizzes.AddRange(new Quiz(), new Quiz(), new Quiz(), new Quiz());
+                        //context.Quizzes.AddRange(new Quiz(), new Quiz(), new Quiz(), new Quiz());
                         context.Questions.AddRange(new TrueFalseQuestion { Body = "truefalse1" }, new TrueFalseQuestion { Body = "truefalse2" }, new MultipleChoiceQuestion { Body = "truefalse3" }, new MultipleChoiceQuestion { Body = "truefalse4" }); ;
                         await context.SaveChangesAsync();
                     }
