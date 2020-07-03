@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AccountDsl\IAccountDsl.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="AccountDsl\IAccountDsl.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BusinessEntities\BusinessEntities.csproj" />
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
   </ItemGroup>

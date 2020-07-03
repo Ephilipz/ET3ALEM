@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Server_Application.Data;
 using Server_Application.Models;
@@ -55,7 +56,7 @@ namespace Server_Application
             services.AddScoped<IQuestionDal, QuestionDal>();
             services.AddScoped<IQuestionDsl, QuestionDsl>();
             services.AddScoped<IQuizDsl, QuizDsl>();
-            services.AddScoped<IQuizDal, QuizDal>(); 
+            services.AddScoped<IQuizDal, QuizDal>();
             services.AddDbContext<ApplicationContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
@@ -66,7 +67,9 @@ namespace Server_Application
                 options.Password.RequireNonAlphanumeric = false;
                 options.User.RequireUniqueEmail = true;
             })
-              .AddEntityFrameworkStores<ApplicationContext>();
+              .AddEntityFrameworkStores<ApplicationContext>()
+              .AddTokenProvider("UserRefresh", typeof(DataProtectorTokenProvider<IdentityUser>));
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
                 .AddAuthentication(options =>
@@ -86,6 +89,17 @@ namespace Server_Application
                         ValidAudience = Configuration["Authentication:JwtIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:JwtKey"])),
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                    };
+                    cfg.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
             services.AddControllers();
