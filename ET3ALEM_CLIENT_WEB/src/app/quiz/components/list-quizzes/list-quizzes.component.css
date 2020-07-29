@@ -1,0 +1,51 @@
+table {
+    width: 100%;
+}
+
+.mat-header-cell {
+    font-size: 1.2em;
+}
+
+.mat-cell {
+    font-size: 1.2em;
+}
+
+.header-align-right{
+    text-align: right;
+    justify-content: flex-end;
+  }
+
+.title {
+    font-size: 4em;
+    font-weight: 900;
+    text-align: center;
+}
+
+.tableTitle {
+    font-size: 3em;
+    color: #5F8EBA;
+    font-weight: 500;
+    margin-bottom: 0px;
+}
+
+mat-form-field {
+    width: 15vw;
+    font-size: 1.5em;
+}
+
+.numberColumn{
+   max-width: 20px;
+}
+
+.emptyQuizzes{
+    font-size: 3em;
+    color: gray;
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: 300;
+}
+
+.emptyListCol{
+    text-align: center;
+}

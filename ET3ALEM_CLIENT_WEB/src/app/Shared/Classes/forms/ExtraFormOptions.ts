@@ -4,11 +4,11 @@ export class ExtraFormOptions {
 
 
     /**
- * Returns formControl error messages
- * @param formGrp formGroup object that contains the form control
- * @param name form control name
- * @param displayName (optional) the name of the field to display in the error message
- */
+     * Returns formControl error messages
+     * @param formGrp formGroup object that contains the form control
+     * @param name form control name
+     * @param displayName (optional) the name of the field to display in the error message
+     */
     public getFormErrors(formGrp: FormGroup, name: string, displayName: string = name, checkMatching = false): string {
         //field doesn't match the parent
         if (formGrp.hasError('notSame') && checkMatching) {
@@ -20,7 +20,7 @@ export class ExtraFormOptions {
     }
 
     public getControlErrors(control: FormControl | AbstractControl, displayName: string): string {
-        if (!control || control.valid) return null;
+        if (!control || control.valid || control.disabled) return null;
 
         let currentErrors = control.errors;
 
@@ -38,6 +38,16 @@ export class ExtraFormOptions {
         //field has a max length error
         if (currentErrors['maxlength']) {
             return `${displayName} must not exceed ${currentErrors['maxlength']['requiredLength']} characters`;
+        }
+
+        if (currentErrors['max']) {
+            console.log(currentErrors);
+            return `${displayName} must not exceed ${currentErrors['max']['max']}`;
+        }
+
+        if (currentErrors['min']) {
+            console.log(currentErrors);
+            return `${displayName} must be at least ${currentErrors['min']['min']}`;
         }
 
 

@@ -1,11 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 import * as Editor from '../../../../assets/js/ck-editor-custom-build/ckeditor.js'
-// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic',
 import { environment } from 'src/environments/environment';
 import { CustomImageUploadAdapter } from 'src/app/Shared/Classes/forms/CustomImageUploadAdapter.js';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment'
+import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { QuizModule } from '../../quiz.module.js';
+import { Quiz } from '../../Model/quiz.js';
+import { QuizService } from '../../services/quiz.service.js';
 
 @Component({
   selector: 'app-create-quiz',
@@ -14,7 +18,7 @@ import * as moment from 'moment'
 })
 
 
-export class CreateQuizComponent implements OnInit {
+export class CreateQuizComponent extends ExtraFormOptions implements OnInit {
 
   public Editor = Editor;
   public editText;
@@ -25,22 +29,21 @@ export class CreateQuizComponent implements OnInit {
 
   today: Date = moment().toDate();
 
-  // quizBasicDataForm : new FormGroup({
   quizTitle = new FormControl('', [Validators.required]);
   durationHours = new FormControl(1, [Validators.max(5), Validators.min(0)]);
   durationMinutes = new FormControl(0, [Validators.max(59), Validators.min(0)]);
-  noDuration = new FormControl(false);
+  unlimitedTime = new FormControl(false);
   dueStart = new FormControl(moment().toDate());
-  dueEnd = new FormControl(moment().add(10, 'days').format());
+  dueEnd = new FormControl(moment().add(3, 'days').format());
   noDueDate = new FormControl(false);
-  // });
 
-  constructor() { }
+  constructor(private toastr: ToastrService, private quizService: QuizService) {
+    super();
+  }
 
   ngOnInit(): void {
   }
 
-  //#region CKEditor
   CustomImageUploadAdapterPlugin(editor) {
     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
       // Configure the URL to the upload script in your back-end here!
@@ -48,18 +51,9 @@ export class CreateQuizComponent implements OnInit {
     };
   }
   public onChange(event) {
-    // console.log(this.quizInstructions);
     console.log(this.editText.getData());
   }
 
-
-  onReady(editor) {
-    console.log(editor.config);
-  }
-
-  //#endregion
-
-  //#region TINYMCE
   tinyMCESettings = {
     height: 400,
     menubar: false,
@@ -75,18 +69,40 @@ export class CreateQuizComponent implements OnInit {
       bullist numlist outdent indent | help'
   }
 
-  tinyMCEEditor: '';
-  //#endregion
-
   toggleDisable(checked: boolean, list: Array<string>) {
     list.forEach((x) => {
-      if(checked){
+      if (checked) {
         this[x].disable();
       }
-      else{
+      else {
         this[x].enable();
       }
     });
+  }
+
+  subtractDays(date: Date, days = 1) {
+    return moment(date).subtract(days, 'days').toDate();
+  }
+
+  createQuiz() {
+    //check duration
+    if (this.durationHours.value * 60 + this.durationMinutes.value < 5 && !this.unlimitedTime.value) {
+      this.toastr.error('duration must be at least 5 minutes');
+      return;
+    }
+
+    let quiz: Quiz = new Quiz(this.quizTitle.value, this.quizInstructions, this.durationHours.value, this.durationMinutes.value, this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value);
+
+    this.quizService.createQuiz(quiz).subscribe(
+      result => {
+        this.toastr.success('Quiz Created');
+        console.log(result);
+      },
+      error => {
+        this.toastr.error('Quiz not created');
+        console.error(error);
+      }
+    )
   }
 
 }

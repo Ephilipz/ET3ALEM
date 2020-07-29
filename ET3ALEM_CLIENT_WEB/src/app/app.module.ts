@@ -12,6 +12,7 @@ import { AngularMaterialModule } from './Shared/modules/material.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './Shared/services/auth.interceptor';
 import { RouterModule } from '@angular/router';
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -31,10 +32,16 @@ import { RouterModule } from '@angular/router';
     HttpClientModule,
     FormsModule,
     RouterModule,
-    AngularMaterialModule],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    AngularMaterialModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right'
+    })
   ],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

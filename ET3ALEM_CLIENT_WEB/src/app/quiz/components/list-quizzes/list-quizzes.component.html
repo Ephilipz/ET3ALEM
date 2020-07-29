@@ -1,0 +1,52 @@
+<div class="container-fluid p-4">
+    <h1 class="title">Manage</h1>
+    <div class="row px-3 mt-5">
+        <h2 class="tableTitle align-self-center">My Quizzes</h2>
+        <mat-form-field class="ml-auto">
+            <mat-label>Search</mat-label>
+            <input matInput type="search" (change)="applyFilter($event)">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+    </div>
+
+
+    <table mat-table [dataSource]="quizListDS" matSort class="mat-elevation-z3">
+        <!-- Id Column -->
+        <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="numberColumn"> # </th>
+            <td mat-cell *matCellDef="let element" class="numberColumn"> {{element.index}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="Name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="StartDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.StartDate | date:'mediumDate'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="header-align-right"> Actions </th>
+            <td mat-cell *matCellDef="let element" class="header-align-right">
+                <button mat-icon-button color="warn" (click)="delete(element.Id)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-icon-button color="primary">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <div class="col emptyListCol">
+        <h1 *ngIf="quizListDS.data.length == 0" class="emptyQuizzes">You do not have any quizzes yet</h1>
+        <button mat-flat-button class="blue large newQuizButton" [routerLink]="'../create'">New Quiz</button>
+    </div>
+</div>

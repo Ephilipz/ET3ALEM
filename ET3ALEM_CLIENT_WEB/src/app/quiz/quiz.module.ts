@@ -8,23 +8,26 @@ import { ViewQuizComponent } from './components/view-quiz/view-quiz.component';
 import { AngularMaterialModule } from '../Shared/modules/material.module';
 import { EditorModule } from '@tinymce/tinymce-angular';
 
-// import { RichTextEditorModule, ToolbarService, LinkService, ImageService, HtmlEditorService } from '@syncfusion/ej2-angular-richtexteditor';
-
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
+import { AuthInterceptor } from '../Shared/services/auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { QuizHomeComponent } from './components/quiz-home/quiz-home.component';
+import { ListQuizzesComponent } from './components/list-quizzes/list-quizzes.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
-  declarations: [CreateQuizComponent, TakeQuizComponent, ViewQuizComponent],
+  declarations: [CreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent],
   imports: [
     CommonModule,
     QuizRoutingModule,
     AngularMaterialModule,
-    // RichTextEditorModule,
     CKEditorModule,
+    AngularMaterialModule,
     EditorModule,
     ReactiveFormsModule,
-    // FormsModule
-  ],
-  // providers: [ToolbarService, LinkService, ImageService, HtmlEditorService]
+    ToastrModule.forRoot(),
+  ]
 })
 export class QuizModule { }

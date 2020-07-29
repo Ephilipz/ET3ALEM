@@ -72,7 +72,7 @@ namespace Server_Application.Controllers
             {
                 return BadRequest(loginVM);
             }
-
+                   
             var user = await _userManager.FindByEmailAsync(loginVM.Email);
             if (user != null &&
                 await _userManager.CheckPasswordAsync(user, loginVM.Password))
@@ -99,9 +99,9 @@ namespace Server_Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Refresh(string token, string refreshToken)
+        public async Task<IActionResult> Refresh([FromBody] Tokens tokens)
         {
-            ClaimsPrincipal principal = GetPrincipalFromExpiredToken(token);
+            ClaimsPrincipal principal = GetPrincipalFromExpiredToken(tokens.JWT);
             string username = principal.Identity.Name;
             IdentityUser user = await _userManager.FindByNameAsync(username);
             if(user == null)
@@ -110,7 +110,7 @@ namespace Server_Application.Controllers
             }
 
             string savedRefreshToken = await GetRefreshToken(user);
-            if (savedRefreshToken != refreshToken)
+            if (savedRefreshToken != tokens.RefreshToken)
             {
                 throw new SecurityTokenException("Invalid refresh token");
             }

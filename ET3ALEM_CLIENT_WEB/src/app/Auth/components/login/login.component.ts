@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +11,7 @@ import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions'
 })
 export class LoginComponent extends ExtraFormOptions implements OnInit {
 
-  constructor() {
+  constructor(private authService: AuthService, private router: Router) {
     super();
   }
 
@@ -24,6 +26,13 @@ export class LoginComponent extends ExtraFormOptions implements OnInit {
   login() {
     let email = this.loginForm.get('email').value;
     let password = this.loginForm.get('password').value;
+    this.authService.login(email, password).subscribe(
+      res => {
+        if(res){
+          this.router.navigate(['/quiz']);
+        }
+      }
+    )
   }
 
 }

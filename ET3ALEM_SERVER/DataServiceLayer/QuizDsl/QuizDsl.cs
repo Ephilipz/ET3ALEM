@@ -17,9 +17,15 @@ namespace DataServiceLayer.QuizDsl
             _IQuizDal = IQuizDal;
             _IQuestionDsl = IQuestionDsl;
         }
+
         public Task<Quiz> GetQuiz(int quizId)
         {
             return _IQuizDal.GetQuiz(quizId);
+        }
+
+        public Task<IEnumerable<Quiz>> GetQuizzes()
+        {
+            return _IQuizDal.GetQuizzes();
         }
 
         public Task<Quiz> InsertQuiz(Quiz quiz)
@@ -31,5 +37,15 @@ namespace DataServiceLayer.QuizDsl
             }
             return _IQuizDal.InsertQuiz(quiz);
         }
+        public Task<Quiz> DeleteQuiz(int id)
+        {
+            return _IQuizDal.DeleteQuiz(id);
+        }
+
+        public Task PutQuiz(int id, Quiz quiz)
+        {
+            return _IQuizDal.PutQuiz(id, quiz);
+        }
+
     }
 }

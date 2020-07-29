@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BusinessEntities.Models;
 using Server_Application.Data;
 using DataServiceLayer.QuizDsl;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Server_Application.Controllers
 {
@@ -21,6 +22,7 @@ namespace Server_Application.Controllers
         {
             _IQuizDsl = IQuizDsl;
         }
+
         // GET: api/Quiz/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Quiz>> GetQuiz(int id)
@@ -35,9 +37,14 @@ namespace Server_Application.Controllers
             return quiz;
         }
 
+        //GET: api/Quiz
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Quiz>>> GetQuizzes()
+        {
+            return (await _IQuizDsl.GetQuizzes()).ToList();
+        }
+
         // POST: api/Quiz
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Quiz>> PostQuiz(Quiz quiz)
         {
@@ -48,5 +55,28 @@ namespace Server_Application.Controllers
             await _IQuizDsl.InsertQuiz(quiz);
             return CreatedAtAction("GetQuiz", new { id = quiz.Id }, quiz);
         }
+
+        [HttpDelete]
+        public async Task<ActionResult<Quiz>> DeleteQuiz(int id)
+        {
+            var quiz = await _IQuizDsl.DeleteQuiz(id);
+            if(quiz == null)
+            {
+                return NotFound();
+            }
+            return quiz;
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutQuiz(int id, Quiz quiz)
+        {
+            if (id != quiz.Id)
+                return BadRequest();
+
+            await _IQuizDsl.PutQuiz(id, quiz);
+
+            return NoContent();
+        }
+        
     }
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -19,8 +19,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
         MatPaginatorModule,
         MatTabsModule,
         MatExpansionModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatSortModule
     ],
     exports: [
         MatButtonModule,
@@ -66,8 +68,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
         MatTabsModule,
         MatPaginatorModule,
         MatExpansionModule,
-        MatCheckboxModule
-
+        MatCheckboxModule,
+        MatSortModule,
     ],
     providers: [
         MatDatepickerModule,

@@ -8,6 +8,7 @@ using DataAccessLayer.QuestionDataAccess;
 using DataAccessLayer.QuizDal;
 using DataServiceLayer.QuestionDataService;
 using DataServiceLayer.QuizDsl;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -102,7 +103,9 @@ namespace Server_Application
                         }
                     };
                 });
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(
+                options => options.JsonSerializerOptions.PropertyNamingPolicy = null
+                );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

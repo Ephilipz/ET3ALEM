@@ -13,7 +13,7 @@ namespace BusinessEntities.Models
             QuestionType = QuestionType.MCQ;
             Choices = new List<Choice>();
         }
-        public McqAnswerType McqAnswerType { get; set; }
+        public McqAnswerType McqAnswerType { get; set; } = McqAnswerType.SingleChoice;
         [MinimumListLength(minNumberofElements: 2)]
         public List<Choice> Choices { get; set; }
     }

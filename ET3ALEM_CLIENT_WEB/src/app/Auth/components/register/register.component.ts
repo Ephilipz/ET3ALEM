@@ -5,6 +5,7 @@ import { confirmPasswordErrorStateMatcher } from 'src/app/Shared/Classes/forms/c
 import { AuthService } from '../../services/auth.service';
 import { RegisterUser } from '../../Model/User';
 import { Role } from '../../Model/UserEnums';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -22,7 +23,7 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
 
   matcher = new confirmPasswordErrorStateMatcher();
 
-  constructor(private AuthService: AuthService) {
+  constructor(private AuthService: AuthService, private router: Router) {
     super();
   }
 
@@ -43,9 +44,11 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
       this.studentForm.get('password').value,
       Role.Student
     );
-      this.AuthService.register(registerUserObject)
-
-
+    this.AuthService.register(registerUserObject).subscribe(
+      res => {
+        this.router.navigateByUrl('/quiz');
+      }
+    )
   }
 
 
