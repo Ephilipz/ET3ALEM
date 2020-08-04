@@ -28,7 +28,6 @@ export class ListQuizzesComponent implements OnInit {
     this.quizService.getQuizzes().subscribe(
       res => {
         this.quizListDS.data = res.map((x, i) => ({ ...x, 'index': i + 1 }));
-        console.log('quizzes', this.quizListDS.data);
         this.isLoaded = true;
         this.quizListDS.sort = this.sort;
       },
@@ -45,13 +44,15 @@ export class ListQuizzesComponent implements OnInit {
   }
 
   delete(id: Number) {
-    console.log('id', id);
     this.quizService.delete(id).subscribe(
       res => {
         this.toastr.success('Quiz Deleted Successfully');
         this.loadQuizzes();
       },
-      err => console.error(err)
+      err => {
+        this.toastr.error('Unable to delete quiz');
+        console.error(err);
+      }
     )
   }
 

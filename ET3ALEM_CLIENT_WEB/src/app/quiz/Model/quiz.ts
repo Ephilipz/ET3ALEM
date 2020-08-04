@@ -12,7 +12,9 @@ export class Quiz {
     NoDueDate: boolean;
     QuizQuestions: Array<Question>;
 
-    constructor(title: string,
+    constructor(
+        Id: Number = 0,
+        title: string,
         instructions: string = '',
         durationHours: number,
         durationMinutes: number,
@@ -21,6 +23,7 @@ export class Quiz {
         dueEnd: Date,
         noDueDate: boolean,
         QuizQuestions?: Array<Question>) {
+        this.Id = Id;
         this.Name = title;
         this.instructions = instructions;
         this.durationHours = durationHours;

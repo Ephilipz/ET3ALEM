@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { QuizRoutingModule } from './quiz-routing.module';
-import { CreateQuizComponent } from './components/create-quiz/create-quiz.component';
+import { EditOrCreateQuizComponent } from './components/create-quiz/edit-or-create-quiz.component';
 import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { ViewQuizComponent } from './components/view-quiz/view-quiz.component';
 import { AngularMaterialModule } from '../Shared/modules/material.module';
@@ -18,7 +18,7 @@ import { ListQuizzesComponent } from './components/list-quizzes/list-quizzes.com
 import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
-  declarations: [CreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent],
+  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent],
   imports: [
     CommonModule,
     QuizRoutingModule,

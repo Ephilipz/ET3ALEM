@@ -4,11 +4,9 @@ import { Converter } from '../helpers/Coverter';
 export class CustomImageUploadAdapter {
     loader: any;
     xhr: XMLHttpRequest;
-    t;
-    constructor(loader, config) {
+    constructor(loader) {
         // The file loader instance to use during the upload.
         this.loader = loader;
-        this.t = config;
     }
 
     // Starts the upload process.

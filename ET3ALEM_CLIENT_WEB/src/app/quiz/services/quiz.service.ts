@@ -16,19 +16,15 @@ export class QuizService {
   }
 
   getQuiz(id: Number) {
-    // let params = new HttpParams();
-    // params = params.append('id', id.toString());
-    return this.http.get(environment.baseUrl + '/api/Quiz',
-      {
-        params: {
-          'id': id.toString()
-        }
-      }
-    );
+    return this.http.get<Quiz>(environment.baseUrl + '/api/Quiz/' + id);
   }
 
   getQuizzes() {
     return this.http.get<Array<Quiz>>(environment.baseUrl + '/api/Quiz');
+  }
+
+  updateQuiz(quiz: Quiz) {
+    return this.http.put(environment.baseUrl + '/api/Quiz/' + quiz.Id, quiz);
   }
 
   delete(id: Number) {

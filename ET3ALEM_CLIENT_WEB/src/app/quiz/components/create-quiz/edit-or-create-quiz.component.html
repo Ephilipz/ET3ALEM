@@ -1,4 +1,4 @@
-<div class="container-fluid p-5 parentContainer">
+<div class="container-fluid p-5 parentContainer" *ngIf="isLoaded">
     <h1 class="blueHeader">Create Quiz</h1>
 
     <div class="container-fluid px-5 py-3">
@@ -20,11 +20,8 @@
                 <div class="row px-3">
                     <h2 class="col-12">Quiz Instructions</h2>
 
-                    <!-- <ckeditor [editor]="Editor" (ready)="CustomImageUploadAdapterPlugin" [config]="editorConfig"
-                        [(ngModel)]="quizInstructions" style="display: none;"></ckeditor> -->
-
                     <editor class="mx-5" apiKey="l4bcgf0ej03e38f4zeovr5r2e8nmdnq1tware8y62naasb50"
-                        [init]="tinyMCESettings">
+                        [init]="tinyMCESettings" [formControl]="quizInstructions">
                     </editor>
 
                 </div>
@@ -48,33 +45,42 @@
                         <mat-error>{{getControlErrors(durationHours, 'hours')}}</mat-error>
                     </mat-form-field>
                     <mat-form-field class="smallMatInput col-2">
-                        <input matInput placeholder="minutes" [formControl]="durationMinutes" type="number" max="59" min="0">
+                        <input matInput placeholder="minutes" [formControl]="durationMinutes" type="number" max="59"
+                            min="0">
                         <mat-error>{{getControlErrors(durationMinutes, 'minutes')}}</mat-error>
                     </mat-form-field>
-                    <mat-checkbox class="col-2 largeCheckBox" [formControl]="unlimitedTime" (change)="toggleDisable($event.checked, ['durationHours', 'durationMinutes'])">Unlimited Time</mat-checkbox>
+                    <mat-checkbox class="col-2 largeCheckBox" [formControl]="unlimitedTime"
+                        (change)="toggleDisable($event.checked, ['durationHours', 'durationMinutes'])">Unlimited Time
+                    </mat-checkbox>
                 </div>
                 <h2 class="mt-4 mb-0 pb-0">Dates</h2>
                 <div class="row px-4 align-items-center m-0">
                     <mat-form-field class="col-2">
-                        <input matInput [matDatepicker]="startDate" placeholder="start date" [formControl]="dueStart" [max]="subtractDays(dueEnd.value)" [min]="today">
+                        <input matInput [matDatepicker]="startDate" placeholder="start date" [formControl]="dueStart"
+                            [max]="subtractDays(dueEnd.value)" [min]="today">
                         <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
                         <mat-datepicker #startDate></mat-datepicker>
                     </mat-form-field>
                     <mat-form-field class="col-2">
-                        <input matInput [matDatepicker]="endDate" placeholder="end date" [formControl]="dueEnd" [disabled]="noDueDate.value" [min]="dueStart.value">
+                        <input matInput [matDatepicker]="endDate" placeholder="end date" [formControl]="dueEnd"
+                            [disabled]="noDueDate.value" [min]="dueStart.value">
                         <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
                         <mat-datepicker #endDate></mat-datepicker>
                     </mat-form-field>
 
-                    <mat-checkbox class="col-2 largeCheckBox" [formControl]="noDueDate" (change)="toggleDisable($event.checked, ['dueEnd'])">No Due Date</mat-checkbox>
+                    <mat-checkbox class="col-2 largeCheckBox" [formControl]="noDueDate"
+                        (change)="toggleDisable($event.checked, ['dueEnd'])">No Due Date</mat-checkbox>
                 </div>
             </div>
         </mat-expansion-panel>
 
         <div class="d-flex justify-content-around mt-4">
             <button mat-flat-button class="blue large">Reset</button>
-            <button mat-flat-button class="red large" [disabled]="!quizTitle.valid" onkeydown="enter" (click)="createQuiz()">Next</button>
+            <button mat-flat-button class="red large" [disabled]="!quizTitle.valid"
+                (click)="mode == 1 ? createQuiz() : updateQuiz()">Next</button>
         </div>
     </div>
 
 </div>
+
+<mat-spinner *ngIf="!isLoaded" class="my-5 mx-auto" style="text-align: center;"></mat-spinner>

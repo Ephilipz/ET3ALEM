@@ -16,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    if (this.authService.getJWT()) {
+    if (this.authService.getJWT() && !req.url.toLowerCase().includes('imgur')) {
       req = this.addToken(req, this.authService.getJWT());
     }
 
