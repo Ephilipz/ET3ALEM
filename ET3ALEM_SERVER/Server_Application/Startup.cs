@@ -1,28 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataAccessLayer.QuestionDataAccess;
-using DataAccessLayer.QuizDal;
-using DataServiceLayer.QuestionDataService;
-using DataServiceLayer.QuizDsl;
-using Google.Protobuf.WellKnownTypes;
+using DataAccessLayer;
+using DataServiceLayer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
 using Server_Application.Data;
-using Server_Application.Models;
 
 namespace Server_Application
 {
@@ -54,10 +46,7 @@ namespace Server_Application
                                   });
             });
 
-            services.AddScoped<IQuestionDal, QuestionDal>();
-            services.AddScoped<IQuestionDsl, QuestionDsl>();
-            services.AddScoped<IQuizDsl, QuizDsl>();
-            services.AddScoped<IQuizDal, QuizDal>();
+            ConfigureDI(services);
             services.AddDbContext<ApplicationContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
@@ -103,9 +92,12 @@ namespace Server_Application
                         }
                     };
                 });
-            services.AddControllers().AddJsonOptions(
-                options => options.JsonSerializerOptions.PropertyNamingPolicy = null
-                );
+            services.AddControllers().AddNewtonsoftJson(options =>
+                            {
+                                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                                options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new DefaultNamingStrategy() };
+                            });
+//) AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; options.JsonSerializerOptions. });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -115,19 +107,20 @@ namespace Server_Application
             {
                 app.UseDeveloperExceptionPage();
             }
-
-
             app.UseRouting();
-
             app.UseCors(AllowCORS);
-
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
+        }
+        private void ConfigureDI(IServiceCollection services)
+        {
+            services.AddScoped<IQuestionDal, QuestionDal>();
+            services.AddScoped<IQuestionDsl, QuestionDsl>();
+            services.AddScoped<IQuizDsl, QuizDsl>();
+            services.AddScoped<IQuizDal, QuizDal>();
+            services.AddScoped<IQuestionCollectionDsl, QuestionCollectionDsl>();
+            services.AddScoped<IQuestionCollectionDal, QuestionCollectionDal>();
         }
     }
 }

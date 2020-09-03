@@ -1,11 +1,11 @@
-﻿using DataAccessLayer.QuestionDataAccess;
+﻿using DataAccessLayer;
 using BusinessEntities.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataServiceLayer.QuestionDataService
+namespace DataServiceLayer
 {
     public class QuestionDsl : IQuestionDsl
     {

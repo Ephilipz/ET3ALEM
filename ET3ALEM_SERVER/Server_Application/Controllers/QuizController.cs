@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BusinessEntities.Models;
 using Server_Application.Data;
-using DataServiceLayer.QuizDsl;
+using DataServiceLayer;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Server_Application.Controllers

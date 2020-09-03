@@ -13,5 +13,6 @@ namespace BusinessEntities.Models
         public QuestionType QuestionType { get; protected set; }
         [Required]
         public string Body { get; set; }
+        public int? QuestionCollectionId { get; set; }
     }
 }
