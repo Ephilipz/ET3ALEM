@@ -1,5 +1,5 @@
 <div class="container-fluid p-5 parentContainer" *ngIf="isLoaded">
-    <h1 class="blueHeader">Create Quiz</h1>
+    <h1 class="blueHeader">{{ mode == 1 ? 'Create Quiz' : 'Edit Quiz' }}</h1>
 
     <div class="container-fluid px-5 py-3">
 
@@ -20,9 +20,7 @@
                 <div class="row px-3">
                     <h2 class="col-12">Quiz Instructions</h2>
 
-                    <editor class="mx-5" apiKey="l4bcgf0ej03e38f4zeovr5r2e8nmdnq1tware8y62naasb50"
-                        [init]="tinyMCESettings" [formControl]="quizInstructions">
-                    </editor>
+                    <app-rich-text-editor [control]="quizInstructions" class="col-12"></app-rich-text-editor>
 
                 </div>
             </div>
@@ -30,7 +28,7 @@
         </mat-expansion-panel>
 
         <!-- Timing Settings -->
-        <mat-expansion-panel>
+        <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
                 <mat-panel-title class="boldPanelTitle">
                     Timing Settings
@@ -74,10 +72,47 @@
             </div>
         </mat-expansion-panel>
 
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title class="boldPanelTitle">
+                    Questions
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="container-fluid px-2">
+
+                <div class="row mb-3" *ngFor="let question of questions; let i = index">
+                    <mat-checkbox class="m-auto"></mat-checkbox>
+
+                    <mat-expansion-panel style="width: 90%" class="m-0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="questionTitle">
+                                {{'Question ' + (i + 1)}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-create-question #CreateQuestionComponent [question] = "question"></app-create-question>
+                    </mat-expansion-panel>
+
+                    <button mat-icon-button class="m-auto">
+                        <mat-icon style="color: rgb(180, 25, 25); transform: scale(1.6)">delete</mat-icon>
+                    </button>
+                </div>
+
+
+                <div class="row addQuestionRow">
+                    <button mat-icon-button (click)="addQuestion()">
+                        <mat-icon class="addQuestionIcon">add_circle_outline</mat-icon>
+                    </button>
+                </div>
+
+
+            </div>
+        </mat-expansion-panel>
+
         <div class="d-flex justify-content-around mt-4">
-            <button mat-flat-button class="blue large">Reset</button>
-            <button mat-flat-button class="red large" [disabled]="!quizTitle.valid"
-                (click)="mode == 1 ? createQuiz() : updateQuiz()">Next</button>
+            <button mat-flat-button class="red large">Cancel</button>
+            <button mat-flat-button class="blue large" [disabled]="!quizTitle.valid"
+                (click)="mode == 1 ? createQuiz() : updateQuiz()">Save</button>
         </div>
     </div>
 

@@ -1,18 +1,18 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 
 // import * as Editor from '../../../../assets/js/ck-editor-custom-build/ckeditor.js'
-import { environment } from 'src/environments/environment';
-import { CustomImageUploadAdapter } from 'src/app/Shared/Classes/forms/CustomImageUploadAdapter.js';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment'
 import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { QuizModule } from '../../quiz.module.js';
+import { ToastrService } from 'ngx-toastr';
 import { Quiz } from '../../Model/quiz.js';
 import { QuizService } from '../../services/quiz.service.js';
-import { Converter } from 'src/app/Shared/Classes/helpers/Coverter.js';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component.js';
+import { Question } from 'src/app/question/Models/question.js';
+import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
+import { TrueFalseQuestion } from 'src/app/question/Models/true-false-question.js';
+import { CreateQuestionComponent } from 'src/app/question/create-question/create-question.component.js';
 
 @Component({
   selector: 'app-create-quiz',
@@ -20,17 +20,22 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./edit-or-create-quiz.component.css']
 })
 
+
 export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnInit {
+
+  @ViewChild(RichTextEditorComponent) private richTextComponent: RichTextEditorComponent;
+
+  @ViewChildren('CreateQuestionComponent') createQuestionComponents: QueryList<CreateQuestionComponent>;
 
   //manage create and edit modes
   mode: mode = mode.create;
   currentQuiz: Quiz;
 
+  questions: Array<any> = [];
+
   isLoaded: boolean = false;
 
   today: Date = moment().toDate();
-
-  uploadedImages: Array<ImageUrls> = [];
 
   quizTitle = new FormControl('', [Validators.required]);
   quizInstructions = new FormControl();
@@ -38,10 +43,10 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   durationMinutes = new FormControl(0, [Validators.max(59), Validators.min(0)]);
   unlimitedTime = new FormControl(false);
   dueStart = new FormControl(moment().toDate());
-  dueEnd = new FormControl(moment().add(3, 'days').format());
+  dueEnd = new FormControl(moment().add(3, 'days').toDate());
   noDueDate = new FormControl(false);
 
-  constructor(private toastr: ToastrService, private quizService: QuizService, private route: ActivatedRoute, private http: HttpClient) {
+  constructor(private toastr: ToastrService, private quizService: QuizService, private route: ActivatedRoute) {
     super();
   }
 
@@ -52,6 +57,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       this.quizService.getQuiz(id).subscribe(
         res => {
           this.currentQuiz = res;
+          this.questions = this.currentQuiz.QuizQuestions.map(x => x.)
           this.setFormControls();
           this.isLoaded = true;
         },
@@ -86,73 +92,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     }
   }
 
-  tinyMCESettings = {
-    height: 400,
-    menubar: false,
-    plugins: [
-      'forecolor autolink lists link imagetools image',
-      'preview code advlist',
-    ],
-    toolbar:
-      'undo redo | formatselect forecolor | bold italic | \
-      alignleft aligncenter alignright alignjustify | \
-      bullist numlist outdent indent | link image preview',
-
-    images_upload_handler:
-      (blobInfo, success, failure, progress) => {
-        let formData;
-        let xhr: XMLHttpRequest;
-
-        console.log(blobInfo.blob());
-
-        xhr = new XMLHttpRequest();
-
-        xhr.open('POST', environment.postUploadImgurImage, true);
-        xhr.setRequestHeader('Authorization', 'Client-ID ' + environment.imgurClientId)
-
-        xhr.upload.onprogress = function (e) {
-          progress((e.loaded / e.total * 100).toFixed(0));
-        };
-
-        xhr.onload = () => {
-
-          var json;
-
-          if (xhr.status < 200 || xhr.status >= 300) {
-            failure('HTTP Error: ' + xhr.status);
-            return;
-          }
-
-          json = JSON.parse(xhr.responseText);
-
-          if (!json || typeof json.data.link != 'string') {
-            failure('Invalid JSON: ' + xhr.responseText);
-            return;
-          }
-
-          this.uploadedImages.push(new ImageUrls(json.data.link, json.data.deletehash));
-          
-          success(json.data.link);
-        };
-
-        xhr.onerror = function () {
-          failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
-        };
-
-        formData = new FormData();
-
-        if (Converter.BtoMB(blobInfo.blob().size) > 2) {
-          failure('file cannot be larger than 2 mb');
-          return;
-        }
-
-        formData.append('image', blobInfo.blob(), blobInfo.filename());
-
-        xhr.send(formData);
-      }
-
-  }
-
   toggleDisable(checked: boolean, list: Array<string>) {
     list.forEach((x) => {
       if (checked) {
@@ -168,27 +107,8 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     return moment(date).subtract(days, 'days').toDate();
   }
 
-  async removeUnusedImages() {
-    let imagesToBeDeleted: Array<string> = [];
-
-    //check if images are being used. Add unused images to the delete array
-    this.uploadedImages.forEach(element => {
-      if (!(<string>this.quizInstructions.value ?? '').includes(element.imageURL)) {
-        imagesToBeDeleted.push(element.deleteURL);
-      }
-    });
-
-    //iterate over the delete array
-    imagesToBeDeleted.forEach(deletHash => {
-      this.http.delete(environment.postUploadImgurImage + '/' + deletHash, {
-        headers: {
-          'Authorization': 'Client-ID ' + environment.imgurClientId
-        }
-      }).subscribe(
-        res => console.log('success ', res),
-        err => console.log('error ', err)
-      )
-    });
+  addQuestion() {
+    this.questions.push(new MultipleChoiceQuestion());
   }
 
   validate(): boolean {
@@ -201,18 +121,22 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   }
 
   async createQuiz() {
+    this.createQuestionComponents.forEach(async (component,i) => {
+      this.questions[i] = await component.saveQuestion();
+    });
+
     if (!this.validate())
       return;
 
-    await this.removeUnusedImages();
+    await this.richTextComponent.removeUnusedImages();
 
     this.currentQuiz = new Quiz(0, this.quizTitle.value, this.quizInstructions.value, this.durationHours.value, this.durationMinutes.value, this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value);
 
     this.quizService.createQuiz(this.currentQuiz).subscribe(
-      result => {
+      () => {
         this.toastr.success('Quiz Created');
       },
-      error => {
+      () => {
         this.toastr.error('Quiz not created');
       }
     )
@@ -225,10 +149,10 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.currentQuiz = new Quiz(this.currentQuiz.Id, this.quizTitle.value, this.quizInstructions.value, this.durationHours.value, this.durationMinutes.value, this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value);
 
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
-      result => {
+      () => {
         this.toastr.success('Quiz Updated');
       },
-      error => {
+      () => {
         this.toastr.error('Quiz not updated');
       }
     )
@@ -239,13 +163,4 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 enum mode {
   edit,
   create
-}
-
-class ImageUrls {
-  imageURL: string;
-  deleteURL: string;
-  constructor(imageUrl, deleteUrl) {
-    this.imageURL = imageUrl;
-    this.deleteURL = deleteUrl;
-  }
 }

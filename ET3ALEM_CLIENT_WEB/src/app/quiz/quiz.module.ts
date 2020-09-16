@@ -16,6 +16,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuizHomeComponent } from './components/quiz-home/quiz-home.component';
 import { ListQuizzesComponent } from './components/list-quizzes/list-quizzes.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { SharedComponentsModule } from '../Shared/modules/shared-components/shared-components.module';
+import { QuestionModule } from '../question/question.module';
 
 @NgModule({
   declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent],
@@ -24,10 +26,10 @@ import { BrowserModule } from '@angular/platform-browser';
     QuizRoutingModule,
     AngularMaterialModule,
     CKEditorModule,
-    AngularMaterialModule,
     EditorModule,
     ReactiveFormsModule,
     ToastrModule.forRoot(),
-  ]
+    SharedComponentsModule,
+    QuestionModule]
 })
 export class QuizModule { }
