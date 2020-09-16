@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
 
-namespace DataServiceLayer.QuestionDataService
+namespace DataServiceLayer
 {
     public  interface IQuestionDsl
     {

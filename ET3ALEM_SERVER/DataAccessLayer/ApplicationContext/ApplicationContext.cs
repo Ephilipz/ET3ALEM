@@ -27,12 +27,14 @@ namespace Server_Application.Data
             modelBuilder.Entity<Choice>().ToTable("Choice");
             modelBuilder.Entity<Choice>()
                 .HasOne(choice => choice.MCQ)
-                .WithMany(mcq => mcq.Choices);  
+                .WithMany(mcq => mcq.Choices);
+            modelBuilder.Entity<QuestionCollection>().ToTable("QuestionCollection").Ignore(qc => qc.TrueFalseQuestions).Ignore(qc => qc.MultipleChoiceQuestions);
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuizQuestion> QuizQuestions { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Choice> Choices { get; set; }
+        public DbSet<QuestionCollection> QuestionCollections { get; set; }
     }
 }

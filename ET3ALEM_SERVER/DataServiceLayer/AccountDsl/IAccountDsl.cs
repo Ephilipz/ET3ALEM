@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataServiceLayer.AccountDsl
+namespace DataServiceLayer
 {
     public interface IAccountDsl
     {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.QuizDal
+namespace DataAccessLayer
 {
     public class QuizDal : IQuizDal
     {
