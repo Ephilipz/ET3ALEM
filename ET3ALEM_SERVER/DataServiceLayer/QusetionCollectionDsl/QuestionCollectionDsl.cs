@@ -15,9 +15,9 @@ namespace DataServiceLayer
         {
             _IQuestionCollectionDal = IQuestionCollectionDal;
         }
-        public async Task<QuestionCollection> GetQuestionCollection(string userId)
+        public async Task<List<QuestionCollection>> GetQuestionCollections(string userId)
         {
-            return await _IQuestionCollectionDal.GetQuestionCollection(userId);
+            return await _IQuestionCollectionDal.GetQuestionCollections(userId);
         }
 
         public async Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection)

@@ -8,7 +8,7 @@ namespace DataServiceLayer
 {
     public interface IQuestionCollectionDsl
     {
-        Task<QuestionCollection> GetQuestionCollection(string userId);
+        Task<List<QuestionCollection>> GetQuestionCollections(string userId);
         Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection);
     }
 }

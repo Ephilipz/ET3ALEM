@@ -8,7 +8,7 @@ namespace DataAccessLayer
 {
     public interface IQuestionCollectionDal
     {
-        Task<QuestionCollection> GetQuestionCollection(string UserId);
+        Task<List<QuestionCollection>> GetQuestionCollections(string UserId);
         Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection);
     }
 }

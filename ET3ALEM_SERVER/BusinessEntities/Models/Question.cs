@@ -1,12 +1,11 @@
 ﻿using BusinessEntities.Enumerators;
-using System;
-using System.Collections.Generic;
+using BusinessEntities.CustomConverters;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BusinessEntities.Models
 {
+    [JsonConverter(typeof(QuestionConverter))]
     public abstract class Question
     {
         public int Id { get; set; }

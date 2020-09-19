@@ -17,12 +17,12 @@ namespace DataAccessLayer
         {
             _context = context;
         }
-        public async Task<QuestionCollection> GetQuestionCollection(string userId)
+        public async Task<List<QuestionCollection>> GetQuestionCollections(string userId)
         {
-            var collection  = await _context.QuestionCollections.FirstAsync(collection => collection.UserId == userId);
-            collection.TrueFalseQuestions = _context.Questions.OfType<TrueFalseQuestion>().Where(q => q.QuestionCollectionId == collection.Id).ToList();
-            collection.MultipleChoiceQuestions  = _context.Questions.OfType<MultipleChoiceQuestion>().Where(q => q.QuestionCollectionId == collection.Id).Include(mcq=>mcq.Choices).ToList();
-            return collection;
+            var collections = await _context.QuestionCollections.Where(collection => collection.UserId == userId)
+                .Include(collection => collection.Questions)
+                .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).ToListAsync();
+            return collections;
         }
 
         public async Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection)

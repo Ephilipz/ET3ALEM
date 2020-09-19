@@ -22,9 +22,9 @@ namespace Server_Application.Controllers
 
         // GET api/<QuestionCollectionController>/userId
         [HttpGet("{userId}")]
-        public async Task<ActionResult<QuestionCollection>> Get(string userId)
+        public async Task<ActionResult<List<QuestionCollection>>> Get(string userId)
         {
-            return await _IQuestionCollectionDsl.GetQuestionCollection(userId);
+            return await _IQuestionCollectionDsl.GetQuestionCollections(userId);
         }
 
         // POST api/<QuestionCollectionController>

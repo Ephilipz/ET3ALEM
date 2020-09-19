@@ -28,7 +28,7 @@ namespace Server_Application.Data
             modelBuilder.Entity<Choice>()
                 .HasOne(choice => choice.MCQ)
                 .WithMany(mcq => mcq.Choices);
-            modelBuilder.Entity<QuestionCollection>().ToTable("QuestionCollection").Ignore(qc => qc.TrueFalseQuestions).Ignore(qc => qc.MultipleChoiceQuestions);
+            modelBuilder.Entity<QuestionCollection>().ToTable("QuestionCollection");
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Question> Questions { get; set; }

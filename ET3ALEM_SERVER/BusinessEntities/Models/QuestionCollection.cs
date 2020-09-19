@@ -13,15 +13,6 @@ namespace BusinessEntities.Models
         public string Name { get; set; }
         public string UserId { get; set; }
         public IdentityUser User { get; set; }
-        [JsonIgnore]
-        public List<Question> Questions
-        {
-            get
-            {
-                return TrueFalseQuestions.Concat<Question>(MultipleChoiceQuestions).ToList();
-            }
-        }
-        public List<TrueFalseQuestion> TrueFalseQuestions { get; set; } = new List<TrueFalseQuestion>();
-        public List<MultipleChoiceQuestion> MultipleChoiceQuestions { get; set; } = new List<MultipleChoiceQuestion>();
+        public List<Question> Questions { get; set; }
     }
 }
