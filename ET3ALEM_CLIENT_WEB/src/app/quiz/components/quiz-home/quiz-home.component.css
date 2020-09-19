@@ -65,3 +65,7 @@ a {
 .card:hover h2 {
     color: #5F8EBA;
 }
+
+img.profileImage{
+    border: 2px solid white;
+}

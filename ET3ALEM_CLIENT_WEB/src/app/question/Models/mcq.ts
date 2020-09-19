@@ -4,10 +4,10 @@ import { Choice } from './choice';
 
 export class MultipleChoiceQuestion extends Question {
     Choices: Array<Choice>;
-    QuestionType: QuestionType
 
-    constructor() {
-        super();
+    constructor(Id: Number = 0, Body: string = '', choices = [new Choice()]) {
+        super(Id, Body);
         this.QuestionType = QuestionType.MCQ;
+        this.Choices = choices
     }
 }

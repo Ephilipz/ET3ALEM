@@ -1,4 +1,4 @@
-import { Question } from 'src/app/question/Models/question';
+import { QuizQuestion } from './quizQuestion';
 
 export class Quiz {
     Id: Number;
@@ -10,7 +10,7 @@ export class Quiz {
     StartDate: Date;
     EndDate: Date;
     NoDueDate: boolean;
-    QuizQuestions: Array<Question>;
+    QuizQuestions: Array<QuizQuestion>;
 
     constructor(
         Id: Number = 0,
@@ -22,7 +22,7 @@ export class Quiz {
         dateStart: Date,
         dueEnd: Date,
         noDueDate: boolean,
-        QuizQuestions?: Array<Question>) {
+        QuizQuestions?: Array<QuizQuestion>) {
         this.Id = Id;
         this.Name = title;
         this.instructions = instructions;

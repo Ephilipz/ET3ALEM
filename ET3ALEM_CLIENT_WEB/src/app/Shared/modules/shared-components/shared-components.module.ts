@@ -1,12 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RichTextEditorComponent } from './rich-text-editor/rich-text-editor.component';
+import { EditorModule } from '@tinymce/tinymce-angular';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [RichTextEditorComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    EditorModule,
+    ReactiveFormsModule
+  ],
+  exports: [
+    RichTextEditorComponent
   ]
 })
 export class SharedComponentsModule { }

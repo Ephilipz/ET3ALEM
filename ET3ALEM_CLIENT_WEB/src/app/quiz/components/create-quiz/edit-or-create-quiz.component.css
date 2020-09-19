@@ -35,13 +35,19 @@ h2 {
     font-weight: normal;
 }
 
+.questionTitle {
+    font-size: 1.6em;
+    font-weight: 300;
+    letter-spacing: 4px;
+}
+
 :host ::ng-deep .ck-editor__editable_inline {
     min-height: 500px;
     width: 80vw;
 }
 
 .parentContainer {
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(236, 236, 236);
     min-height: 100%;
 }
 
@@ -54,6 +60,10 @@ mat-checkbox ::ng-deep .mat-checkbox-inner-container {
     height: 20px;
 }
 
-editor{
-    width: 70%;
+.addQuestionIcon {
+    transform: scale(2.5);
+}
+
+.addQuestionRow {
+    justify-content: center;
 }
