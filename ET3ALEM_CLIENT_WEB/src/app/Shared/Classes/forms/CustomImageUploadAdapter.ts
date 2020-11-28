@@ -1,5 +1,5 @@
 import { environment } from 'src/environments/environment'
-import { Converter } from '../helpers/Coverter';
+import { Converter } from '../helpers/Helper';
 
 export class CustomImageUploadAdapter {
     loader: any;

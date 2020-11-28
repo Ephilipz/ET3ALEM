@@ -28,7 +28,7 @@ namespace Server_Application
                 {
                     var context = services.GetRequiredService <ApplicationContext>();
                     context.Database.Migrate();
-                    if (!context.Quizzes.Any())
+                    if (context.Quizzes.Count() == 0)
                     { 
                         context.Questions.AddRange(new TrueFalseQuestion { Body = "truefalse1" }, new TrueFalseQuestion { Body = "truefalse2" }, new MultipleChoiceQuestion { Body = "truefalse3" }, new MultipleChoiceQuestion { Body = "truefalse4" }); ;
                         await context.SaveChangesAsync();

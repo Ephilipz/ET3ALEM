@@ -4,20 +4,18 @@ export class Quiz {
     Id: Number;
     Name: string;
     instructions: string;
-    durationHours: number;
-    durationMinutes: number;
+    DurationSeconds: number;
     UnlimitedTime: boolean;
     StartDate: Date;
     EndDate: Date;
     NoDueDate: boolean;
-    QuizQuestions: Array<QuizQuestion>;
+    QuizQuestions: Array<QuizQuestion> = [];
 
     constructor(
         Id: Number = 0,
         title: string,
         instructions: string = '',
-        durationHours: number,
-        durationMinutes: number,
+        durationSeconds: number,
         UnlimitedTime: boolean,
         dateStart: Date,
         dueEnd: Date,
@@ -26,8 +24,7 @@ export class Quiz {
         this.Id = Id;
         this.Name = title;
         this.instructions = instructions;
-        this.durationHours = durationHours;
-        this.durationMinutes = durationMinutes;
+        this.DurationSeconds = durationSeconds;
         this.UnlimitedTime = UnlimitedTime;
         this.StartDate = dateStart;
         this.EndDate = dueEnd;

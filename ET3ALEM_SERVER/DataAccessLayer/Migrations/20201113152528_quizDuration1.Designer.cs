@@ -3,15 +3,17 @@ using System;
 using BusinessEntities.Enumerators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server_Application.Data;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20201113152528_quizDuration1")]
+    partial class quizDuration1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,6 +129,9 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<TimeSpan?>("Duration")
+                        .HasColumnType("time");
+
                     b.Property<int>("Grade")
                         .HasColumnType("int");
 
@@ -138,8 +143,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId")
-                        .IsUnique();
+                    b.HasIndex("QuestionId");
 
                     b.HasIndex("QuizId");
 
@@ -382,17 +386,14 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("BusinessEntities.Models.QuizQuestion", b =>
                 {
                     b.HasOne("BusinessEntities.Models.Question", "Question")
-                        .WithOne()
-                        .HasForeignKey("BusinessEntities.Models.QuizQuestion", "QuestionId")
-                        .HasConstraintName("FK_QuizQuestion_Question_QuestionId")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BusinessEntities.Models.Quiz", null)
                         .WithMany("QuizQuestions")
-                        .HasForeignKey("QuizId")
-                        .HasConstraintName("FK_QuizQuestion_Quiz_QuizId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("QuizId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

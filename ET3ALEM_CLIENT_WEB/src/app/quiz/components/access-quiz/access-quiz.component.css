@@ -1,0 +1,18 @@
+.mainTitle{
+    font-size: 6em;
+    margin: 5% auto;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-align: center;
+}
+
+.textBoxRow{
+    align-self: center;
+    height: 60%;
+}
+
+.mat-form-field{
+    font-size: 3em;
+    text-align: center;
+    width: 40vw;
+}

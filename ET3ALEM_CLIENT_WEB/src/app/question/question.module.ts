@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreateQuestionComponent } from './create-question/create-question.component';
+import { EditOrCreateQuestionComponent } from './create-question/edit-or-create-question.component';
 import { ViewQuestionComponent } from './view-question/view-question.component';
 import { AngularMaterialModule } from '../Shared/modules/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { SharedComponentsModule } from '../Shared/modules/shared-components/shar
 
 
 @NgModule({
-  declarations: [CreateQuestionComponent, ViewQuestionComponent],
+  declarations: [EditOrCreateQuestionComponent, ViewQuestionComponent],
   imports: [
     CommonModule,
     AngularMaterialModule,
@@ -19,7 +19,7 @@ import { SharedComponentsModule } from '../Shared/modules/shared-components/shar
     FormsModule
   ],
   exports: [
-    CreateQuestionComponent,
+    EditOrCreateQuestionComponent,
   ]
 })
 export class QuestionModule { }

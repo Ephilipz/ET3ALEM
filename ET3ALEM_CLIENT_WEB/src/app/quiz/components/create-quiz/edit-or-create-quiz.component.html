@@ -20,7 +20,7 @@
                 <div class="row px-3">
                     <h2 class="col-12">Quiz Instructions</h2>
 
-                    <app-rich-text-editor [control]="quizInstructions" class="col-12"></app-rich-text-editor>
+                    <app-rich-text-editor #RichTextEditorComponent [control]="quizInstructions" class="col-12"></app-rich-text-editor>
 
                 </div>
             </div>
@@ -94,23 +94,20 @@
                     </mat-expansion-panel>
 
                     <button mat-icon-button class="m-auto">
-                        <mat-icon style="color: rgb(180, 25, 25); transform: scale(1.6)">delete</mat-icon>
+                        <mat-icon class="deleteIconButton" (click)="deleteQuestion(question)">delete</mat-icon>
                     </button>
                 </div>
 
 
                 <div class="row addQuestionRow">
-                    <button mat-icon-button (click)="addQuestion()">
-                        <mat-icon class="addQuestionIcon">add_circle_outline</mat-icon>
-                    </button>
+                    <button mat-flat-button class="blue medium" (click)="addQuestion()">Add Question</button>
                 </div>
-
 
             </div>
         </mat-expansion-panel>
 
         <div class="d-flex justify-content-around mt-4">
-            <button mat-flat-button class="red large">Cancel</button>
+            <button mat-flat-button class="red large" [routerLink] = "mode == 1 ? '../manage' : '../../manage'">Cancel</button>
             <button mat-flat-button class="blue large" [disabled]="!quizTitle.valid"
                 (click)="mode == 1 ? createQuiz() : updateQuiz()">Save</button>
         </div>

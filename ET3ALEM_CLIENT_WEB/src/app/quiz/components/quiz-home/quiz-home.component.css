@@ -13,11 +13,12 @@
     font-size: 4em;
     font-weight: 500;
     color: #5F8EBA;
+    line-height: 1.2em;
 }
 
 .blurb {
     text-align: center;
-    margin: auto 40px;
+    margin: 0 0.5% 5%;
 }
 
 .blurbHeading {
@@ -31,7 +32,7 @@ a {
 }
 
 .mainContent {
-    margin: 7% auto;
+    margin: 5% auto;
 }
 
 .card {

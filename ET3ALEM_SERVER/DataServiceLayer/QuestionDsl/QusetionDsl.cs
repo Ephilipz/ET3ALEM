@@ -14,6 +14,8 @@ namespace DataServiceLayer
         {
             _IQuestionDal = QuestionDal;
         }
+
+
         public Task<List<Question>> GetQuestions()
         {
             return _IQuestionDal.GetQuestions();
@@ -22,6 +24,15 @@ namespace DataServiceLayer
         public Task<Question> InsertQuestion(Question question)
         {
             return  _IQuestionDal.InsertQuestion(question);
+        }
+        public Task<Question> DeleteQuestion(int questionId)
+        {
+            return _IQuestionDal.DeleteQuestion(questionId);
+        }
+
+        public Task PutQuestion(Question question)
+        {
+            return _IQuestionDal.PutQuestion(question);
         }
     }
 }

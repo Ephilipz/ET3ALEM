@@ -11,6 +11,5 @@ namespace BusinessEntities.Models
         public Question Question { get; set; }
         public int QuestionId { get; set; }
         public int Grade { get; set; }
-        public TimeSpan? Duration { get; set; }
     }
 }

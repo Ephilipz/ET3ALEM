@@ -19,7 +19,7 @@ namespace BusinessEntities.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool NoDueDate { get; set; }
-        public TimeSpan? Duration { get; set; }
+        public int DurationSeconds { get; set; }
         public bool UnlimitedTime { get; set; }
     }
 }

@@ -10,5 +10,7 @@ namespace DataServiceLayer
     {
         Task<List<Question>> GetQuestions();
         Task<Question> InsertQuestion(Question question);
+        Task<Question> DeleteQuestion(int questionId);
+        Task PutQuestion(Question question);
     }
 }

@@ -1,16 +1,18 @@
 <div class="container-fluid p-4">
     <h1 class="title">Manage</h1>
     <div class="row px-3 mt-5">
-        <h2 class="tableTitle align-self-center">My Quizzes</h2>
-        <mat-form-field class="ml-auto">
+        <h2 class="tableTitle">My Quizzes</h2>
+        <mat-form-field class="ml-auto" *ngIf="quizListDS.data.length > 0">
             <mat-label>Search</mat-label>
             <input matInput type="search" (change)="applyFilter($event)">
             <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
     </div>
 
+    <mat-spinner *ngIf="!isLoaded" class="mx-auto my-5"></mat-spinner>
 
-    <table mat-table [dataSource]="quizListDS" matSort class="mat-elevation-z3">
+
+    <table mat-table [dataSource]="quizListDS" matSort class="mat-elevation-z3" *ngIf="quizListDS.data.length > 0">
         <!-- Id Column -->
         <ng-container matColumnDef="index">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="numberColumn"> # </th>
@@ -45,8 +47,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <div class="col emptyListCol" * ngIf="quizListDS.data.length == 0">
-        <h1 class="emptyQuizzes">You do not have any quizzes yet</h1>
+    <div class="col emptyListCol" *ngIf="isLoaded">
+        <h1 class="emptyQuizzes" *ngIf="quizListDS.data.length == 0">You do not have any quizzes yet</h1>
         <button mat-flat-button class="blue large newQuizButton" [routerLink]="'../create'">New Quiz</button>
     </div>
 </div>

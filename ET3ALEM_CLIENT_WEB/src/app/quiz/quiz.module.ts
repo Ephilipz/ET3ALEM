@@ -18,9 +18,10 @@ import { ListQuizzesComponent } from './components/list-quizzes/list-quizzes.com
 import { BrowserModule } from '@angular/platform-browser';
 import { SharedComponentsModule } from '../Shared/modules/shared-components/shared-components.module';
 import { QuestionModule } from '../question/question.module';
+import { AccessQuizComponent } from './components/access-quiz/access-quiz.component';
 
 @NgModule({
-  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent],
+  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent, AccessQuizComponent],
   imports: [
     CommonModule,
     QuizRoutingModule,

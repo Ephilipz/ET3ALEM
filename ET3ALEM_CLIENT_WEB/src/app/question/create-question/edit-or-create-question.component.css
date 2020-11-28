@@ -33,3 +33,7 @@ textarea{
 .mat-button-toggle-checked{
     border: 2px solid black;
 }
+
+.justify-center{
+    justify-content: center;
+}

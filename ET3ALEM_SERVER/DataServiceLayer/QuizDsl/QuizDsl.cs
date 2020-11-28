@@ -3,6 +3,7 @@ using DataAccessLayer;
 using DataServiceLayer;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,6 +24,11 @@ namespace DataServiceLayer
             return _IQuizDal.GetQuiz(quizId);
         }
 
+        public Task<Quiz> GetSimpleQuiz(int quizId)
+        {
+            return _IQuizDal.GetSimpleQuiz(quizId);
+        }
+
         public Task<IEnumerable<Quiz>> GetQuizzes()
         {
             return _IQuizDal.GetQuizzes();
@@ -32,20 +38,47 @@ namespace DataServiceLayer
         {
             foreach (var quizQuestion in quiz.QuizQuestions)
             {
-                if (quizQuestion.QuestionId == 0)
-                    _IQuestionDsl.InsertQuestion(quizQuestion.Question);
+                if (quizQuestion.QuestionId <= 0)
+                    quizQuestion.QuestionId = _IQuestionDsl.InsertQuestion(quizQuestion.Question).Id;
             }
             return _IQuizDal.InsertQuiz(quiz);
         }
-        public Task<Quiz> DeleteQuiz(int id)
+        public async Task<Quiz> DeleteQuiz(int id)
         {
-            return _IQuizDal.DeleteQuiz(id);
+            //remove quiz
+            Quiz quiz = await _IQuizDal.DeleteQuiz(id);
+
+            if (quiz != null)
+            {
+                //remove questions
+                List<int> relatedQuestions = quiz.QuizQuestions.Select(quizQuestion => quizQuestion.QuestionId).ToList();
+                foreach (int questionId in relatedQuestions)
+                {
+                    await _IQuestionDsl.DeleteQuestion(questionId);
+                }
+
+            }
+
+            return quiz;
         }
 
         public Task PutQuiz(int id, Quiz quiz)
         {
+            foreach(QuizQuestion Qquestion in quiz.QuizQuestions)
+            {
+                if(Qquestion.Question.Id <= 0)
+                {
+                    Qquestion.QuestionId = _IQuestionDsl.InsertQuestion(Qquestion.Question).Id;
+                }
+                else
+                {
+                    _IQuestionDsl.PutQuestion(Qquestion.Question);
+                }
+            }
             return _IQuizDal.PutQuiz(id, quiz);
         }
+
+
 
     }
 }

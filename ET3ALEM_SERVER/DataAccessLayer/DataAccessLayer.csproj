@@ -7,6 +7,20 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200630132314_InitialCreate.cs" />
     <Compile Remove="Migrations\20200630132314_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20201113151016_changedDurationFormat.cs" />
+    <Compile Remove="Migrations\20201113151016_changedDurationFormat.Designer.cs" />
+    <Compile Remove="Migrations\20201113152420_quizDuration.cs" />
+    <Compile Remove="Migrations\20201113152420_quizDuration.Designer.cs" />
+    <Compile Remove="Migrations\20201113182134_quizQuestion1.cs" />
+    <Compile Remove="Migrations\20201113182134_quizQuestion1.Designer.cs" />
+    <Compile Remove="Migrations\20201113182245_quizQuestion1.cs" />
+    <Compile Remove="Migrations\20201113182245_quizQuestion1.Designer.cs" />
+    <Compile Remove="Migrations\20201113182509_quizQuestion1.cs" />
+    <Compile Remove="Migrations\20201113182509_quizQuestion1.Designer.cs" />
+    <Compile Remove="Migrations\20201113182523_quizQuestion2.cs" />
+    <Compile Remove="Migrations\20201113182523_quizQuestion2.Designer.cs" />
+    <Compile Remove="Migrations\20201113182756_quizQuestion_question.cs" />
+    <Compile Remove="Migrations\20201113182756_quizQuestion_question.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

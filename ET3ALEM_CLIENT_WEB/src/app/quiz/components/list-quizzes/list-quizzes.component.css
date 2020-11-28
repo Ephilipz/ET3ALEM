@@ -1,5 +1,6 @@
 table {
     width: 100%;
+    margin-bottom: 30px;
 }
 
 .mat-header-cell {
@@ -41,8 +42,8 @@ mat-form-field {
     font-size: 3em;
     color: gray;
     text-align: center;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
+    margin-top: 2em;
+    margin-bottom: 1em;
     font-weight: 300;
 }
 

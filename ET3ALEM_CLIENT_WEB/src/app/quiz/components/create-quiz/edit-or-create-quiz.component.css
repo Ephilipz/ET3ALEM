@@ -67,3 +67,8 @@ mat-checkbox ::ng-deep .mat-checkbox-inner-container {
 .addQuestionRow {
     justify-content: center;
 }
+
+.deleteIconButton {
+    color: rgb(180, 25, 25);
+    transform: scale(1.6);
+}

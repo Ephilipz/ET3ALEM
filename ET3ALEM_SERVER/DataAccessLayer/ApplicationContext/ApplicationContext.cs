@@ -22,8 +22,13 @@ namespace Server_Application.Data
                 .HasDiscriminator<QuestionType>("QuestionType")
                 .HasValue<MultipleChoiceQuestion>(QuestionType.MCQ)
                 .HasValue<TrueFalseQuestion>(QuestionType.TrueFalse);
-            modelBuilder.Entity<QuizQuestion>().ToTable("QuizQuestion");
-            modelBuilder.Entity<Quiz>().ToTable("Quiz");
+            modelBuilder.Entity<QuizQuestion>().ToTable("QuizQuestion")
+                .HasOne(q => q.Question)
+                .WithOne()
+                .HasConstraintName("FK_QuizQuestion_Question_QuestionId").OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Quiz>().ToTable("Quiz")
+                .HasMany(q => q.QuizQuestions)
+                .WithOne().HasConstraintName("FK_QuizQuestion_Quiz_QuizId").OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Choice>().ToTable("Choice");
             modelBuilder.Entity<Choice>()
                 .HasOne(choice => choice.MCQ)

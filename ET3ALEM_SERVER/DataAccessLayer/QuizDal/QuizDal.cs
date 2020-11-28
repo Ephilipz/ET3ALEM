@@ -23,6 +23,8 @@ namespace DataAccessLayer
 
             if (quiz != null)
             {
+                //_context.QuizQuestions.RemoveRange(quiz.QuizQuestions);
+                //await _context.SaveChangesAsync();
                 _context.Quizzes.Remove(quiz);
                 await _context.SaveChangesAsync();
             }
@@ -32,7 +34,17 @@ namespace DataAccessLayer
 
         public async Task<Quiz> GetQuiz(int quizId)
         {
-            return await _context.Quizzes.FindAsync(quizId);
+            Quiz quiz = await _context.Quizzes.Where(q => q.Id == quizId)
+                .Include(quiz => quiz.QuizQuestions)
+                .ThenInclude(quizQuestion => quizQuestion.Question)
+                .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).FirstAsync();
+
+            return quiz;
+        }
+
+        public async Task<Quiz> GetSimpleQuiz(int quizId)
+        {
+            return await _context.FindAsync<Quiz>(quizId);
         }
 
         public async Task<IEnumerable<Quiz>> GetQuizzes()
@@ -49,6 +61,13 @@ namespace DataAccessLayer
 
         public async Task PutQuiz(int id, Quiz quiz)
         {
+            foreach (QuizQuestion quizQuestion in quiz.QuizQuestions)
+            {
+                if (quizQuestion.Id == 0)
+                {
+                    await _context.QuizQuestions.AddAsync(quizQuestion);
+                }
+            }
             _context.Entry(quiz).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }

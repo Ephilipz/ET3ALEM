@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { Converter } from 'src/app/Shared/Classes/helpers/Coverter';
+import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -12,12 +12,11 @@ import { HttpClient } from '@angular/common/http';
 export class RichTextEditorComponent implements OnInit {
 
   constructor(private http: HttpClient) {
-
   }
 
   @Input('control') _formControl: FormControl;
   uploadedImages: Array<ImageUrls> = [];
-  
+
   ngOnInit(): void {
   }
 
@@ -76,7 +75,7 @@ export class RichTextEditorComponent implements OnInit {
 
         formData = new FormData();
 
-        if (Converter.BtoMB(blobInfo.blob().size) > 2) {
+        if (Helper.BtoMB(blobInfo.blob().size) > 2) {
           failure('file cannot be larger than 2 mb');
           return;
         }
@@ -89,6 +88,7 @@ export class RichTextEditorComponent implements OnInit {
   }
 
   async removeUnusedImages() {
+    console.log('removing unused images');
     let imagesToBeDeleted: Array<string> = [];
 
     //check if images are being used. Add unused images to the delete array
