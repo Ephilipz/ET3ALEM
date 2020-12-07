@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessEntities", "Busines
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{2F9DCAD9-06F5-48BB-A37B-0A55CC399F0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validation", "Validation\Validation.csproj", "{76DFD2EA-0E86-4A99-8435-B594965C575F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Validation", "Validation\Validation.csproj", "{76DFD2EA-0E86-4A99-8435-B594965C575F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExceptionHandling", "ExceptionHandling\ExceptionHandling.csproj", "{9104A7BD-E763-4EDD-930E-0F7280905073}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExceptionHandling", "ExceptionHandling\ExceptionHandling.csproj", "{9104A7BD-E763-4EDD-930E-0F7280905073}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{5A88E884-0491-43DE-9A32-4A5594D7A97B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{9104A7BD-E763-4EDD-930E-0F7280905073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9104A7BD-E763-4EDD-930E-0F7280905073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9104A7BD-E763-4EDD-930E-0F7280905073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A88E884-0491-43DE-9A32-4A5594D7A97B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A88E884-0491-43DE-9A32-4A5594D7A97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A88E884-0491-43DE-9A32-4A5594D7A97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A88E884-0491-43DE-9A32-4A5594D7A97B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

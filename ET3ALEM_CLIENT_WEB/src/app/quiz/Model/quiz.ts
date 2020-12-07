@@ -3,6 +3,7 @@ import { QuizQuestion } from './quizQuestion';
 export class Quiz {
     Id: Number;
     Name: string;
+    code: string;
     instructions: string;
     DurationSeconds: number;
     UnlimitedTime: boolean;
@@ -13,6 +14,7 @@ export class Quiz {
 
     constructor(
         Id: Number = 0,
+        code: string = '',
         title: string,
         instructions: string = '',
         durationSeconds: number,
@@ -22,6 +24,7 @@ export class Quiz {
         noDueDate: boolean,
         QuizQuestions?: Array<QuizQuestion>) {
         this.Id = Id;
+        this.code = code;
         this.Name = title;
         this.instructions = instructions;
         this.DurationSeconds = durationSeconds;

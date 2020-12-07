@@ -37,6 +37,24 @@ namespace Server_Application.Controllers
             return quiz;
         }
 
+        [HttpGet("GetQuizTitleFromCode/{code}")]
+        public async Task<ActionResult<string>> GetQuizTitleFromCode(string code)
+        {
+            string title = await _IQuizDsl.GetQuizTitleFromCode(code);
+
+            if (string.IsNullOrEmpty(title))
+            {
+                return NotFound();
+            }
+
+            var returnedTitle = new
+            {
+               title
+            };
+
+            return Ok(returnedTitle);
+        }
+
         //GET: api/Quiz
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Quiz>>> GetQuizzes()

@@ -24,6 +24,11 @@ namespace DataServiceLayer
             return _IQuizDal.GetQuiz(quizId);
         }
 
+        public Task<string> GetQuizTitleFromCode(string code)
+        {
+            return _IQuizDal.GetQuizTitleFromCode(code);
+        }
+
         public Task<Quiz> GetSimpleQuiz(int quizId)
         {
             return _IQuizDal.GetSimpleQuiz(quizId);
@@ -62,20 +67,25 @@ namespace DataServiceLayer
             return quiz;
         }
 
-        public Task PutQuiz(int id, Quiz quiz)
+        public async Task PutQuiz(int id, Quiz quiz)
         {
             foreach(QuizQuestion Qquestion in quiz.QuizQuestions)
             {
+                //if(Qquestion.Question.Id < 0)
+                //{
+                //    _IQuestionDsl.DeleteQuestion(Qquestion.Question.Id * -1);
+                //}
+                //else 
                 if(Qquestion.Question.Id <= 0)
                 {
-                    Qquestion.QuestionId = _IQuestionDsl.InsertQuestion(Qquestion.Question).Id;
+                    Qquestion.QuestionId = (await _IQuestionDsl.InsertQuestion(Qquestion.Question)).Id;
                 }
                 else
                 {
-                    _IQuestionDsl.PutQuestion(Qquestion.Question);
+                    await _IQuestionDsl.PutQuestion(Qquestion.Question);
                 }
             }
-            return _IQuizDal.PutQuiz(id, quiz);
+            await _IQuizDal.PutQuiz(id, quiz);
         }
 
 

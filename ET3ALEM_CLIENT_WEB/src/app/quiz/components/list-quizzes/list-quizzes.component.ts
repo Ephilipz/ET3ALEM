@@ -13,7 +13,7 @@ import { MatSort } from '@angular/material/sort';
 export class ListQuizzesComponent implements OnInit {
 
   quizListDS = new MatTableDataSource();
-  displayedColumns: string[] = ['index', 'Name', 'StartDate', 'actions'];
+  displayedColumns: string[] = ['index', 'Name', 'code', 'StartDate', 'actions'];
   isLoaded = false;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { QuizService } from '../../services/quiz.service';
 
 @Component({
   selector: 'app-access-quiz',
@@ -7,13 +9,31 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccessQuizComponent implements OnInit {
 
-  constructor() { }
+  quizTitle: string = '';
+  quizCode: string = '';
+
+  constructor(private quizService: QuizService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
   }
 
-  x(){
-    alert('d');
+  getQuizFromCode(e) {
+    if (this.quizCode.length == 5) {
+      this.quizService.getQuizTitleFromCode(this.quizCode).subscribe(
+        obj => {
+          this.quizTitle = obj["title"];
+        },
+        err => {
+          this.toastr.info('No quiz found with the entered code');
+        });
+    }
+    else {
+
+    }
+  }
+
+  routeToQuiz() {
+
   }
 
 }

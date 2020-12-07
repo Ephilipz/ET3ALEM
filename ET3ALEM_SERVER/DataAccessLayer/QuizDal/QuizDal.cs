@@ -1,4 +1,5 @@
 ﻿using BusinessEntities.Models;
+using Helpers;
 using Microsoft.EntityFrameworkCore;
 using Server_Application.Data;
 using System;
@@ -23,8 +24,6 @@ namespace DataAccessLayer
 
             if (quiz != null)
             {
-                //_context.QuizQuestions.RemoveRange(quiz.QuizQuestions);
-                //await _context.SaveChangesAsync();
                 _context.Quizzes.Remove(quiz);
                 await _context.SaveChangesAsync();
             }
@@ -42,6 +41,14 @@ namespace DataAccessLayer
             return quiz;
         }
 
+        public async Task<string> GetQuizTitleFromCode(string code)
+        {
+            Quiz quiz = await _context.Quizzes.FirstAsync(q => q.code.ToUpper() == code.ToUpper());
+            if (quiz != null)
+                return quiz.Name;
+            return null;
+        }
+
         public async Task<Quiz> GetSimpleQuiz(int quizId)
         {
             return await _context.FindAsync<Quiz>(quizId);
@@ -55,6 +62,8 @@ namespace DataAccessLayer
         public async Task<Quiz> InsertQuiz(Quiz quiz)
         {
             await _context.Quizzes.AddAsync(quiz);
+            await _context.SaveChangesAsync();
+            quiz.code = QuizHelper.getCode(quiz.Id);
             await _context.SaveChangesAsync();
             return quiz;
         }

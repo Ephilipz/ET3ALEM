@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessEntities.Models
 {
@@ -11,6 +12,7 @@ namespace BusinessEntities.Models
             QuizQuestions = new List<QuizQuestion>();
         }
         public int Id { get; set; }
+        public string code { get; set; }
         [Required]
         public string Name { get; set; }
         public string instructions { get; set; }

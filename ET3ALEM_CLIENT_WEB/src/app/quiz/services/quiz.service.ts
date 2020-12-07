@@ -18,6 +18,10 @@ export class QuizService {
   getQuiz(id: Number) {
     return this.http.get<Quiz>(environment.baseUrl + '/api/Quiz/' + id);
   }
+  
+  getQuizTitleFromCode(code: string) {
+    return this.http.get(environment.baseUrl + '/api/Quiz/GetQuizTitleFromCode/' + code);
+  }
 
   getQuizzes() {
     return this.http.get<Array<Quiz>>(environment.baseUrl + '/api/Quiz');

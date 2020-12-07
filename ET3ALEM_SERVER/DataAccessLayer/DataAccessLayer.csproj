@@ -21,6 +21,14 @@
     <Compile Remove="Migrations\20201113182523_quizQuestion2.Designer.cs" />
     <Compile Remove="Migrations\20201113182756_quizQuestion_question.cs" />
     <Compile Remove="Migrations\20201113182756_quizQuestion_question.Designer.cs" />
+    <Compile Remove="Migrations\20201205133842_quizHash.cs" />
+    <Compile Remove="Migrations\20201205133842_quizHash.Designer.cs" />
+    <Compile Remove="Migrations\20201207093637_quizCode.cs" />
+    <Compile Remove="Migrations\20201207093637_quizCode.Designer.cs" />
+    <Compile Remove="Migrations\20201207095710_quizCodeNullable.cs" />
+    <Compile Remove="Migrations\20201207095710_quizCodeNullable.Designer.cs" />
+    <Compile Remove="Migrations\20201207100906_quizCodeGenerateDB.cs" />
+    <Compile Remove="Migrations\20201207100906_quizCodeGenerateDB.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessEntities\BusinessEntities.csproj" />
+    <ProjectReference Include="..\Helpers\Helpers.csproj" />
   </ItemGroup>
 
 </Project>

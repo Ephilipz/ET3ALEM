@@ -7,7 +7,7 @@ import { Choice } from '../Models/choice';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { TrueFalseQuestion } from '../Models/true-false-question';
 import { QuestionType } from '../Models/question-type.enum';
-import { mode } from '../../quiz/components/create-quiz/edit-or-create-quiz.component'
+import { mode } from 'src/app/quiz/components/edit-create-quiz/edit-or-create-quiz.component';
 
 @Component({
   selector: 'app-create-question',

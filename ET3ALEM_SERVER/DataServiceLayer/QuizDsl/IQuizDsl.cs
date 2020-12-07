@@ -9,6 +9,7 @@ namespace DataServiceLayer
     public interface IQuizDsl
     {
         Task<Quiz> GetQuiz(int quizId);
+        Task<string> GetQuizTitleFromCode(string code);
         Task<Quiz> GetSimpleQuiz(int quizId);
         Task<IEnumerable<Quiz>> GetQuizzes();
         Task<Quiz> InsertQuiz(Quiz quiz);

@@ -30,6 +30,10 @@ body {
     background-color: #5F8EBA;
 }
 
+.mat-flat-button.darkBlue {
+    background-color: #426280;
+}
+
 .mat-flat-button.red {
     background-color: #CF6868;
 }

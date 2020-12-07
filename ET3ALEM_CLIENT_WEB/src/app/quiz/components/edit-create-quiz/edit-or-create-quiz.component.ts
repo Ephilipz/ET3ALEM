@@ -142,14 +142,14 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       );
     });
 
-    this.currentQuiz = new Quiz(0, this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, quizQuestions);
+    this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, quizQuestions);
 
     console.log('current quiz', this.currentQuiz);
 
     this.quizService.createQuiz(this.currentQuiz).subscribe(
       (quiz: Quiz) => {
-        this.router.navigate([`../../edit`, { 'id': quiz.Id }])
         this.toastr.success('Quiz Created');
+        this.router.navigate(['../../manage'])
       },
       () => {
         this.toastr.error('Quiz not created');
@@ -171,8 +171,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       this.questions[i] = Object.assign({}, question);
     });
 
-    console.log('questions: ', questions);
-
     this.questions.forEach(question => {
       //check if question already existed in quiz questions
       let questionIndex = this.currentQuiz.QuizQuestions.map(x => x.Question.Id).indexOf(question.Id);
@@ -186,13 +184,14 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       }
     });
 
-    this.currentQuiz = new Quiz(this.currentQuiz.Id, this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, this.currentQuiz.QuizQuestions);
+    this.currentQuiz = new Quiz(this.currentQuiz.Id, this.currentQuiz.code, this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, this.currentQuiz.QuizQuestions);
 
     console.log('current quiz', this.currentQuiz);
 
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
       () => {
         this.toastr.success('Quiz Updated');
+        this.router.navigate(['../../manage'], {relativeTo: this.route});
       },
       () => {
         this.toastr.error('Quiz not updated');

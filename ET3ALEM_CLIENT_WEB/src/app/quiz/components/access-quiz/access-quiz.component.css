@@ -1,4 +1,4 @@
-.mainTitle{
+.mainTitle {
     font-size: 6em;
     margin: 5% auto;
     font-weight: 700;
@@ -6,13 +6,29 @@
     text-align: center;
 }
 
-.textBoxRow{
+.textBoxRow {
     align-self: center;
-    height: 60%;
+    height: 50%;
 }
 
-.mat-form-field{
+.mat-form-field {
     font-size: 3em;
     text-align: center;
-    width: 40vw;
+    width: 20vw;
 }
+.mat-form-field input{
+    font-size: 2em;
+}
+
+.buttonRow{
+    text-align: center;
+}
+
+.takeQuizButton:hover{
+    background-color: #4d81b1;
+}
+
+.takeQuizButton{
+    min-width: 200px;
+}
+
