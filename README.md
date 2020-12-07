@@ -1,8 +1,9 @@
 # ET3ALEM APP
 ## MODULES
 - ### Auth
-- ### Search
-- ### Google Maps
+- ### Quiz
+- ### Question
+- ### Grading
 ## DEV
 - ### Client - Mobile :
     - Language : Dart (Flutter)
@@ -13,7 +14,7 @@
 - ### Server :
     - Language : C# (.NET CORE)
 - ### DB :
-    - Language : SQL
+    - Language : MySQL
 - ### DEV OPS :
     - Docker
     - Kubernetes
