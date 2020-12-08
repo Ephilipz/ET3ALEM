@@ -76,6 +76,10 @@ namespace DataAccessLayer
                 {
                     await _context.QuizQuestions.AddAsync(quizQuestion);
                 }
+                else if (quizQuestion.Id < 0)
+                {
+                    _context.QuizQuestions.Remove(quizQuestion);
+                }
             }
             _context.Entry(quiz).State = EntityState.Modified;
             await _context.SaveChangesAsync();

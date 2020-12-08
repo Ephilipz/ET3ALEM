@@ -71,12 +71,11 @@ namespace DataServiceLayer
         {
             foreach(QuizQuestion Qquestion in quiz.QuizQuestions)
             {
-                //if(Qquestion.Question.Id < 0)
-                //{
-                //    _IQuestionDsl.DeleteQuestion(Qquestion.Question.Id * -1);
-                //}
-                //else 
-                if(Qquestion.Question.Id <= 0)
+                if (Qquestion.Question.Id < 0)
+                {
+                    await _IQuestionDsl.DeleteQuestion(Qquestion.Question.Id * -1);
+                }
+                else if (Qquestion.Question.Id == 0)
                 {
                     Qquestion.QuestionId = (await _IQuestionDsl.InsertQuestion(Qquestion.Question)).Id;
                 }

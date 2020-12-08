@@ -25,10 +25,11 @@ export class AccessQuizComponent implements OnInit {
         },
         err => {
           this.toastr.info('No quiz found with the entered code');
+          this.quizTitle = '';
         });
     }
     else {
-
+      this.quizTitle = '';
     }
   }
 

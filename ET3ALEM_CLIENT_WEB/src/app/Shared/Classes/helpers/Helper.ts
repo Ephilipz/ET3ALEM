@@ -26,8 +26,9 @@ export class Helper {
             case QuestionType.MCQ:
                 return new MultipleChoiceQuestion(question.Id, question.Body, question.Choices, question.McqAnswerType);
             case QuestionType.TrueFalse:
-                return new TrueFalseQuestion(question.Id, question.Body, question.answer);
+                return new TrueFalseQuestion(question.Id, question.Body, question.Answer);
             default:
+                alert("didn't detect question type");
                 return question;
         }
     }

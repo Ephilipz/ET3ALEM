@@ -149,7 +149,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.quizService.createQuiz(this.currentQuiz).subscribe(
       (quiz: Quiz) => {
         this.toastr.success('Quiz Created');
-        this.router.navigate(['../../manage'])
+        this.router.navigate(['../../manage'],{relativeTo: this.route})
       },
       () => {
         this.toastr.error('Quiz not created');
@@ -184,7 +184,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       }
     });
 
-    this.currentQuiz = new Quiz(this.currentQuiz.Id, this.currentQuiz.code, this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, this.currentQuiz.QuizQuestions);
+    this.currentQuiz = Quiz.quizFromExisting(this.currentQuiz, this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, this.currentQuiz.QuizQuestions);
 
     console.log('current quiz', this.currentQuiz);
 

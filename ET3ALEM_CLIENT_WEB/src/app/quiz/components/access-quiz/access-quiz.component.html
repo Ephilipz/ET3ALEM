@@ -11,17 +11,8 @@
             </mat-form-field>
         </div>
     </div>
-    <!-- <a [href]="null" (click)="routeToQuiz()" class="matchedQuizLink" [disabled]="quizTitle.length > 0">
-        <div class="d-flex flex-row mx-auto matchedQuiz">
-            <h2 style="font-size: 2em; align-self: flex-start; margin: 10px;">{{quizTitle}}</h2>
-            <mat-icon class="my-auto mr-2 ml-auto matchedQuizIcon">
-                keyboard_arrow_right
-            </mat-icon>
-        </div>
-    </a> -->
+
     <div class="buttonRow" *ngIf="quizTitle.length > 0 && quizCode.length == 5">
-        <!-- <h2 style="font-size: 4em; font-weight: 300; margin-bottom: 30px;">Math 140: Final exam 01</h2>
-        <button mat-flat-button class="medium blue">Take Quiz</button> -->
         <button mat-flat-button class="large darkBlue takeQuizButton">{{quizTitle}}</button>
     </div>
 

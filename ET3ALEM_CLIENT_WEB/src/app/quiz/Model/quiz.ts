@@ -34,4 +34,22 @@ export class Quiz {
         this.NoDueDate = noDueDate;
         this.QuizQuestions = QuizQuestions;
     }
+
+    public static quizFromExisting(q: Quiz, title: string,
+        instructions: string = '',
+        durationSeconds: number,
+        UnlimitedTime: boolean,
+        dateStart: Date,
+        dueEnd: Date,
+        noDueDate: boolean,
+        QuizQuestions?: Array<QuizQuestion>): Quiz{
+        return new Quiz(q.Id, q.code, title,
+            instructions,
+            durationSeconds,
+            UnlimitedTime,
+            dateStart,
+            dueEnd,
+            noDueDate,
+            QuizQuestions)
+    }
 }
