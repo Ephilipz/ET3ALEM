@@ -34,9 +34,9 @@ namespace DataServiceLayer
             return _IQuizDal.GetSimpleQuiz(quizId);
         }
 
-        public Task<IEnumerable<Quiz>> GetQuizzes()
+        public Task<IEnumerable<Quiz>> GetQuizzes(string userId)
         {
-            return _IQuizDal.GetQuizzes();
+            return _IQuizDal.GetQuizzes(userId);
         }
 
         public Task<Quiz> InsertQuiz(Quiz quiz)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,5 +24,9 @@ namespace BusinessEntities.Models
         public bool NoDueDate { get; set; }
         public int DurationSeconds { get; set; }
         public bool UnlimitedTime { get; set; }
+        [Required]
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual IdentityUser IdentityUser { get; set; }
     }
 }

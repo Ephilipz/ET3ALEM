@@ -57,9 +57,9 @@ namespace Server_Application.Controllers
 
         //GET: api/Quiz
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Quiz>>> GetQuizzes()
+        public async Task<IEnumerable<Quiz>> GetQuizzes(string userId)
         {
-            return (await _IQuizDsl.GetQuizzes()).ToList();
+            return await _IQuizDsl.GetQuizzes(userId);
         }
 
         // POST: api/Quiz
