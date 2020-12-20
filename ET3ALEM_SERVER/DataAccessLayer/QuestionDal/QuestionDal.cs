@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessEntities.Enumerators;
+using System.Linq;
 
 namespace DataAccessLayer
 {
@@ -66,6 +67,14 @@ namespace DataAccessLayer
                         //modified choice
                         else
                             _context.Entry(c).State = EntityState.Modified;
+                    }
+                    break;
+                case QuestionType.TrueFalse:
+                    //if question is updated from MCQ to TF, delete the choices
+                    Question oldQuestion = _context.Questions.First(q => q.Id == question.Id);
+                    if (oldQuestion.QuestionType == QuestionType.MCQ)
+                    {
+                        _context.Choices.RemoveRange(((MultipleChoiceQuestion)oldQuestion).Choices);
                     }
                     break;
             }

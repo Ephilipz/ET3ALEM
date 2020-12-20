@@ -33,6 +33,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   currentQuiz: Quiz;
 
   questions: Array<any> = [];
+  deletedQuizQuestions: Array<any> = [];
 
   isLoaded: boolean = false;
 
@@ -114,6 +115,14 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   }
 
   deleteQuestion(question: Question) {
+    //check if question existed in original quz questions
+    let quizQuestionToDelete: QuizQuestion = this.currentQuiz.QuizQuestions.find(qQ => qQ.QuestionId == question.Id);
+    if (quizQuestionToDelete) {
+      quizQuestionToDelete.Id = quizQuestionToDelete.Id * -1;
+      // quizQuestionToDelete.QuestionId = quizQuestionToDelete.QuestionId * -1;
+      // quizQuestionToDelete.Question.Id = quizQuestionToDelete.Question.Id * -1;
+    }
+
     let index = this.questions.findIndex(q => q.Id == question.Id);
     if (index > -1)
       this.questions.splice(index, 1);
@@ -136,11 +145,10 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
     let quizQuestions: Array<QuizQuestion> = [];
 
-    await this.createQuestionComponents.forEach(async component => {
-      component.saveQuestion(this.mode).then(
-        question => { quizQuestions.push(new QuizQuestion(question)) }
-      );
-    });
+    await Promise.all(this.createQuestionComponents.map(async (component) => {
+      let question = await component.saveQuestion(this.mode);
+      quizQuestions.push(new QuizQuestion(question));
+    }));
 
     this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, quizQuestions);
 
@@ -149,7 +157,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.quizService.createQuiz(this.currentQuiz).subscribe(
       (quiz: Quiz) => {
         this.toastr.success('Quiz Created');
-        this.router.navigate(['../../manage'],{relativeTo: this.route})
+        this.router.navigate(['../manage'], { relativeTo: this.route })
       },
       () => {
         this.toastr.error('Quiz not created');
@@ -165,11 +173,11 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
     let questions = [];
 
-    await this.createQuestionComponents.forEach(async (component, i) => {
+    await Promise.all(this.createQuestionComponents.map(async (component, i) => {
       let question = await component.saveQuestion(this.questions[i].Id > 0 ? mode.edit : mode.create);
       questions.push(Object.assign({}, question));
       this.questions[i] = Object.assign({}, question);
-    });
+    }));
 
     this.questions.forEach(question => {
       //check if question already existed in quiz questions
@@ -186,12 +194,12 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
     this.currentQuiz = Quiz.quizFromExisting(this.currentQuiz, this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, this.currentQuiz.QuizQuestions);
 
-    console.log('current quiz', this.currentQuiz);
+    console.log('sending quiz', this.currentQuiz);
 
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
       () => {
         this.toastr.success('Quiz Updated');
-        this.router.navigate(['../../manage'], {relativeTo: this.route});
+        this.router.navigate(['../../manage'], { relativeTo: this.route });
       },
       () => {
         this.toastr.error('Quiz not updated');

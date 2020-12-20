@@ -78,6 +78,7 @@ namespace DataAccessLayer
                 }
                 else if (quizQuestion.Id < 0)
                 {
+                    quizQuestion.Id *= -1;
                     _context.QuizQuestions.Remove(quizQuestion);
                 }
             }

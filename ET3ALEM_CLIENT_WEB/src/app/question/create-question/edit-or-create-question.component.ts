@@ -81,7 +81,6 @@ export class EditOrCreateQuestionComponent implements OnInit {
   onQuestionTypeChange(event) {
     switch (event.value) {
       case 1:
-        // this.question = new MultipleChoiceQuestion(this.question.Id, this.question.Body);
         this.question = new MultipleChoiceQuestion(this.question.Id);
         break;
 
@@ -94,8 +93,8 @@ export class EditOrCreateQuestionComponent implements OnInit {
     }
   }
 
-  public saveQuestion(_mode: mode = mode.edit): Promise<any> {
-    //await this.richTextComponent.removeUnusedImages();
+  public async saveQuestion(_mode: mode = mode.edit) {
+    await this.richTextComponent.removeUnusedImages();
     this.question.Body = this.questionContentFC.value;
 
     if (_mode == mode.create) {

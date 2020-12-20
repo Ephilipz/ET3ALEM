@@ -1,10 +1,10 @@
 import { Question } from 'src/app/question/Models/question';
 
 export class QuizQuestion {
-    Id: Number;
+    Id: number;
     Question: Question;
-    Grade: Number;
-    QuestionId: Number;
+    Grade: number;
+    QuestionId: number;
 
     constructor(question: Question, grade = 0, Id = 0) {
         this.Question = question;

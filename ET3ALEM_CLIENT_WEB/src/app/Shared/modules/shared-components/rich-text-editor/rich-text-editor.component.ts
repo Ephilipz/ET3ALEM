@@ -99,15 +99,12 @@ export class RichTextEditorComponent implements OnInit {
     });
 
     //iterate over the delete array
-    imagesToBeDeleted.forEach(deletHash => {
-      this.http.delete(environment.postUploadImgurImage + '/' + deletHash, {
+    await imagesToBeDeleted.forEach(async deletHash => {
+      await this.http.delete(environment.postUploadImgurImage + '/' + deletHash, {
         headers: {
           'Authorization': 'Client-ID ' + environment.imgurClientId
         }
-      }).subscribe(
-        res => console.log('success ', res),
-        err => console.log('error ', err)
-      )
+      });
     });
   }
 }

@@ -69,13 +69,9 @@ namespace DataServiceLayer
 
         public async Task PutQuiz(int id, Quiz quiz)
         {
-            foreach(QuizQuestion Qquestion in quiz.QuizQuestions)
+            foreach (QuizQuestion Qquestion in quiz.QuizQuestions)
             {
-                if (Qquestion.Question.Id < 0)
-                {
-                    await _IQuestionDsl.DeleteQuestion(Qquestion.Question.Id * -1);
-                }
-                else if (Qquestion.Question.Id == 0)
+                if (Qquestion.Question.Id == 0)
                 {
                     Qquestion.QuestionId = (await _IQuestionDsl.InsertQuestion(Qquestion.Question)).Id;
                 }
