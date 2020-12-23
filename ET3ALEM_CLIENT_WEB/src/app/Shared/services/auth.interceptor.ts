@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  private isRefreshing = true;
+  private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   constructor(public authService: AuthService) {

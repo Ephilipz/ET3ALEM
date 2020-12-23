@@ -78,7 +78,8 @@ namespace Server_Application
                         ValidIssuer = Configuration["Authentication:JwtIssuer"],
                         ValidAudience = Configuration["Authentication:JwtIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:JwtKey"])),
-                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                        // remove delay of token when expire
+                        ClockSkew = TimeSpan.Zero
                     };
                     cfg.Events = new JwtBearerEvents
                     {

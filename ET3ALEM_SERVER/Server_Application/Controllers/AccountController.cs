@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Server_Application.Models.Account;
 using System.Security.Cryptography;
 using BusinessEntities.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Server_Application.Controllers
 {
@@ -72,7 +73,7 @@ namespace Server_Application.Controllers
             {
                 return BadRequest(loginVM);
             }
-                   
+
             var user = await _userManager.FindByEmailAsync(loginVM.Email);
             if (user != null &&
                 await _userManager.CheckPasswordAsync(user, loginVM.Password))
@@ -98,13 +99,13 @@ namespace Server_Application.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("Refresh")]
         public async Task<IActionResult> Refresh([FromBody] Tokens tokens)
         {
             ClaimsPrincipal principal = GetPrincipalFromExpiredToken(tokens.JWT);
-            string username = principal.Identity.Name;
+            string username = principal.Claims.FirstOrDefault(c => c.Type == "sub").Value;
             IdentityUser user = await _userManager.FindByNameAsync(username);
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest();
             }
@@ -123,7 +124,7 @@ namespace Server_Application.Controllers
                 await saveRefreshToken(user, newRefreshToken);
                 return Ok(new Tokens(newJWT, newRefreshToken));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e);
             }
@@ -179,21 +180,25 @@ namespace Server_Application.Controllers
             {
                 ValidateAudience = false,
                 ValidateIssuer = false,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the server key used to sign the JWT token is here, use more than 16 chars")),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:JwtKey"])),
                 ValidateLifetime = false
             };
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;
-            ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            JwtSecurityToken jwtSecurityToken = securityToken as JwtSecurityToken;
-
-            //check that the algorithm used to sign key is valid
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCulture))
-                throw new SecurityTokenException("Invalid Token");
-
-            return principal;
-
+            try
+            {
+                ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+                JwtSecurityToken jwtSecurityToken = securityToken as JwtSecurityToken;
+                //check that the algorithm used to sign key is valid
+                if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCulture))
+                    throw new SecurityTokenException("Invalid Token");
+                return principal;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

@@ -19,9 +19,10 @@ import { SharedComponentsModule } from '../Shared/modules/shared-components/shar
 import { QuestionModule } from '../question/question.module';
 import { AccessQuizComponent } from './components/access-quiz/access-quiz.component';
 import { EditOrCreateQuizComponent } from './components/edit-create-quiz/edit-or-create-quiz.component';
+import { QuizDetailsComponent } from './components/quiz-details/quiz-details.component';
 
 @NgModule({
-  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent, AccessQuizComponent],
+  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent, AccessQuizComponent, QuizDetailsComponent],
   imports: [
     CommonModule,
     QuizRoutingModule,

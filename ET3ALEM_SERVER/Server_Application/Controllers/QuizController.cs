@@ -9,9 +9,13 @@ using BusinessEntities.Models;
 using Server_Application.Data;
 using DataServiceLayer;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Security.Claims;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Server_Application.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class QuizController : ControllerBase
@@ -49,7 +53,7 @@ namespace Server_Application.Controllers
 
             var returnedTitle = new
             {
-               title
+                title
             };
 
             return Ok(returnedTitle);
@@ -57,19 +61,28 @@ namespace Server_Application.Controllers
 
         //GET: api/Quiz
         [HttpGet]
-        public async Task<IEnumerable<Quiz>> GetQuizzes(string userId)
+        public async Task<IEnumerable<Quiz>> GetQuizzes()
         {
-            return await _IQuizDsl.GetQuizzes(userId);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            string userId = string.Empty;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
+                return await _IQuizDsl.GetQuizzes(userId);
         }
 
         // POST: api/Quiz
         [HttpPost]
         public async Task<ActionResult<Quiz>> PostQuiz(Quiz quiz)
         {
-            if (!ModelState.IsValid)
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
             {
                 return BadRequest(quiz);
             }
+            quiz.UserId = userId;
             await _IQuizDsl.InsertQuiz(quiz);
             return CreatedAtAction("GetQuiz", new { id = quiz.Id }, quiz);
         }
@@ -78,7 +91,7 @@ namespace Server_Application.Controllers
         public async Task<ActionResult<Quiz>> DeleteQuiz(int id)
         {
             var quiz = await _IQuizDsl.DeleteQuiz(id);
-            if(quiz == null)
+            if (quiz == null)
             {
                 return NotFound();
             }
@@ -95,6 +108,6 @@ namespace Server_Application.Controllers
 
             return NoContent();
         }
-        
+
     }
 }
