@@ -1,6 +1,14 @@
-<div class="container-fluid">
-    <h1 class="mainTitle">Math Midterm 1</h1>
-    <div class=" d-flex justify-content-between">
-        
+<div class="container-fluid mainContainer">
+    <div *ngIf="isLoaded && quiz != null">
+        <h1 class="mainTitle">Math Midterm 1</h1>
+        <div class="quizDetailsRow d-flex justify-content-between">
+            <h2>20 Questions</h2>
+            <h2>120 Minutes</h2>
+            <h2>Due August 23</h2>
+        </div>
+        <h1 class="instructionsHeading">Instructions</h1>
+        <!-- <p class="instructions">The quiz is on chapter 11 to 23. You are not allowed to use a calculator but you may use your formula sheet. Good luck!</p> -->
+        {{quiz.Instructions}}
     </div>
+    <mat-spinner *ngIf="!isLoaded" class="m-auto"></mat-spinner>
 </div>

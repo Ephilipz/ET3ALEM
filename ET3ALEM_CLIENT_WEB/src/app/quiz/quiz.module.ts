@@ -1,13 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { QuizRoutingModule } from './quiz-routing.module';
 import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { ViewQuizComponent } from './components/view-quiz/view-quiz.component';
 import { AngularMaterialModule } from '../Shared/modules/material.module';
 import { EditorModule } from '@tinymce/tinymce-angular';
-
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { AuthInterceptor } from '../Shared/services/auth.interceptor';
@@ -27,7 +24,6 @@ import { QuizDetailsComponent } from './components/quiz-details/quiz-details.com
     CommonModule,
     QuizRoutingModule,
     AngularMaterialModule,
-    CKEditorModule,
     EditorModule,
     ReactiveFormsModule,
     FormsModule,

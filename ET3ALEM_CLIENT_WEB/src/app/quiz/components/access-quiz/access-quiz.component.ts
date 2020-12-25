@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { QuizService } from '../../services/quiz.service';
 
@@ -12,7 +13,7 @@ export class AccessQuizComponent implements OnInit {
   quizTitle: string = '';
   quizCode: string = '';
 
-  constructor(private quizService: QuizService, private toastr: ToastrService) { }
+  constructor(private quizService: QuizService, private toastr: ToastrService, private route: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
   }
@@ -33,8 +34,8 @@ export class AccessQuizComponent implements OnInit {
     }
   }
 
-  routeToQuiz() {
-
+  quizClick() {
+    this.route.navigate(['../take', this.quizCode], { relativeTo: this.activatedRoute });
   }
 
 }

@@ -1,14 +1,9 @@
 .mainTitle {
-    font-size: 6em;
-    margin: 5% auto;
+    font-size: 5vw;
+    margin: 2% auto;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-align: center;
-}
-
-.textBoxRow {
-    align-self: center;
-    height: 50%;
 }
 
 .mat-form-field {

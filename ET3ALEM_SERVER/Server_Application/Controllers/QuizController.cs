@@ -59,6 +59,12 @@ namespace Server_Application.Controllers
             return Ok(returnedTitle);
         }
 
+        [HttpGet("GetBasicQuizByCode/{code}")]
+        public async Task<ActionResult<Quiz>> GetBasicQuizByCode(string code)
+        {
+            return await _IQuizDsl.GetBasicQuizByCode(code);
+        }
+
         //GET: api/Quiz
         [HttpGet]
         public async Task<IEnumerable<Quiz>> GetQuizzes()

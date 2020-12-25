@@ -43,7 +43,7 @@ namespace DataAccessLayer
 
         public async Task<string> GetQuizTitleFromCode(string code)
         {
-            Quiz quiz = await _context.Quizzes.FirstAsync(q => q.code.ToUpper() == code.ToUpper());
+            Quiz quiz = await _context.Quizzes.FirstAsync(q => q.Code.ToUpper() == code.ToUpper());
             if (quiz != null)
                 return quiz.Name;
             return null;
@@ -63,7 +63,7 @@ namespace DataAccessLayer
         {
             await _context.Quizzes.AddAsync(quiz);
             await _context.SaveChangesAsync();
-            quiz.code = QuizHelper.getCode(quiz.Id);
+            quiz.Code = QuizHelper.getCode(quiz.Id);
             await _context.SaveChangesAsync();
             return quiz;
         }
@@ -84,6 +84,11 @@ namespace DataAccessLayer
             }
             _context.Entry(quiz).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+        }
+
+        public Task<Quiz> GetBasicQuizByCode(string code)
+        {
+            return _context.Quizzes.FirstOrDefaultAsync(q => q.Code.ToLower() == code.ToLower());
         }
     }
 }

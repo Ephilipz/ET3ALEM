@@ -9,33 +9,40 @@ import { environment } from 'src/environments/environment';
 
 export class QuizService {
 
+  private baseRoute = environment.baseUrl + '/api/Quiz';
+  
   constructor(private http: HttpClient) { }
-
+  
   createQuiz(quiz: Quiz) {
-    return this.http.post(environment.baseUrl + '/api/Quiz', quiz);
+    return this.http.post(this.baseRoute, {...quiz,'UserId':'NA'});
   }
-
+  
   getQuiz(id: Number) {
-    return this.http.get<Quiz>(environment.baseUrl + '/api/Quiz/' + id);
+    return this.http.get<Quiz>(this.baseRoute + `/${id}`);
   }
   
   getQuizTitleFromCode(code: string) {
-    return this.http.get(environment.baseUrl + '/api/Quiz/GetQuizTitleFromCode/' + code);
+    return this.http.get(this.baseRoute + '/GetQuizTitleFromCode/' + code);
   }
-
+  
   getQuizzes() {
-    return this.http.get<Array<Quiz>>(environment.baseUrl + '/api/Quiz');
+    return this.http.get<Array<Quiz>>(this.baseRoute);
   }
 
+  getBasicQuizFromCode(code: string) {
+    return this.http.get<Quiz>(this.baseRoute + '/GetBasicQuizByCode/' + code);
+  }
+  
   updateQuiz(quiz: Quiz) {
-    return this.http.put(environment.baseUrl + '/api/Quiz/' + quiz.Id, quiz);
+    return this.http.put(this.baseRoute + `/${quiz.Id}`, quiz);
   }
-
+  
   delete(id: Number) {
-    return this.http.delete<Quiz>(environment.baseUrl + '/api/Quiz', {
+    return this.http.delete<Quiz>(this.baseRoute, {
       params: {
         'id': id.toString()
       }
     });
   }
+
 }

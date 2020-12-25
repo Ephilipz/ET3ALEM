@@ -83,7 +83,9 @@ namespace DataServiceLayer
             await _IQuizDal.PutQuiz(id, quiz);
         }
 
-
-
+        public Task<Quiz> GetBasicQuizByCode(string code)
+        {
+            return _IQuizDal.GetBasicQuizByCode(code);
+        }
     }
 }

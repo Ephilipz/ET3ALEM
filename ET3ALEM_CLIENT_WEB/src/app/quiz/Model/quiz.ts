@@ -3,8 +3,8 @@ import { QuizQuestion } from './quizQuestion';
 export class Quiz {
     Id: Number;
     Name: string;
-    code: string;
-    instructions: string;
+    Code: string;
+    Instructions: string;
     DurationSeconds: number;
     UnlimitedTime: boolean;
     StartDate: Date;
@@ -24,9 +24,9 @@ export class Quiz {
         noDueDate: boolean,
         QuizQuestions?: Array<QuizQuestion>) {
         this.Id = Id;
-        this.code = code;
+        this.Code = code;
         this.Name = title;
-        this.instructions = instructions;
+        this.Instructions = instructions;
         this.DurationSeconds = durationSeconds;
         this.UnlimitedTime = UnlimitedTime;
         this.StartDate = dateStart;
@@ -43,7 +43,7 @@ export class Quiz {
         dueEnd: Date,
         noDueDate: boolean,
         QuizQuestions?: Array<QuizQuestion>): Quiz{
-        return new Quiz(q.Id, q.code, title,
+        return new Quiz(q.Id, q.Code, title,
             instructions,
             durationSeconds,
             UnlimitedTime,

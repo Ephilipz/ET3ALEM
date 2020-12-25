@@ -13,10 +13,10 @@ namespace BusinessEntities.Models
             QuizQuestions = new List<QuizQuestion>();
         }
         public int Id { get; set; }
-        public string code { get; set; }
+        public string Code { get; set; }
         [Required]
         public string Name { get; set; }
-        public string instructions { get; set; }
+        public string Instructions { get; set; }
         public List<QuizQuestion> QuizQuestions { get; set; }
         public int TotalGrade { get; set; }
         public DateTime? StartDate { get; set; }

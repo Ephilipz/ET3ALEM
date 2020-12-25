@@ -29,6 +29,10 @@
     <Compile Remove="Migrations\20201207095710_quizCodeNullable.Designer.cs" />
     <Compile Remove="Migrations\20201207100906_quizCodeGenerateDB.cs" />
     <Compile Remove="Migrations\20201207100906_quizCodeGenerateDB.Designer.cs" />
+    <Compile Remove="Migrations\20201225225539_PascalCaseQuiz.cs" />
+    <Compile Remove="Migrations\20201225225539_PascalCaseQuiz.Designer.cs" />
+    <Compile Remove="Migrations\20201225231937_PascalCaseQuiz.cs" />
+    <Compile Remove="Migrations\20201225231937_PascalCaseQuiz.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

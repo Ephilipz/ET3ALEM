@@ -77,7 +77,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
   setFormControls() {
     this.quizTitle.setValue(this.currentQuiz.Name)
-    this.quizInstructions.setValue(this.currentQuiz.instructions);
+    this.quizInstructions.setValue(this.currentQuiz.Instructions);
     this.durationHours.setValue(Math.floor(this.currentQuiz.DurationSeconds / 3600));
     this.durationMinutes.setValue(this.currentQuiz.DurationSeconds % 3600 / 60);
     this.unlimitedTime.setValue(this.currentQuiz.UnlimitedTime);

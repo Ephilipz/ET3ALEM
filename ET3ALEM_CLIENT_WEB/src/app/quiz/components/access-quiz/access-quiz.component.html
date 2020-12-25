@@ -2,18 +2,19 @@
     <div class="row" style="align-items: center;">
         <h1 class="mainTitle">Take a Quiz</h1>
     </div>
-    <div class="row textBoxRow">
-        <div class="row m-auto">
-            <mat-form-field>
-                <mat-label>Enter Quiz Code</mat-label>
-                <input matInput name="quizCode" autofocus (input)="getQuizFromCode($event)" maxlength="5"
-                    [(ngModel)]="quizCode">
-            </mat-form-field>
+    <div class="row mt-5">
+        <div class="col-sm m-auto">
+            <div class="d-flex justify-content-center row">
+                <mat-form-field>
+                    <mat-label>Enter Quiz Code</mat-label>
+                    <input matInput name="quizCode" autofocus (input)="getQuizFromCode($event)" maxlength="5"
+                        [(ngModel)]="quizCode">
+                </mat-form-field>
+            </div>
+            <div class="buttonRow mx-auto mt-4" *ngIf="quizTitle.length > 0 && quizCode.length == 5">
+                <button mat-flat-button class="large darkBlue takeQuizButton" (click)="quizClick()">{{quizTitle}}</button>
+            </div>
         </div>
+        <img src="../../../../assets/images/method-draw-image.svg" width="40%" class="col-sm">
     </div>
-
-    <div class="buttonRow" *ngIf="quizTitle.length > 0 && quizCode.length == 5">
-        <button mat-flat-button class="large darkBlue takeQuizButton">{{quizTitle}}</button>
-    </div>
-
 </div>
