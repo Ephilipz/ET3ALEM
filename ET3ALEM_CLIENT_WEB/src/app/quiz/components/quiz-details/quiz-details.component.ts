@@ -12,8 +12,8 @@ import { QuizService } from '../../services/quiz.service';
 })
 export class QuizDetailsComponent implements OnInit {
 
-  private quiz: Quiz = null;
-  private isLoaded = false;
+  quiz: Quiz = null;
+  isLoaded = false;
   // private instructionsHTML = '';
 
   constructor(private route : ActivatedRoute, private quizService: QuizService, private toastr: ToastrService) { }
