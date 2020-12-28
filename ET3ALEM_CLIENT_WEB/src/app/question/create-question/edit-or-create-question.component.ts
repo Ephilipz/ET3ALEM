@@ -82,6 +82,7 @@ export class EditOrCreateQuestionComponent implements OnInit {
     switch (event.value) {
       case 1:
         this.question = new MultipleChoiceQuestion(this.question.Id);
+        this.choices = (<MultipleChoiceQuestion>this.question).Choices;
         break;
 
       case 0:

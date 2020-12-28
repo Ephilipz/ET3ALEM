@@ -71,10 +71,11 @@ namespace DataAccessLayer
                     break;
                 case QuestionType.TrueFalse:
                     //if question is updated from MCQ to TF, delete the choices
-                    Question oldQuestion = _context.Questions.First(q => q.Id == question.Id);
-                    if (oldQuestion.QuestionType == QuestionType.MCQ)
+                    bool wasMCQ = _context.Questions.Any(q => question.Id == q.Id && q.QuestionType == QuestionType.MCQ);
+                    if (wasMCQ)
                     {
-                        _context.Choices.RemoveRange(((MultipleChoiceQuestion)oldQuestion).Choices);
+                        var choices = _context.Choices.Where(c => c.MCQ.Id == question.Id);
+                        _context.Choices.RemoveRange(choices);
                     }
                     break;
             }

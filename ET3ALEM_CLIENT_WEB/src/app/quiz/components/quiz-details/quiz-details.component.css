@@ -16,7 +16,7 @@
     border-radius: 20px;
 }
 
-h2{
+.quizDetailsRow h2{
     color: white;
     font-size: 2.3em;
     font-weight: 300;
@@ -30,7 +30,6 @@ h2{
 }
 
 .instructions{
-    font-size: 2em;
-    margin: 20px 30px;
+    font-size: larger;
     font-weight: 300;
 }

@@ -1,7 +1,9 @@
+import { Type } from 'class-transformer';
 import { QuizQuestion } from './quizQuestion';
 
 export class Quiz {
     Id: Number;
+    readonly UserId: string = null;
     Name: string;
     Code: string;
     Instructions: string;
@@ -10,6 +12,8 @@ export class Quiz {
     StartDate: Date;
     EndDate: Date;
     NoDueDate: boolean;
+
+    @Type(() => QuizQuestion)
     QuizQuestions: Array<QuizQuestion> = [];
 
     constructor(
@@ -33,23 +37,25 @@ export class Quiz {
         this.EndDate = dueEnd;
         this.NoDueDate = noDueDate;
         this.QuizQuestions = QuizQuestions;
+        if(!this.UserId)
+            this.UserId = 'NA';
     }
 
-    public static quizFromExisting(q: Quiz, title: string,
+    public updateQuiz(title: string,
         instructions: string = '',
         durationSeconds: number,
         UnlimitedTime: boolean,
         dateStart: Date,
         dueEnd: Date,
         noDueDate: boolean,
-        QuizQuestions?: Array<QuizQuestion>): Quiz{
-        return new Quiz(q.Id, q.Code, title,
-            instructions,
-            durationSeconds,
-            UnlimitedTime,
-            dateStart,
-            dueEnd,
-            noDueDate,
-            QuizQuestions)
+        QuizQuestions?: Array<QuizQuestion>) {
+            this.Name = title;
+            this.Instructions = instructions;
+            this.DurationSeconds = durationSeconds;
+            this.UnlimitedTime = UnlimitedTime;
+            this.StartDate = dateStart;
+            this.EndDate = dueEnd;
+            this.NoDueDate = noDueDate;
+            this.QuizQuestions = QuizQuestions;
     }
 }

@@ -7,8 +7,7 @@
             <h2>Due August 23</h2>
         </div>
         <h1 class="instructionsHeading">Instructions</h1>
-        <!-- <p class="instructions">The quiz is on chapter 11 to 23. You are not allowed to use a calculator but you may use your formula sheet. Good luck!</p> -->
-        {{quiz.Instructions}}
+        <div [innerHTML]="quiz.Instructions" class="mt-4 px-4 instructions"></div>
     </div>
     <mat-spinner *ngIf="!isLoaded" class="m-auto"></mat-spinner>
 </div>

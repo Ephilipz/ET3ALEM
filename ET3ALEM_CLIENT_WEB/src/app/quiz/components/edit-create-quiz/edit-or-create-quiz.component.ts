@@ -14,6 +14,7 @@ import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
 import { EditOrCreateQuestionComponent } from 'src/app/question/create-question/edit-or-create-question.component.js';
 import { QuizQuestion } from '../../Model/quizQuestion.js';
 import { Helper } from 'src/app/Shared/Classes/helpers/Helper.js';
+import { plainToClass } from 'class-transformer';
 
 @Component({
   selector: 'app-create-quiz',
@@ -58,11 +59,10 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       this.mode = mode.edit;
       this.quizService.getQuiz(id).subscribe(
         res => {
-          this.currentQuiz = res;
-          this.questions = this.currentQuiz.QuizQuestions.map(x => Helper.getSpecificQuestion(x.Question));
+          this.currentQuiz = plainToClass(Quiz, res);
+          this.questions = this.currentQuiz.QuizQuestions.map(x => x.Question);
           this.setFormControls();
           this.isLoaded = true;
-          console.log('current quiz retrieved ', this.currentQuiz);
         },
         err => {
           this.toastr.error('unable to open quiz');
@@ -192,7 +192,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       }
     });
 
-    this.currentQuiz = Quiz.quizFromExisting(this.currentQuiz, this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, this.currentQuiz.QuizQuestions);
+    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, this.currentQuiz.QuizQuestions);
 
     console.log('sending quiz', this.currentQuiz);
 

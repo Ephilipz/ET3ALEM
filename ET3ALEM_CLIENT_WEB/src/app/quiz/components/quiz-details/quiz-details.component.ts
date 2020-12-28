@@ -24,7 +24,6 @@ export class QuizDetailsComponent implements OnInit {
       this.quizService.getBasicQuizFromCode(code).subscribe(
         (quiz) => {
           this.quiz = quiz;
-          // this.instructionsHTML = documentToHtmlString(quiz.Instructions);
           this.isLoaded = true;
         },
         (err)=>{

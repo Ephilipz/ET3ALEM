@@ -14,7 +14,7 @@ export class QuizService {
   constructor(private http: HttpClient) { }
   
   createQuiz(quiz: Quiz) {
-    return this.http.post(this.baseRoute, {...quiz,'UserId':'NA'});
+    return this.http.post(this.baseRoute, quiz);
   }
   
   getQuiz(id: Number) {

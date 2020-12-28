@@ -13,6 +13,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './Shared/services/auth.interceptor';
 import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
+import { MainMenuComponent } from './General/components/main-menu/main-menu.component';
 
 
 
@@ -22,6 +23,7 @@ import { ToastrModule } from 'ngx-toastr';
     HomeComponent,
     ContactComponent,
     NotFoundComponent,
+    MainMenuComponent,
   ],
   imports: [
     BrowserModule,
