@@ -6,15 +6,8 @@ namespace DataAccessLayer.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "instructions",
-                table: "Quiz",
-                newName: "Instructions");
-
-            migrationBuilder.RenameColumn(
-                name: "code",
-                table: "Quiz",
-                newName: "Code");
+            migrationBuilder.Sql("ALTER TABLE Quiz RENAME COLUMN instructions TO Instructions");
+            migrationBuilder.Sql("ALTER TABLE Quiz RENAME COLUMN code TO Code");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
