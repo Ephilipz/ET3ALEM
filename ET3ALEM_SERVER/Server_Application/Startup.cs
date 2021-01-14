@@ -122,6 +122,8 @@ namespace Server_Application
             services.AddScoped<IQuizDal, QuizDal>();
             services.AddScoped<IQuestionCollectionDsl, QuestionCollectionDsl>();
             services.AddScoped<IQuestionCollectionDal, QuestionCollectionDal>();
+            services.AddScoped<IQuizAttemptDal, QuizAttemptDal>();
+            services.AddScoped<IQuizAttemptDsl, QuizAttemptDsl>();
         }
     }
 }

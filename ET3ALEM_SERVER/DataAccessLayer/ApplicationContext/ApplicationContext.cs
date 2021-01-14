@@ -37,7 +37,6 @@ namespace Server_Application.Data
                .HasDiscriminator<QuestionType>("QuestionType")
                .HasValue<MCQAttmept>(QuestionType.MCQ)
                .HasValue<TrueFalseAttempt>(QuestionType.TrueFalse);
-            modelBuilder.Entity<MCQAttmept>().HasMany(mcqAttempt => mcqAttempt.Choices);
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Question> Questions { get; set; }

@@ -1,9 +1,9 @@
 ﻿using BusinessEntities.CustomConverters;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Json.Serialization;
 using Validation.CustomValidationAttributes;
 
 namespace BusinessEntities.Models
@@ -27,8 +27,8 @@ namespace BusinessEntities.Models
         {
             IsGraded = true;
             MultipleChoiceQuestion mcq = QuizQuestion.Question as MultipleChoiceQuestion;
-            double grade = mcq.Choices.Where(choice => choice.IsAnswer).Count(rightChoice => Choices.Any(answer => answer.Id == rightChoice.Id)) / mcq.Choices.Count;
-            return Math.Round(grade, 2) * QuizQuestion.Grade;
+            double grade = Choices.Count(choice => mcq.Choices.Where(choice => choice.IsAnswer).Any(rightAnswer => rightAnswer.Id == choice.Id)) / (double)mcq.Choices.Count(choice => choice.IsAnswer);
+            return Math.Round(grade * QuizQuestion.Grade, 2);
         }
     }
     public class TrueFalseAttempt : QuestionAttempt
@@ -38,7 +38,8 @@ namespace BusinessEntities.Models
         {
             IsGraded = true;
             TrueFalseQuestion tfQuestion = QuizQuestion.Question as TrueFalseQuestion;
-            return tfQuestion.Answer == Answer ? QuizQuestion.Grade : 0;
+            double grade=  tfQuestion.Answer == Answer ? QuizQuestion.Grade : 0;
+            return grade * QuizQuestion.Grade;
         }
     }
 }

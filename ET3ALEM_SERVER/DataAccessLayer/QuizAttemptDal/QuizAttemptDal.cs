@@ -1,4 +1,5 @@
 ﻿using BusinessEntities.Models;
+using Server_Application.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +9,15 @@ namespace DataAccessLayer
 {
     public class QuizAttemptDal : IQuizAttemptDal
     {
-        public Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt)
+        private readonly ApplicationContext _context;
+        public QuizAttemptDal(ApplicationContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt)
+        {
+            await _context.QuizAttempts.AddAsync(quizAttempt);
+            return quizAttempt;
         }
     }
 }

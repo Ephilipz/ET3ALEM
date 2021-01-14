@@ -1,7 +1,11 @@
-﻿using System;
+﻿using BusinessEntities.CustomConverters;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
+
 using Validation.CustomValidationAttributes;
 
 namespace BusinessEntities.Models
@@ -14,7 +18,8 @@ namespace BusinessEntities.Models
         [Required]
         public int QuizId { get; set; }
         [MinimumListLength(minNumberofElements: 1)]
-        public List<QuestionAttempt> Attmepts { get; set; }
+        public List<QuestionAttempt> QuestionsAttempts { get; set; }
         public double Grade { get; set; }
+        public bool IsGraded => QuestionsAttempts.Count(questionAttempt => questionAttempt.IsGraded) == QuestionsAttempts.Count;
     }
 }
