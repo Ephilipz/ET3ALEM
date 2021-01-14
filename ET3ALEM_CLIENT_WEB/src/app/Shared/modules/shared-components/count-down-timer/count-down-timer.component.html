@@ -1,0 +1,14 @@
+<div class="timer">
+    <span *ngIf="displayDays">
+        <span class="days"> {{days}} </span>Day(s)
+    </span>
+    <span *ngIf="displayHours">
+        <span class="hours"> {{hours}} </span>Hrs
+    </span>
+    <span *ngIf="displayMinutes">
+        <span class="minutes" *ngIf="displayMinutes"> {{minutes}} </span>Min
+    </span>
+    <span *ngIf="displaySeconds">
+        <span class="seconds" *ngIf="displaySeconds"> {{seconds}} </span>S
+    </span>
+</div>

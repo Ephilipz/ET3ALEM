@@ -4,7 +4,7 @@
         <h2 class="tableTitle">My Quizzes</h2>
         <mat-form-field class="ml-auto" *ngIf="quizListDS.data.length > 0">
             <mat-label>Search</mat-label>
-            <input matInput type="search" (change)="applyFilter($event)">
+            <input matInput type="search" (keyup)="applyFilter($event)">
             <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
     </div>

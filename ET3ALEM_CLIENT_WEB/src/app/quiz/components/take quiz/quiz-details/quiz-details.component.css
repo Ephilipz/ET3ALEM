@@ -1,10 +1,10 @@
 .mainContainer{
-    padding: 2% 10%;
+    padding: 1% 10% 0;
 }
 
 .mainTitle {
     font-size: 6em;
-    margin: 5% auto;
+    margin: 3% auto 4%;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-align: center;
@@ -24,12 +24,27 @@
 }
 
 .instructionsHeading{
-    font-size: 3em;
-    /* font-weight: bold; */
+    font-size: 3.5em;
     margin: 2% 0 0;
 }
 
 .instructions{
     font-size: larger;
     font-weight: 300;
+}
+
+:host ::ng-deep .instructions *{
+    font-size: larger;
+}
+
+a.startButton:hover{
+    transform: scale(1.07);
+    text-decoration: none;
+    
+}
+
+.startText{
+    font-size: 6em;
+    letter-spacing: 15px;
+    margin-top: 30px;
 }

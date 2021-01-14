@@ -87,5 +87,10 @@ namespace DataServiceLayer
         {
             return _IQuizDal.GetBasicQuizByCode(code);
         }
+
+        public Task<Quiz> GetFullQuizByCode(string code)
+        {
+            return _IQuizDal.GetFullQuizByCode(code);
+        }
     }
 }

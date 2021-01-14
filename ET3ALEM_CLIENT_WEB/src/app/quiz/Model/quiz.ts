@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { QuizQuestion } from './quizQuestion';
 
 export class Quiz {

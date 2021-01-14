@@ -14,9 +14,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AuthService {
 
-   JWT = 'id_token';
-   Refresh = 'refresh';
-  
+  JWT = 'id_token';
+  Refresh = 'refresh';
+
   constructor(private http: HttpClient, private router: Router, private toastr: ToastrService) { }
 
   login(email: string, password: string): Observable<boolean> {
@@ -76,8 +76,12 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem(this.JWT);
-    localStorage.removeItem(this.Refresh);
+    return this.http.get(environment.baseUrl + '/api/Account/Logout').pipe(
+      tap(() => {
+        localStorage.removeItem(this.JWT);
+        localStorage.removeItem(this.Refresh);
+      })
+    );
   }
 
   public isLoggedIn() {

@@ -9,22 +9,23 @@ import { environment } from 'src/environments/environment';
 
 export class QuizService {
 
+
   private baseRoute = environment.baseUrl + '/api/Quiz';
-  
+
   constructor(private http: HttpClient) { }
-  
+
   createQuiz(quiz: Quiz) {
     return this.http.post(this.baseRoute, quiz);
   }
-  
+
   getQuiz(id: Number) {
     return this.http.get<Quiz>(this.baseRoute + `/${id}`);
   }
-  
+
   getQuizTitleFromCode(code: string) {
     return this.http.get(this.baseRoute + '/GetQuizTitleFromCode/' + code);
   }
-  
+
   getQuizzes() {
     return this.http.get<Array<Quiz>>(this.baseRoute);
   }
@@ -32,11 +33,11 @@ export class QuizService {
   getBasicQuizFromCode(code: string) {
     return this.http.get<Quiz>(this.baseRoute + '/GetBasicQuizByCode/' + code);
   }
-  
+
   updateQuiz(quiz: Quiz) {
     return this.http.put(this.baseRoute + `/${quiz.Id}`, quiz);
   }
-  
+
   delete(id: Number) {
     return this.http.delete<Quiz>(this.baseRoute, {
       params: {
@@ -45,4 +46,7 @@ export class QuizService {
     });
   }
 
+  getFullQuizFromCode(code: string) {
+    return this.http.get<Quiz>(this.baseRoute + '/GetFullQuizByCode/' + code);
+  }
 }

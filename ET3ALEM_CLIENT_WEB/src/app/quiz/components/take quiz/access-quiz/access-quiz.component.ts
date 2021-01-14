@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { QuizService } from '../../services/quiz.service';
+import { QuizService } from '../../../services/quiz.service';
 
 @Component({
   selector: 'app-access-quiz',

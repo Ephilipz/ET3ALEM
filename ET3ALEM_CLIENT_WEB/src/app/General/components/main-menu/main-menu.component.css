@@ -1,4 +1,19 @@
+.navbar{
+    background-color: #f3f3f3;
+}
+
 .nav-item{
     font-size: 1.2em;
     margin: auto 30px;
+}
+
+.nav-item:hover{
+    color: black;
+    font-weight: 500;
+    font-size: larger;
+}
+
+.nav-item.active{
+    font-weight: 500;
+    text-underline-offset: 5px;
 }

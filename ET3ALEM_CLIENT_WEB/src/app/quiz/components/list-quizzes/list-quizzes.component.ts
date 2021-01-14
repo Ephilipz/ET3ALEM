@@ -33,6 +33,7 @@ export class ListQuizzesComponent implements OnInit {
       },
       err => {
         this.toastr.error('Unable to load quizzes');
+        this.isLoaded = true;
         console.error(err);
       }
     );
@@ -46,7 +47,7 @@ export class ListQuizzesComponent implements OnInit {
   delete(id: Number) {
     this.quizService.delete(id).subscribe(
       res => {
-        this.toastr.success('Quiz Deleted Successfully');
+        this.toastr.info('Quiz Deleted');
         this.loadQuizzes();
       },
       err => {

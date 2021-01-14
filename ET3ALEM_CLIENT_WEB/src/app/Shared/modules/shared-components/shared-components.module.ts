@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RichTextEditorComponent } from './rich-text-editor/rich-text-editor.component';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CountDownTimerComponent } from './count-down-timer/count-down-timer.component';
 
 
 
 @NgModule({
-  declarations: [RichTextEditorComponent],
+  declarations: [RichTextEditorComponent, CountDownTimerComponent],
   imports: [
     CommonModule,
     EditorModule,

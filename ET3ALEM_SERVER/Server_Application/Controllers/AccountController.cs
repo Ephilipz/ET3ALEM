@@ -131,6 +131,17 @@ namespace Server_Application.Controllers
 
         }
 
+        [HttpGet("Logout")]
+        public async Task Logout()
+        {
+            var userPrincipal = HttpContext.User;
+            if (userPrincipal != null)
+            {
+               await deleteRefreshToken(await _userManager.GetUserAsync(userPrincipal));
+            }
+            await _signInManager.SignOutAsync();
+        }
+
         private async Task saveRefreshToken(IdentityUser user, string newRefreshToken)
         {
             await _userManager.SetAuthenticationTokenAsync(user, "UserRefresh", "RefreshToken", newRefreshToken);

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'ET3ALEM';
+  title = 'ET3ALLEM';
+
+  constructor(private activatedRoute: ActivatedRoute){}
+
+  public isAuthRoute(): boolean{
+    return window.location.toString().toLowerCase().indexOf('auth') != -1;
+  }
 }

@@ -1,0 +1,14 @@
+.formLabelHeader {
+    font-size: 1.5em;
+    font-weight: normal;
+}
+
+.justify-center{
+    justify-content: center;
+}
+
+mat-form-field.smallMatInput {
+    text-align: center;
+    width: 3vw;
+    font-size: larger;
+}
