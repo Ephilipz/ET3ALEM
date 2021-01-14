@@ -13,11 +13,9 @@ namespace Server_Application.Data
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
-
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Question>().ToTable("Question")
                 .HasDiscriminator<QuestionType>("QuestionType")
                 .HasValue<MultipleChoiceQuestion>(QuestionType.MCQ)
@@ -34,6 +32,11 @@ namespace Server_Application.Data
                 .HasOne(choice => choice.MCQ)
                 .WithMany(mcq => mcq.Choices);
             modelBuilder.Entity<QuestionCollection>().ToTable("QuestionCollection");
+            modelBuilder.Entity<QuizAttempt>().ToTable("QuizAttempt");
+            modelBuilder.Entity<QuestionAttempt>().ToTable("QuestionAttempt")
+               .HasDiscriminator<QuestionType>("QuestionType")
+               .HasValue<MCQAttmept>(QuestionType.MCQ)
+               .HasValue<TrueFalseAttempt>(QuestionType.TrueFalse);
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Question> Questions { get; set; }
@@ -41,5 +44,7 @@ namespace Server_Application.Data
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Choice> Choices { get; set; }
         public DbSet<QuestionCollection> QuestionCollections { get; set; }
+        public DbSet<QuizAttempt> QuizAttempts { get; set; }
+        public DbSet<QuestionAttempt> QuestionAttempts { get; set; }
     }
 }

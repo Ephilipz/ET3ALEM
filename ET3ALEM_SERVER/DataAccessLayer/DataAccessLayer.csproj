@@ -33,6 +33,8 @@
     <Compile Remove="Migrations\20201225225539_PascalCaseQuiz.Designer.cs" />
     <Compile Remove="Migrations\20201225231937_PascalCaseQuiz.cs" />
     <Compile Remove="Migrations\20201225231937_PascalCaseQuiz.Designer.cs" />
+    <Compile Remove="Migrations\20210113040412_addQuizAttempt.cs" />
+    <Compile Remove="Migrations\20210113040412_addQuizAttempt.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
