@@ -1,0 +1,34 @@
+.choiceDiv{
+    background-color: #ebebeb;
+    min-height: 50px;
+    padding: 20px;
+    margin: 10px 0;
+    font-size: 1.5em;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.choiceDiv:hover{
+    filter: brightness(85%);
+}
+
+.choiceDiv > p {
+    margin: 0;
+}
+
+.choiceLink:hover{
+    text-decoration: none;
+}
+
+.choiceLink{
+    margin: 0;
+}
+
+.headerText{
+    font-weight: 300;
+    font-size: 1.2em;
+    margin: 0;
+    padding: 0;
+}

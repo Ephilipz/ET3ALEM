@@ -1,0 +1,6 @@
+<h3 class="headerText">{{headerText}}</h3>
+<a [routerLink]="" class="choiceLink" (click)="selectChoice(choice)" *ngFor="let choice of question.Choices">
+    <div class="choiceDiv" [@selectionChange]="isSelected(choice) ? 'selected' : 'deselected'">
+        <p>{{choice.Body}}</p>
+    </div>
+</a>

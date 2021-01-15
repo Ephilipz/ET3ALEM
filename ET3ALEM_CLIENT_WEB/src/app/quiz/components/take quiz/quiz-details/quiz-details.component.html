@@ -1,0 +1,23 @@
+<div class="container-fluid mainContainer">
+    <div *ngIf="isLoaded && quiz != null">
+        <h1 class="mainTitle">{{quiz.Name}}</h1>
+        <div class="quizDetailsRow d-flex justify-content-between">
+            <h2>{{quiz.QuizQuestions.length}} Questions</h2>
+            <h2 *ngIf="!quiz.UnlimitedTime">{{quiz.DurationSeconds / 60}} Minutes</h2>
+            <h2 *ngIf="quiz.UnlimitedTime">Unlimited Time</h2>
+            <h2 *ngIf="!quiz.NoDueDate">Due {{quiz.EndDate +'Z' | date:'dd/MM, h:mm a'}}</h2>
+            <h2 *ngIf="quiz.NoDueDate">No Due Date</h2>
+        </div>
+        <h1 class="instructionsHeading">Instructions</h1>
+        <div [innerHTML]="quiz.Instructions" class="mt-4 mb-1 px-4 instructions"></div>
+        <mat-divider class="my-4"></mat-divider>
+        <div class="d-flex flex-row justify-content-center" style="text-align: center;">
+            <a [routerLink]="[ './start']" class="startButton">
+                <img src="../../../../assets//images/undraw_To_the_stars_qhyy.svg" class="m-auto" width="50%"
+                    class="m-auto startQuizImage">
+                <h2 class="startText">Start</h2>
+            </a>
+        </div>
+    </div>
+    <mat-spinner *ngIf="!isLoaded" class="m-auto"></mat-spinner>
+</div>

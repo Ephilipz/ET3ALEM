@@ -39,7 +39,7 @@ namespace Server_Application
                 options.AddPolicy(name: AllowCORS,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:4200")
+                                      builder.WithOrigins("http://localhost:4200", "http://192.168.1.6:4200")
                                       .AllowAnyHeader()
                                       .AllowAnyMethod()
                                       .AllowCredentials();

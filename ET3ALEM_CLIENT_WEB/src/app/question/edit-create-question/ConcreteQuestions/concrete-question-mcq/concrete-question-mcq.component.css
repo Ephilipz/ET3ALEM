@@ -1,0 +1,9 @@
+.answerInputText{
+    width: 70%;
+}
+
+textarea{
+    font-size: 1.2em;
+    padding: 4px;
+    overflow: hidden;
+}

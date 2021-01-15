@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { plainToClass } from 'class-transformer';
 import { ToastrService } from 'ngx-toastr';
-import { Quiz } from '../../Model/quiz';
-import { QuizService } from '../../services/quiz.service'; 
+import { Quiz } from '../../../Model/quiz';
+import { QuizService } from '../../../services/quiz.service'; 
 // import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 
 @Component({
@@ -14,7 +15,6 @@ export class QuizDetailsComponent implements OnInit {
 
   quiz: Quiz = null;
   isLoaded = false;
-  // private instructionsHTML = '';
 
   constructor(private route : ActivatedRoute, private quizService: QuizService, private toastr: ToastrService) { }
   
@@ -23,7 +23,7 @@ export class QuizDetailsComponent implements OnInit {
       let code = params['code'];
       this.quizService.getBasicQuizFromCode(code).subscribe(
         (quiz) => {
-          this.quiz = quiz;
+          this.quiz = plainToClass(Quiz, quiz);
           this.isLoaded = true;
         },
         (err)=>{

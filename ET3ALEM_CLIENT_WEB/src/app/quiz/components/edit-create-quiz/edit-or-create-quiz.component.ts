@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component.js';
 import { Question } from 'src/app/question/Models/question.js';
 import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
-import { EditOrCreateQuestionComponent } from 'src/app/question/create-question/edit-or-create-question.component.js';
+import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
 import { QuizQuestion } from '../../Model/quizQuestion.js';
 import { Helper } from 'src/app/Shared/Classes/helpers/Helper.js';
 import { plainToClass } from 'class-transformer';
@@ -27,7 +27,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
   @ViewChild('RichTextEditorComponent') private richTextComponent: RichTextEditorComponent;
 
-  @ViewChildren('CreateQuestionComponent') createQuestionComponents: QueryList<EditOrCreateQuestionComponent>;
+  @ViewChildren('CreateQuestionComponent') createQuestionComponents: QueryList<EditOrCreateQuestionHeaderComponent>;
 
   //manage create and edit modes
   mode: mode = mode.create;
@@ -37,6 +37,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   deletedQuizQuestions: Array<any> = [];
 
   isLoaded: boolean = false;
+  richTextLoaded: boolean = false;
 
   today: Date = moment().toDate();
 
@@ -81,8 +82,8 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.durationHours.setValue(Math.floor(this.currentQuiz.DurationSeconds / 3600));
     this.durationMinutes.setValue(this.currentQuiz.DurationSeconds % 3600 / 60);
     this.unlimitedTime.setValue(this.currentQuiz.UnlimitedTime);
-    this.dueStart.setValue(this.currentQuiz.StartDate);
-    this.dueEnd.setValue(this.currentQuiz.EndDate);
+    this.dueStart.setValue(Helper.getLocalDateFromUTC(this.currentQuiz.StartDate));
+    this.dueEnd.setValue(Helper.getLocalDateFromUTC(this.currentQuiz.EndDate));
     this.noDueDate.setValue(this.currentQuiz.NoDueDate);
 
     if (this.currentQuiz.UnlimitedTime) {
@@ -119,13 +120,16 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     let quizQuestionToDelete: QuizQuestion = this.currentQuiz.QuizQuestions.find(qQ => qQ.QuestionId == question.Id);
     if (quizQuestionToDelete) {
       quizQuestionToDelete.Id = quizQuestionToDelete.Id * -1;
-      // quizQuestionToDelete.QuestionId = quizQuestionToDelete.QuestionId * -1;
-      // quizQuestionToDelete.Question.Id = quizQuestionToDelete.Question.Id * -1;
     }
 
     let index = this.questions.findIndex(q => q.Id == question.Id);
     if (index > -1)
       this.questions.splice(index, 1);
+  }
+
+  getGradeFromQuestion(question: Question): number{
+    const grade = this.currentQuiz.QuizQuestions.find(qq => qq.QuestionId == question.Id)?.Grade;
+    return grade ?? 1;
   }
 
   validate(): boolean {
@@ -147,10 +151,11 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
     await Promise.all(this.createQuestionComponents.map(async (component) => {
       let question = await component.saveQuestion(this.mode);
-      quizQuestions.push(new QuizQuestion(question));
+      let grade = component.getGrade();
+      quizQuestions.push(new QuizQuestion(question, grade));
     }));
 
-    this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, quizQuestions);
+    this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, quizQuestions);
 
     console.log('current quiz', this.currentQuiz);
 
@@ -171,30 +176,27 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
     await this.richTextComponent.removeUnusedImages();
 
-    let questions = [];
 
     await Promise.all(this.createQuestionComponents.map(async (component, i) => {
       let question = await component.saveQuestion(this.questions[i].Id > 0 ? mode.edit : mode.create);
-      questions.push(Object.assign({}, question));
-      this.questions[i] = Object.assign({}, question);
-    }));
+      this.questions[i] = Helper.deepCopy(question);
+      let grade = component.getGrade();
 
-    this.questions.forEach(question => {
       //check if question already existed in quiz questions
       let questionIndex = this.currentQuiz.QuizQuestions.map(x => x.Question.Id).indexOf(question.Id);
       if (questionIndex > -1) {
-        this.currentQuiz.QuizQuestions[questionIndex].Question = question;
+        let currentQuizQuestion = this.currentQuiz.QuizQuestions[questionIndex]
+        currentQuizQuestion.Question = question;
+        currentQuizQuestion.Grade = component.getGrade();
       }
 
       //if not, insert it
       else {
-        this.currentQuiz.QuizQuestions.push(new QuizQuestion(question));
+        this.currentQuiz.QuizQuestions.push(new QuizQuestion(question, grade));
       }
-    });
+    }));
 
-    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, this.dueStart.value, this.dueEnd.value, this.noDueDate.value, this.currentQuiz.QuizQuestions);
-
-    console.log('sending quiz', this.currentQuiz);
+    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions);
 
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
       () => {

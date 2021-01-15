@@ -56,7 +56,7 @@ namespace DataAccessLayer
 
         public async Task<IEnumerable<Quiz>> GetQuizzes(string userId)
         {
-            return await _context.Quizzes.Where(quiz => string.Equals(userId,quiz.UserId)).ToListAsync();
+            return await _context.Quizzes.Where(quiz => string.Equals(userId, quiz.UserId)).ToListAsync();
         }
 
         public async Task<Quiz> InsertQuiz(Quiz quiz)
@@ -81,6 +81,8 @@ namespace DataAccessLayer
                     quizQuestion.Id *= -1;
                     _context.QuizQuestions.Remove(quizQuestion);
                 }
+                else
+                    _context.Entry(quizQuestion).State = EntityState.Modified;
             }
             _context.Entry(quiz).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -88,7 +90,15 @@ namespace DataAccessLayer
 
         public Task<Quiz> GetBasicQuizByCode(string code)
         {
-            return _context.Quizzes.FirstOrDefaultAsync(q => q.Code.ToLower() == code.ToLower());
+            return _context.Quizzes.Where(q => q.Code.ToLower() == code.ToLower()).Include(q => q.QuizQuestions).FirstAsync();
+        }
+
+        public Task<Quiz> GetFullQuizByCode(string code)
+        {
+            int? id = _context.Quizzes.First(q => q.Code.ToLower() == code)?.Id;
+            if (id == null)
+                return null;
+            return GetQuiz((int)id);
         }
     }
 }

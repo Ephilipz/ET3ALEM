@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { QuestionType } from './question-type.enum';
 
 export abstract class Question {
@@ -5,7 +6,7 @@ export abstract class Question {
     Body: string;
     QuestionType: QuestionType;
     QuestionCollectionId?: number;
-
+    
     constructor(id: number, Body: string) {
         this.Id = id;
         this.Body = Body;

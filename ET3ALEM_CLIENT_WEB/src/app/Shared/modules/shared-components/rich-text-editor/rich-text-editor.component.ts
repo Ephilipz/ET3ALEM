@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
@@ -15,6 +15,8 @@ export class RichTextEditorComponent implements OnInit {
   }
 
   @Input('control') _formControl: FormControl;
+  @Output() onLoad = new EventEmitter<void>();
+
   uploadedImages: Array<ImageUrls> = [];
 
   ngOnInit(): void {
@@ -30,7 +32,7 @@ export class RichTextEditorComponent implements OnInit {
     toolbar:
       'undo redo | formatselect forecolor | bold italic | \
       alignleft aligncenter alignright alignjustify | \
-      bullist numlist outdent indent | tiny_mce_wiris_formulaEditor,tiny_mce_wiris_formulaEditorChemistry | link image preview',
+      bullist numlist outdent indent | link image preview',
 
     images_upload_handler:
       (blobInfo, success, failure, progress) => {
@@ -85,6 +87,10 @@ export class RichTextEditorComponent implements OnInit {
         xhr.send(formData);
       }
 
+  }
+
+  Loaded() {
+    this.onLoad.emit();
   }
 
   async removeUnusedImages() {

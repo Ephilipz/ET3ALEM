@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-main-menu',
@@ -7,9 +10,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainMenuComponent implements OnInit {
 
-  constructor() { }
+  isLoggedIn: boolean = false;
+  constructor(private auth: AuthService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit(): void {
+    this.isLoggedIn = this.auth.isLoggedIn();
+  }
+
+  logout() {
+    this.auth.logout().subscribe(
+      () => {
+        this.isLoggedIn = this.auth.isLoggedIn();
+        this.toastr.info('Logged Out');
+        this.router.navigate(['']);
+      },
+      (err) => {
+        this.toastr.error('unable to log out');
+        console.error('logout error', err);
+      }
+    )
+
+  }
+
+  routeContains(text: string): boolean {
+    return this.router.url.toLowerCase().indexOf(text.toLowerCase()) != -1;
   }
 
 }
