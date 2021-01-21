@@ -15,12 +15,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Server_Application.Data;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace Server_Application
 {
     public class Startup
     {
-        readonly string AllowCORS = "_AllowSpecificOrigins";
+        private readonly string AllowCORS = "_AllowSpecificOrigins";
 
         public Startup(IConfiguration configuration)
         {
@@ -32,7 +33,6 @@ namespace Server_Application
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             //enables CORS for HTTP : note on deployment the site must be configured to use https
             services.AddCors(options =>
             {
@@ -47,7 +47,16 @@ namespace Server_Application
             });
 
             ConfigureDI(services);
-            services.AddDbContext<ApplicationContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<ApplicationContext>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(
+                    Configuration.GetConnectionString("DefaultConnection"),
+                        new MySqlServerVersion(new Version(8, 0, 20)),
+                        mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend))
+                    // Everything from this point on is optional but helps with debugging.
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors());
+
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 3;
@@ -67,7 +76,6 @@ namespace Server_Application
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
                 })
                 .AddJwtBearer(cfg =>
                 {
@@ -98,7 +106,7 @@ namespace Server_Application
                                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                                 options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new DefaultNamingStrategy() };
                             });
-//) AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; options.JsonSerializerOptions. });
+            //) AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; options.JsonSerializerOptions. });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,7 +122,7 @@ namespace Server_Application
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
-        private void ConfigureDI(IServiceCollection services)
+        private static void ConfigureDI(IServiceCollection services)
         {
             services.AddScoped<IQuestionDal, QuestionDal>();
             services.AddScoped<IQuestionDsl, QuestionDsl>();
