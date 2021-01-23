@@ -14,8 +14,8 @@ namespace DataAccessLayer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64)
+                .HasAnnotation("ProductVersion", "5.0.2");
 
             modelBuilder.Entity("BusinessEntities.Models.Choice", b =>
                 {
@@ -25,20 +25,15 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<string>("Body")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
-                    b.Property<short>("IsAnswer")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("MCQAttmeptId")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsAnswer")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int?>("MCQId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MCQAttmeptId");
 
                     b.HasIndex("MCQId");
 
@@ -53,7 +48,7 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<string>("Body")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("QuestionCollectionId")
                         .HasColumnType("int");
@@ -79,8 +74,8 @@ namespace DataAccessLayer.Migrations
                     b.Property<double>("Grade")
                         .HasColumnType("double");
 
-                    b.Property<short>("IsGraded")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsGraded")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("QuestionType")
                         .HasColumnType("int");
@@ -109,10 +104,10 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -128,36 +123,36 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("DurationSeconds")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Instructions")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
-                    b.Property<short>("NoDueDate")
-                        .HasColumnType("bit");
+                    b.Property<bool>("NoDueDate")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("TotalGrade")
                         .HasColumnType("int");
 
-                    b.Property<short>("UnlimitedTime")
-                        .HasColumnType("bit");
+                    b.Property<bool>("UnlimitedTime")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -180,9 +175,13 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("QuizAttempt");
                 });
@@ -204,36 +203,50 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId")
-                        .IsUnique();
+                    b.HasIndex("QuestionId");
 
                     b.HasIndex("QuizId");
 
                     b.ToTable("QuizQuestion");
                 });
 
+            modelBuilder.Entity("ChoiceMCQAttmept", b =>
+                {
+                    b.Property<int>("ChoicesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MCQAttmeptsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ChoicesId", "MCQAttmeptsId");
+
+                    b.HasIndex("MCQAttmeptsId");
+
+                    b.ToTable("ChoiceMcqAttempt");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -245,14 +258,14 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -264,63 +277,63 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Email")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
-                    b.Property<short>("EmailConfirmed")
-                        .HasColumnType("bit");
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<short>("LockoutEnabled")
-                        .HasColumnType("bit");
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
-                    b.Property<short>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
-                    b.Property<short>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -332,14 +345,14 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -351,17 +364,17 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -373,10 +386,10 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -388,16 +401,16 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -410,14 +423,16 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<int>("McqAnswerType")
                         .HasColumnType("int");
+
+                    b.HasDiscriminator().HasValue(1);
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.TrueFalseQuestion", b =>
                 {
                     b.HasBaseType("BusinessEntities.Models.Question");
 
-                    b.Property<short>("Answer")
-                        .HasColumnType("bit");
+                    b.Property<bool>("Answer")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasDiscriminator().HasValue(0);
                 });
@@ -425,27 +440,27 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("BusinessEntities.Models.MCQAttmept", b =>
                 {
                     b.HasBaseType("BusinessEntities.Models.QuestionAttempt");
+
+                    b.HasDiscriminator().HasValue(1);
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.TrueFalseAttempt", b =>
                 {
                     b.HasBaseType("BusinessEntities.Models.QuestionAttempt");
 
-                    b.Property<short>("Answer")
-                        .HasColumnType("bit");
+                    b.Property<bool>("Answer")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasDiscriminator().HasValue(0);
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.Choice", b =>
                 {
-                    b.HasOne("BusinessEntities.Models.MCQAttmept", null)
-                        .WithMany("Choices")
-                        .HasForeignKey("MCQAttmeptId");
-
                     b.HasOne("BusinessEntities.Models.MultipleChoiceQuestion", "MCQ")
                         .WithMany("Choices")
                         .HasForeignKey("MCQId");
+
+                    b.Navigation("MCQ");
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.Question", b =>
@@ -458,7 +473,7 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("BusinessEntities.Models.QuestionAttempt", b =>
                 {
                     b.HasOne("BusinessEntities.Models.QuizAttempt", null)
-                        .WithMany("Attmepts")
+                        .WithMany("QuestionsAttempts")
                         .HasForeignKey("QuizAttemptId");
 
                     b.HasOne("BusinessEntities.Models.QuizQuestion", "QuizQuestion")
@@ -466,6 +481,8 @@ namespace DataAccessLayer.Migrations
                         .HasForeignKey("QuizQuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("QuizQuestion");
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.QuestionCollection", b =>
@@ -473,31 +490,68 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.Quiz", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.QuizAttempt", b =>
+                {
+                    b.HasOne("BusinessEntities.Models.Quiz", "Quiz")
+                        .WithMany()
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Quiz");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.QuizQuestion", b =>
                 {
                     b.HasOne("BusinessEntities.Models.Question", "Question")
-                        .WithOne()
-                        .HasForeignKey("BusinessEntities.Models.QuizQuestion", "QuestionId")
-                        .HasConstraintName("FK_QuizQuestion_Question_QuestionId")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BusinessEntities.Models.Quiz", null)
                         .WithMany("QuizQuestions")
-                        .HasForeignKey("QuizId")
-                        .HasConstraintName("FK_QuizQuestion_Quiz_QuizId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("QuizId");
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("ChoiceMCQAttmept", b =>
+                {
+                    b.HasOne("BusinessEntities.Models.Choice", null)
+                        .WithMany()
+                        .HasForeignKey("ChoicesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessEntities.Models.MCQAttmept", null)
+                        .WithMany()
+                        .HasForeignKey("MCQAttmeptsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -549,6 +603,26 @@ namespace DataAccessLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.QuestionCollection", b =>
+                {
+                    b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.Quiz", b =>
+                {
+                    b.Navigation("QuizQuestions");
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.QuizAttempt", b =>
+                {
+                    b.Navigation("QuestionsAttempts");
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.MultipleChoiceQuestion", b =>
+                {
+                    b.Navigation("Choices");
                 });
 #pragma warning restore 612, 618
         }

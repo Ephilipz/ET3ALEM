@@ -11,6 +11,8 @@ namespace BusinessEntities.Models
         [Required]
         public string Body { get; set; }
         public bool IsAnswer { get; set; }
-        public MultipleChoiceQuestion MCQ { get; set; }
+        public virtual MultipleChoiceQuestion MCQ { get; set; }
+        public virtual ICollection<MCQAttmept> MCQAttmepts { get; set; }
+
     }
 }
