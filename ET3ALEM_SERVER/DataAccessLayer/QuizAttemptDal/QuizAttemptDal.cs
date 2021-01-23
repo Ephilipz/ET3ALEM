@@ -17,6 +17,7 @@ namespace DataAccessLayer
         public async Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt)
         {
             await _context.QuizAttempts.AddAsync(quizAttempt);
+            await _context.SaveChangesAsync();
             return quizAttempt;
         }
     }
