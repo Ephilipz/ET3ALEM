@@ -15,6 +15,6 @@ namespace BusinessEntities.Models
         }
         public McqAnswerType McqAnswerType { get; set; } = McqAnswerType.SingleChoice;
         [MinimumListLength(minNumberofElements: 2)]
-        public List<Choice> Choices { get; set; }
+        public virtual List<Choice> Choices { get; set; }
     }
 }

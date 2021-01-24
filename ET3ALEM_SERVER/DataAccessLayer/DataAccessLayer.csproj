@@ -1,47 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200630132314_InitialCreate.cs" />
-    <Compile Remove="Migrations\20200630132314_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\20201113151016_changedDurationFormat.cs" />
-    <Compile Remove="Migrations\20201113151016_changedDurationFormat.Designer.cs" />
-    <Compile Remove="Migrations\20201113152420_quizDuration.cs" />
-    <Compile Remove="Migrations\20201113152420_quizDuration.Designer.cs" />
-    <Compile Remove="Migrations\20201113182134_quizQuestion1.cs" />
-    <Compile Remove="Migrations\20201113182134_quizQuestion1.Designer.cs" />
-    <Compile Remove="Migrations\20201113182245_quizQuestion1.cs" />
-    <Compile Remove="Migrations\20201113182245_quizQuestion1.Designer.cs" />
-    <Compile Remove="Migrations\20201113182509_quizQuestion1.cs" />
-    <Compile Remove="Migrations\20201113182509_quizQuestion1.Designer.cs" />
-    <Compile Remove="Migrations\20201113182523_quizQuestion2.cs" />
-    <Compile Remove="Migrations\20201113182523_quizQuestion2.Designer.cs" />
-    <Compile Remove="Migrations\20201113182756_quizQuestion_question.cs" />
-    <Compile Remove="Migrations\20201113182756_quizQuestion_question.Designer.cs" />
-    <Compile Remove="Migrations\20201205133842_quizHash.cs" />
-    <Compile Remove="Migrations\20201205133842_quizHash.Designer.cs" />
-    <Compile Remove="Migrations\20201207093637_quizCode.cs" />
-    <Compile Remove="Migrations\20201207093637_quizCode.Designer.cs" />
-    <Compile Remove="Migrations\20201207095710_quizCodeNullable.cs" />
-    <Compile Remove="Migrations\20201207095710_quizCodeNullable.Designer.cs" />
-    <Compile Remove="Migrations\20201207100906_quizCodeGenerateDB.cs" />
-    <Compile Remove="Migrations\20201207100906_quizCodeGenerateDB.Designer.cs" />
-    <Compile Remove="Migrations\20201225225539_PascalCaseQuiz.cs" />
-    <Compile Remove="Migrations\20201225225539_PascalCaseQuiz.Designer.cs" />
-    <Compile Remove="Migrations\20201225231937_PascalCaseQuiz.cs" />
-    <Compile Remove="Migrations\20201225231937_PascalCaseQuiz.Designer.cs" />
-    <Compile Remove="Migrations\20210113040412_addQuizAttempt.cs" />
-    <Compile Remove="Migrations\20210113040412_addQuizAttempt.Designer.cs" />
-    <Compile Remove="Migrations\20210114230850_Luigi.cs" />
-    <Compile Remove="Migrations\20210114230850_Luigi.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
   </ItemGroup>
 
   <ItemGroup>

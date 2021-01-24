@@ -63,7 +63,7 @@ namespace DataAccessLayer
         {
             await _context.Quizzes.AddAsync(quiz);
             await _context.SaveChangesAsync();
-            quiz.Code = QuizHelper.getCode(quiz.Id);
+            quiz.Code = QuizHelper.GetCode(quiz.Id);
             await _context.SaveChangesAsync();
             return quiz;
         }

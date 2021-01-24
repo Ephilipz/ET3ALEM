@@ -17,7 +17,7 @@ namespace BusinessEntities.Models
         [Required]
         public string Name { get; set; }
         public string Instructions { get; set; }
-        public List<QuizQuestion> QuizQuestions { get; set; }
+        public virtual List<QuizQuestion> QuizQuestions { get; set; }
         public int TotalGrade { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -26,7 +26,6 @@ namespace BusinessEntities.Models
         public bool UnlimitedTime { get; set; }
         [Required]
         public string UserId { get; set; }
-        [ForeignKey("UserId")]
-        public virtual IdentityUser IdentityUser { get; set; }
+        public virtual IdentityUser User { get; set; }
     }
 }
