@@ -36,7 +36,8 @@ import { MainMenuComponent } from './General/components/main-menu/main-menu.comp
     RouterModule,
     AngularMaterialModule,
     ToastrModule.forRoot({
-      positionClass: 'toast-bottom-right'
+      positionClass: 'toast-bottom-right',
+      countDuplicates: true,
     })
   ],
   providers: [{

@@ -28,7 +28,8 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('RichTextEditorComponent') 
-  private richTextComponent: RichTextEditorComponent;
+  richTextComponent: RichTextEditorComponent;
+
   isLoaded: boolean = false;
 
   @Input('question') inputQuestion: Question;
@@ -66,8 +67,8 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
   }
 
   onQuestionTypeChange(event) {
-    this.question = QuestionTypeResolver.getQuestionInstance(event.value);
-    this.question.Id = this.inputQuestion.Id;
+    this.question = QuestionTypeResolver.getNewQuestionInstance(event.value);
+    this.question.Id = this.inputQuestion?.Id ?? 0;
     this.createQuestionComponent();
   }
 
@@ -78,10 +79,16 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
       this.question.Id = 0;
     }
 
-    this.question = this.componentRef.instance.getQuestion();
+    this.question = this.componentRef.instance.saveQuestion();
     this.question.Body = this.questionContentFC.value;
 
     return this.question;
+  }
+
+  public getQuestion(){
+    let question = this.componentRef.instance.getQuestion();
+    question.Body = this.questionContentFC.value;
+    return question;
   }
 
   public getGrade() : number{

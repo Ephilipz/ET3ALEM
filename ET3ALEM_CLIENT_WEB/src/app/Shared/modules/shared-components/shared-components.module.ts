@@ -15,7 +15,8 @@ import { CountDownTimerComponent } from './count-down-timer/count-down-timer.com
     ReactiveFormsModule
   ],
   exports: [
-    RichTextEditorComponent
+    RichTextEditorComponent,
+    CountDownTimerComponent
   ]
 })
 export class SharedComponentsModule { }

@@ -14,9 +14,11 @@ import { AnswerQuestionHeaderComponent } from './answer-question/answer-question
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { ListQuestionCollectionsComponent } from './question collections/list-question-collections/list-question-collections.component';
+import { EditOrCreateQuestionCollectionComponent } from './question collections/edit-or-create-question-collection/edit-or-create-question-collection.component';
 
 @NgModule({
-  declarations: [EditOrCreateQuestionHeaderComponent, ViewQuestionComponent, ConcreteQuestionMCQComponent, ConcreteQuestionTrueFalseComponent, DynamicComponentHostDirective, AnswerQuestionHeaderComponent, ConcreteAnswerQuestionMCQComponent, ConcreteAnswerQuestionTFComponent],
+  declarations: [EditOrCreateQuestionHeaderComponent, ViewQuestionComponent, ConcreteQuestionMCQComponent, ConcreteQuestionTrueFalseComponent, DynamicComponentHostDirective, AnswerQuestionHeaderComponent, ConcreteAnswerQuestionMCQComponent, ConcreteAnswerQuestionTFComponent, ListQuestionCollectionsComponent, EditOrCreateQuestionCollectionComponent],
   imports: [
     CommonModule,
     AngularMaterialModule,

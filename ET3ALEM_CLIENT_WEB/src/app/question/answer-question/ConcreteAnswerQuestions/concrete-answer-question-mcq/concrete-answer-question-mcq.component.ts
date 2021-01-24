@@ -2,6 +2,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, Input, OnInit } from '@angular/core';
 import { Choice } from 'src/app/question/Models/choice';
 import { McqAnswerType, MultipleChoiceQuestion } from 'src/app/question/Models/mcq';
+import { MCQAttempt } from 'src/app/question/Models/mcq-attempt';
+import { QuizQuestion } from 'src/app/quiz/Model/quizQuestion';
 import { AC_ConcreteAnswerQuestion } from '../ac-concrete-answer-question';
 
 @Component({
@@ -24,9 +26,11 @@ import { AC_ConcreteAnswerQuestion } from '../ac-concrete-answer-question';
     ])
   ]
 })
+
 export class ConcreteAnswerQuestionMCQComponent extends AC_ConcreteAnswerQuestion implements OnInit {
 
-  @Input() question: MultipleChoiceQuestion;
+  @Input() quizQuestion: QuizQuestion;
+  question: MultipleChoiceQuestion;
   selectedChoices: Array<number> = [];
   selectedChoice: number = null;
   headerText: string = 'select one';
@@ -36,12 +40,13 @@ export class ConcreteAnswerQuestionMCQComponent extends AC_ConcreteAnswerQuestio
   }
 
   ngOnInit(): void {
+    this.question = <MultipleChoiceQuestion>this.quizQuestion.Question;
     if(this.question.McqAnswerType == McqAnswerType.MultipleChoice)
       this.headerText = 'select all that apply'
   }
 
   getAnswers() {
-    return null;
+    return new MCQAttempt(0, this.quizQuestion, 0, this.getSelected())
   }
 
   selectChoice(choice: Choice) {
@@ -63,5 +68,9 @@ export class ConcreteAnswerQuestionMCQComponent extends AC_ConcreteAnswerQuestio
 
   isSelected(choice: Choice) {
     return this.selectedChoices.indexOf(choice.Id) != -1 || this.selectedChoice == choice.Id;
+  }
+
+  getSelected(){
+    return this.question.McqAnswerType == McqAnswerType.MultipleChoice ? this.selectedChoices : [this.selectedChoice];
   }
 }

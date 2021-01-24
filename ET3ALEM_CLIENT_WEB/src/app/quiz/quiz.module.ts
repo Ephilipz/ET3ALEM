@@ -15,6 +15,7 @@ import { AccessQuizComponent } from './components/take quiz/access-quiz/access-q
 import { EditOrCreateQuizComponent } from './components/edit-create-quiz/edit-or-create-quiz.component';
 import { QuizDetailsComponent } from './components/take quiz/quiz-details/quiz-details.component';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent, AccessQuizComponent, QuizDetailsComponent],
@@ -30,6 +31,7 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerMod
     FormsModule,
     ToastrModule.forRoot(),
     SharedComponentsModule,
+    DragDropModule,
     QuestionModule]
 })
 export class QuizModule { }

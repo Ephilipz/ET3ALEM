@@ -1,4 +1,4 @@
-<div class="container-fluid p-5 parentContainer" *ngIf="isLoaded" >
+<div class="container-fluid p-5 parentContainer" *ngIf="isLoaded">
     <h1 class="blueHeader">{{ mode == 1 ? 'Create Quiz' : 'Edit Quiz' }}</h1>
 
     <div class="container-fluid px-5 py-3">
@@ -19,7 +19,8 @@
                 </mat-form-field>
                 <div class="row px-3">
                     <h2 class="col-12" *ngIf="richTextLoaded">Quiz Instructions</h2>
-                    <app-rich-text-editor #RichTextEditorComponent [control]="quizInstructions" class="col-12" (onLoad)="richTextLoaded = true"></app-rich-text-editor>
+                    <app-rich-text-editor #RichTextEditorComponent [control]="quizInstructions" class="col-12"
+                        (onLoad)="richTextLoaded = true"></app-rich-text-editor>
                     <mat-spinner *ngIf="!richTextLoaded" class="my-5 mx-auto" style="text-align: center;"></mat-spinner>
                 </div>
             </div>
@@ -42,8 +43,7 @@
                         <mat-error>{{getControlErrors(durationHours, 'hours')}}</mat-error>
                     </mat-form-field>
                     <mat-form-field class="smallMatInput col-2">
-                        <input matInput placeholder="minutes" [formControl]="durationMinutes" type="number" max="59"
-                            min="0">
+                        <input matInput placeholder="minutes" [formControl]="durationMinutes" type="number" min="0">
                         <mat-error>{{getControlErrors(durationMinutes, 'minutes')}}</mat-error>
                     </mat-form-field>
                     <mat-checkbox class="col-2 largeCheckBox" [formControl]="unlimitedTime"
@@ -53,15 +53,16 @@
                 <h2 class="mt-4 mb-0 pb-0">Dates</h2>
                 <div class="row px-4 align-items-center m-0">
                     <mat-form-field class="col-lg-2">
-                        <input matInput [ngxMatDatetimePicker]="startDate" placeholder="start date" [formControl]="dueStart"
-                            [max]="noDueDate.value ? null : subtractDays(dueEnd.value)" [min]="today">
+                        <input matInput [ngxMatDatetimePicker]="startDate" placeholder="start date"
+                            [formControl]="dueStart" [max]="noDueDate.value ? null : subtractDays(dueEnd.value)"
+                            [min]="today">
                         <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
                         <ngx-mat-datetime-picker #startDate [showSeconds]="false"></ngx-mat-datetime-picker>
                     </mat-form-field>
                     <mat-form-field class="col-lg-2">
                         <input matInput [ngxMatDatetimePicker]="endDate" placeholder="end date" [formControl]="dueEnd"
                             [disabled]="noDueDate.value" [min]="dueStart.value">
-                        <mat-datepicker-toggle matSuffix [for]="endDate" ></mat-datepicker-toggle>
+                        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
                         <ngx-mat-datetime-picker #endDate></ngx-mat-datetime-picker>
                     </mat-form-field>
 
@@ -78,25 +79,28 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <div class="container-fluid px-2">
-
-                <div class="row mb-3" *ngFor="let question of questions; let i = index">
-                    <mat-checkbox class="m-auto"></mat-checkbox>
-
+            <div class="container-fluid px-2" (cdkDropListDropped)="drop($event)" cdkDropList>
+                <div class="row mb-3" *ngFor="let question of questions; let i = index" cdkDrag cdkDragLockAxis="y">
+                    <div class="dragHandle m-auto" cdkDragHandle>
+                        <mat-icon>open_with</mat-icon>
+                    </div>
                     <mat-expansion-panel style="width: 90%" class="m-0">
                         <mat-expansion-panel-header>
                             <mat-panel-title class="questionTitle">
                                 {{'Question ' + (i + 1)}}
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-create-question #CreateQuestionComponent [question] = "question" [grade]="getGradeFromQuestion(question)"></app-create-question>
+                        <app-create-question #CreateQuestionComponent [question]="question"
+                            [grade]="getGradeFromQuestion(question)"></app-create-question>
                     </mat-expansion-panel>
 
+                    <button mat-icon-button class="m-auto">
+                        <mat-icon class="copyIconButton" (click)="duplicateQuestion(question, i)">file_copy</mat-icon>
+                    </button>
                     <button mat-icon-button class="m-auto">
                         <mat-icon class="deleteIconButton" (click)="deleteQuestion(question)">delete</mat-icon>
                     </button>
                 </div>
-
 
                 <div class="row addQuestionRow">
                     <button mat-flat-button class="blue medium" (click)="addQuestion()">Add Question</button>
@@ -106,7 +110,8 @@
         </mat-expansion-panel>
 
         <div class="d-flex justify-content-around mt-4">
-            <button mat-flat-button class="red large" [routerLink] = "mode == 1 ? '../manage' : '../../manage'">Cancel</button>
+            <button mat-flat-button class="red large"
+                [routerLink]="mode == 1 ? '../manage' : '../../manage'">Cancel</button>
             <button mat-flat-button class="blue large" [disabled]="!quizTitle.valid"
                 (click)="mode == 1 ? createQuiz() : updateQuiz()">Save</button>
         </div>

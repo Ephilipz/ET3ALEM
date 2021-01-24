@@ -15,6 +15,8 @@ import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-creat
 import { QuizQuestion } from '../../Model/quizQuestion.js';
 import { Helper } from 'src/app/Shared/Classes/helpers/Helper.js';
 import { plainToClass } from 'class-transformer';
+import { isUnionTypeNode } from 'typescript';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-create-quiz',
@@ -44,7 +46,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   quizTitle = new FormControl('', [Validators.required]);
   quizInstructions = new FormControl();
   durationHours = new FormControl(1, [Validators.max(5), Validators.min(0)]);
-  durationMinutes = new FormControl(0, [Validators.max(59), Validators.min(0)]);
+  durationMinutes = new FormControl(0, [Validators.min(0)]);
   unlimitedTime = new FormControl(false);
   dueStart = new FormControl(moment().toDate());
   dueEnd = new FormControl(moment().add(3, 'days').toDate());
@@ -117,7 +119,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
   deleteQuestion(question: Question) {
     //check if question existed in original quz questions
-    let quizQuestionToDelete: QuizQuestion = this.currentQuiz.QuizQuestions.find(qQ => qQ.QuestionId == question.Id);
+    let quizQuestionToDelete: QuizQuestion = this.currentQuiz?.QuizQuestions.find(qQ => qQ.QuestionId == question.Id);
     if (quizQuestionToDelete) {
       quizQuestionToDelete.Id = quizQuestionToDelete.Id * -1;
     }
@@ -127,15 +129,38 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       this.questions.splice(index, 1);
   }
 
-  getGradeFromQuestion(question: Question): number{
+  duplicateQuestion(question: Question, i: number) {
+    let oldQuestion: Question = this.createQuestionComponents.find((item, index) => index == i)?.getQuestion();
+    if(!oldQuestion)
+      return;
+    const newQuestion = oldQuestion.duplicateQuestion();
+    this.questions.push(newQuestion);
+  }
+
+  /**
+   * For drag and drop event in reordering questions
+   * @param event 
+   */
+  drop(event: CdkDragDrop<Question[]>) {
+    const questionComponentsArray = this.createQuestionComponents.toArray();
+    this.questions[event.previousIndex] = questionComponentsArray[event.previousIndex].getQuestion();
+    this.questions[event.currentIndex] = questionComponentsArray[event.currentIndex].getQuestion();
+    moveItemInArray(this.questions, event.previousIndex, event.currentIndex);
+    const temp = Helper.deepCopy(this.questions);
+    this.questions = null;
+    this.questions = temp;
+  }
+
+  getGradeFromQuestion(question: Question): number {
+    if (this.mode == mode.create) return 1;
     const grade = this.currentQuiz.QuizQuestions.find(qq => qq.QuestionId == question.Id)?.Grade;
     return grade ?? 1;
   }
 
   validate(): boolean {
     //check duration
-    if ((this.durationHours.value ?? 0) * 60 + (this.durationMinutes.value ?? 0) < 5 && !this.unlimitedTime.value) {
-      this.toastr.error('duration must be at least 5 minutes or unlimited time');
+    if ((this.durationHours.value ?? 0) * 60 + (this.durationMinutes.value ?? 0) < 1 && !this.unlimitedTime.value) {
+      this.toastr.error('duration must be at least 1 minute or unlimited time');
       return false;
     }
     return true;
@@ -156,8 +181,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     }));
 
     this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, quizQuestions);
-
-    console.log('current quiz', this.currentQuiz);
 
     this.quizService.createQuiz(this.currentQuiz).subscribe(
       (quiz: Quiz) => {
@@ -192,6 +215,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
       //if not, insert it
       else {
+        question.Id = 0;
         this.currentQuiz.QuizQuestions.push(new QuizQuestion(question, grade));
       }
     }));

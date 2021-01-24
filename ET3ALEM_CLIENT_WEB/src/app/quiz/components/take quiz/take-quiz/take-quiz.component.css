@@ -1,22 +1,29 @@
-.questionsContainer{
+.questionsContainer {
     margin: 0 auto;
     min-width: fit-content;
     width: 60%;
 }
 
-.QuestionTitle{
+.QuestionTitle {
     font-size: 2.6em;
     font-weight: 700;
 }
 
-.answerQuestionComponent{
+.answerQuestionComponent {
     margin-left: 40px;
     padding: 0;
 }
 
-.quizTitle{
+.quizTitle {
     font-size: 6em;
     font-weight: 900;
     text-align: center;
-    margin: 60px auto;
+    margin: 90px auto;
+}
+
+.countdown {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 20px;
 }

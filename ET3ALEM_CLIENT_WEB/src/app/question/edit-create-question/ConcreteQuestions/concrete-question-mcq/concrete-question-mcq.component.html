@@ -8,7 +8,7 @@
                 placeholder="Choice Text" [(ngModel)]="choice.Body"></textarea>
         </mat-form-field>
         <mat-checkbox class="ml-3 my-auto" [checked]="choice.IsAnswer"
-            (change)="correctAnswerCheckChange(choice, $event.checked)" [disabled]="!canUncheck(choice)">Correct Answer</mat-checkbox>
+            (change)="correctAnswerCheckChange(choice, $event.checked)">Correct Answer</mat-checkbox>
     </div>
     <button mat-flat-button class="grey" (click)="addChoice()">Add Choice</button>
 </mat-list>

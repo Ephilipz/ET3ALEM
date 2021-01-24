@@ -9,4 +9,7 @@ export class TrueFalseQuestion extends Question {
         this.QuestionType = QuestionType.TrueFalse;
         this.Answer = answer;
     }
+
+    protected duplicateQuestionAnswer(newQuestion: TrueFalseQuestion) {
+    }
 }

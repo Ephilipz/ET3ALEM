@@ -1,5 +1,7 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { plainToClass } from 'class-transformer';
+import { ToastrService } from 'ngx-toastr';
 import { Choice } from 'src/app/question/Models/choice';
 import { McqAnswerType, MultipleChoiceQuestion } from 'src/app/question/Models/mcq';
 import { AC_ConcreteEditQuestion } from '../ac-concrete-question';
@@ -17,13 +19,12 @@ export class ConcreteQuestionMCQComponent extends AC_ConcreteEditQuestion implem
 
   @Input() inputQuestion: MultipleChoiceQuestion;
 
-  constructor() {
+  constructor(private toastrService: ToastrService) {
     super();
   }
 
   ngOnInit(): void {
-    //if no choice is checked, check the first one
-    this.checkCorrectAnswersCount();
+    this.inputQuestion = plainToClass(MultipleChoiceQuestion, this.inputQuestion);
   }
 
   public addChoice() {
@@ -42,27 +43,14 @@ export class ConcreteQuestionMCQComponent extends AC_ConcreteEditQuestion implem
     if (index > -1) {
       this.inputQuestion.Choices.splice(index, 1);
     }
-
-    //if it was the only checked answer, check the first choice in the list
-    this.checkCorrectAnswersCount();
-  }
-
-  checkCorrectAnswersCount() {
-    if (this.inputQuestion.Choices.filter(c => c.IsAnswer).length == 0)
-      this.inputQuestion.Choices[0].IsAnswer = true;
   }
 
   public correctAnswerCheckChange(choice: Choice, checked: boolean) {
     choice.IsAnswer = checked;
   }
 
-  public canUncheck(choice: Choice): boolean {
-    if (this.inputQuestion.Choices.filter(c => c.IsAnswer && c.Id != choice.Id).length == 0)
-      return false;
-    return true;
-  }
-  public getQuestion() {
-    super.getQuestion();
+  public saveQuestion(){
+    super.saveQuestion();
     this.inputQuestion.McqAnswerType = this.inputQuestion.Choices.filter(c => c.IsAnswer).length > 1 ? McqAnswerType.MultipleChoice : McqAnswerType.SingleChoice;
 
     //set ids of current choices to 0 if they're new
@@ -72,13 +60,12 @@ export class ConcreteQuestionMCQComponent extends AC_ConcreteEditQuestion implem
 
     //add the current choices and the deleted choices to the returned question
     this.inputQuestion.Choices = this.inputQuestion.Choices.concat(this.deletedChoices);
-    return this.inputQuestion;
+    return this.getQuestion();
   }
 
-  protected validate(): boolean {
+  protected validate() {
     if (this.inputQuestion.Choices.filter(c => c.IsAnswer).length == 0)
-      return false;
-    return true;
+      this.toastrService.warning('MCQ should have at least one correct answer');
   }
 
 }

@@ -73,7 +73,7 @@ namespace DataServiceLayer
             {
                 if (Qquestion.Question.Id == 0)
                 {
-                    Qquestion.QuestionId = (await _IQuestionDsl.InsertQuestion(Qquestion.Question)).Id;
+                    Qquestion.QuestionId = _IQuestionDsl.InsertQuestion(Qquestion.Question).Id;
                 }
                 else
                 {

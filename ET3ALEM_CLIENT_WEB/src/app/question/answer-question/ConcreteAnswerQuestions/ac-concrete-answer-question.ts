@@ -1,6 +1,7 @@
+import { QuizQuestion } from "src/app/quiz/Model/quizQuestion";
 import { Question } from "../../Models/question";
 
 export abstract class AC_ConcreteAnswerQuestion {
-    question: any = null;
+    quizQuestion: QuizQuestion = null;
     abstract getAnswers();
 }

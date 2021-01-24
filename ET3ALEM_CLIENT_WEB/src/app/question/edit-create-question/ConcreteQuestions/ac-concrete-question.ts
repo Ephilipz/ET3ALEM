@@ -1,8 +1,16 @@
+import { plainToClass, plainToClassFromExist } from "class-transformer";
+import { Question } from "../../Models/question";
+
 export abstract class AC_ConcreteEditQuestion {
-    getQuestion(): any{
-        if(!this.validate())
-            return null;
+    constructor(){
     }
-    protected abstract validate(): boolean;
+    saveQuestion(): any{
+        this.validate();
+    }
+
+    getQuestion(): Question{
+        return this.inputQuestion;
+    }
+    protected abstract validate();
     inputQuestion: any = null;
 }

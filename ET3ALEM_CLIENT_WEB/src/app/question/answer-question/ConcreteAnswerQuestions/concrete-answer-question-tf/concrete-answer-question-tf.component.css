@@ -1,0 +1,20 @@
+.mat-button-toggle-group{
+    width: 70%;
+}
+
+.mat-button-toggle{
+    width: 50%;
+    font-size: 1.5em;
+}
+
+.mat-button-toggle-checked.true{
+    background-color: rgb(87, 221, 87);
+}
+
+.mat-button-toggle-checked.false{
+    background-color: rgb(221, 92, 87);
+}
+
+.mat-button-toggle-checked{
+    border: 2px solid black;
+}

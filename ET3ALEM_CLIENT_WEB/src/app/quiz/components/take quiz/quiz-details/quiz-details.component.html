@@ -3,7 +3,7 @@
         <h1 class="mainTitle">{{quiz.Name}}</h1>
         <div class="quizDetailsRow d-flex justify-content-between">
             <h2>{{quiz.QuizQuestions.length}} Questions</h2>
-            <h2 *ngIf="!quiz.UnlimitedTime">{{quiz.DurationSeconds / 60}} Minutes</h2>
+            <h2 *ngIf="!quiz.UnlimitedTime">{{quiz.DurationSeconds / 60}} {{ quiz.DurationSeconds / 60 > 1 ? 'Minutes' : 'Minute'}}</h2>
             <h2 *ngIf="quiz.UnlimitedTime">Unlimited Time</h2>
             <h2 *ngIf="!quiz.NoDueDate">Due {{quiz.EndDate +'Z' | date:'dd/MM, h:mm a'}}</h2>
             <h2 *ngIf="quiz.NoDueDate">No Due Date</h2>
@@ -13,7 +13,7 @@
         <mat-divider class="my-4"></mat-divider>
         <div class="d-flex flex-row justify-content-center" style="text-align: center;">
             <a [routerLink]="[ './start']" class="startButton">
-                <img src="../../../../assets//images/undraw_To_the_stars_qhyy.svg" class="m-auto" width="50%"
+                <img src="../../../../assets//images/undraw_To_the_stars_qhyy.svg" class="m-auto" width="45%"
                     class="m-auto startQuizImage">
                 <h2 class="startText">Start</h2>
             </a>

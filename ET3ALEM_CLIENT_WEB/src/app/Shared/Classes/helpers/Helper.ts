@@ -18,19 +18,6 @@ export class Helper {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    static getSpecificQuestion(question: any) {
-        if(!question) return null;
-        let type: QuestionType = question.QuestionType;
-        switch (type) {
-            case QuestionType.MCQ:
-                return new MultipleChoiceQuestion(question.Id, question.Body, question.Choices, question.McqAnswerType);
-            case QuestionType.TrueFalse:
-                return new TrueFalseQuestion(question.Id, question.Body, question.Answer);
-            default:
-                return question;
-        }
-    }
-
     static getLocalDateFromUTC(date: Date): Date {
         return moment.utc(date).local().toDate();
     }

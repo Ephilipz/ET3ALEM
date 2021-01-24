@@ -20,7 +20,7 @@ namespace DataAccessLayer
 
         public async Task<Quiz> DeleteQuiz(int id)
         {
-            var quiz = await _context.Quizzes.FindAsync(id);
+            var quiz = await GetQuiz(id);
 
             if (quiz != null)
             {

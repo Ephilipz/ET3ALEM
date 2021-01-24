@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { plainToClass } from 'class-transformer';
 import { TrueFalseQuestion } from 'src/app/question/Models/true-false-question';
 import { AC_ConcreteEditQuestion } from '../ac-concrete-question';
 
@@ -20,10 +21,11 @@ export class ConcreteQuestionTrueFalseComponent extends AC_ConcreteEditQuestion 
   @Input() inputQuestion: TrueFalseQuestion;
 
   ngOnInit(): void {
+    this.inputQuestion = plainToClass(TrueFalseQuestion, this.inputQuestion);
   }
 
-  getQuestion() {
-    super.getQuestion();
-    return this.inputQuestion;
+  saveQuestion() {
+    super.saveQuestion();
+    return this.getQuestion();
   }
 }

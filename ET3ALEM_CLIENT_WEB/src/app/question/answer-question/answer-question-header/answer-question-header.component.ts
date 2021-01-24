@@ -1,6 +1,7 @@
 import { Component, ComponentFactoryResolver, ComponentRef, Input, OnInit, Type, ViewChild } from '@angular/core';
 import { QuizQuestion } from 'src/app/quiz/Model/quizQuestion';
 import { DynamicComponentHostDirective } from 'src/app/Shared/directives/dynamic-component-host.directive';
+import { QuestionAttempt } from '../../Models/question-attempt';
 import { QuestionType } from '../../Models/question-type.enum';
 import { QuestionTypeResolver } from '../../shared/question-type-resolver';
 import { AC_ConcreteAnswerQuestion } from '../ConcreteAnswerQuestions/ac-concrete-answer-question';
@@ -16,13 +17,14 @@ export class AnswerQuestionHeaderComponent implements OnInit {
   dynamicComponentHost: DynamicComponentHostDirective;
   componentRef: ComponentRef<AC_ConcreteAnswerQuestion>;
 
-  @Input() quizQuestion : QuizQuestion;
+  @Input() quizQuestion: QuizQuestion;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
     this.createQuestionComponent();
   }
+
   createQuestionComponent() {
     const question = this.quizQuestion.Question;
     const questionTypeString = QuestionType[question.QuestionType];
@@ -35,7 +37,11 @@ export class AnswerQuestionHeaderComponent implements OnInit {
     viewContainerRef.clear();
 
     this.componentRef = viewContainerRef.createComponent(componentFactory);
-    this.componentRef.instance.question = question;
+    this.componentRef.instance.quizQuestion = this.quizQuestion;
+  }
+
+  getQuestionAttempt(): QuestionAttempt {
+    return this.componentRef.instance.getAnswers();
   }
 
 }

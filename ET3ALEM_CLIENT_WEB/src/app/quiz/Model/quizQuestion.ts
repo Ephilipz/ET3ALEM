@@ -1,10 +1,10 @@
 import { Transform, Type } from 'class-transformer';
 import { Question } from 'src/app/question/Models/question';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
+import { QuestionTypeResolver } from 'src/app/question/shared/question-type-resolver';
 
 export class QuizQuestion {
     Id: number;
-    @Transform((value, obj, type) => Helper.getSpecificQuestion(value))
+    @Transform((value, obj, type) => QuestionTypeResolver.getSpecificQuestion(value))
     Question: Question;
     Grade: number;
     QuestionId: number;
