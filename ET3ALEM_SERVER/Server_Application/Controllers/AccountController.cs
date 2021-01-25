@@ -15,6 +15,7 @@ using Server_Application.Models.Account;
 using System.Security.Cryptography;
 using BusinessEntities.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using BusinessEntities.Models;
 
 namespace Server_Application.Controllers
 {
@@ -22,11 +23,11 @@ namespace Server_Application.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -37,19 +38,16 @@ namespace Server_Application.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterVM registerVM)
         {
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(registerVM);
             }
-            var user = new IdentityUser { Email = registerVM.Email, UserName = registerVM.Email };
+            var user = new User { FullName = registerVM.Name, Email = registerVM.Email, UserName = registerVM.Email };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
             if (!result.Succeeded)
             {
-                //foreach (var error in result.Errors)
-                //{
                 ModelState.TryAddModelError(result.Errors.First().Code, result.Errors.First().Description);
-                // }
-
                 return BadRequest(ModelState);
             }
 
@@ -104,7 +102,7 @@ namespace Server_Application.Controllers
         {
             ClaimsPrincipal principal = GetPrincipalFromExpiredToken(tokens.JWT);
             string username = principal.Claims.FirstOrDefault(c => c.Type == "sub").Value;
-            IdentityUser user = await _userManager.FindByNameAsync(username);
+            User user = await _userManager.FindByNameAsync(username);
             if (user == null)
             {
                 return BadRequest();
@@ -137,22 +135,23 @@ namespace Server_Application.Controllers
             var userPrincipal = HttpContext.User;
             if (userPrincipal != null)
             {
-               await deleteRefreshToken(await _userManager.GetUserAsync(userPrincipal));
+                await deleteRefreshToken(await _userManager.GetUserAsync(userPrincipal));
             }
             await _signInManager.SignOutAsync();
+
         }
 
-        private async Task saveRefreshToken(IdentityUser user, string newRefreshToken)
+        private async Task saveRefreshToken(User user, string newRefreshToken)
         {
             await _userManager.SetAuthenticationTokenAsync(user, "UserRefresh", "RefreshToken", newRefreshToken);
         }
 
-        private async Task deleteRefreshToken(IdentityUser user)
+        private async Task deleteRefreshToken(User user)
         {
             await _userManager.RemoveAuthenticationTokenAsync(user, "UserRefresh", "RefreshToken");
         }
 
-        private async Task<string> GetRefreshToken(IdentityUser user)
+        private async Task<string> GetRefreshToken(User user)
         {
             return await _userManager.GetAuthenticationTokenAsync(user, "UserRefresh", "RefreshToken");
         }
