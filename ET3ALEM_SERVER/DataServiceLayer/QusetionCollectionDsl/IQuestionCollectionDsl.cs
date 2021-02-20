@@ -10,5 +10,6 @@ namespace DataServiceLayer
     {
         Task<List<QuestionCollection>> GetQuestionCollections(string userId);
         Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection);
+        Task<QuestionCollection> DeleteQuestionCollection(int id);
     }
 }

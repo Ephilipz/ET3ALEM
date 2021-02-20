@@ -8,11 +8,13 @@ export class QuizQuestion {
     Question: Question;
     Grade: number;
     QuestionId: number;
+    Sequence: number;
 
-    constructor(question: Question=null, grade = 0, Id = 0) {
+    constructor(question: Question=null, grade = 0, Id = 0, Sequence = 0) {
         this.Question = question;
         this.Grade = grade;
         this.Id = Id;
         this.QuestionId = question?.Id;
+        this.Sequence = Sequence;
     }
 }

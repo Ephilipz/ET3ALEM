@@ -22,8 +22,8 @@ export class AuthService {
   login(email: string, password: string): Observable<boolean> {
     return this.http.post<Tokens>(environment.baseUrl + '/api/Account/login', { email, password }).pipe(
       tap(
-        token => {
-          this.setSession(token);
+        tokens => {
+          this.setSession(tokens);
           this.toastr.success('Welcome');
         }),
       mapTo(true),
@@ -70,7 +70,6 @@ export class AuthService {
   }
 
   setSession(tokens: Tokens) {
-    console.log(tokens);
     localStorage.setItem(this.JWT, tokens.JWT);
     localStorage.setItem(this.Refresh, tokens.RefreshToken);
   }
@@ -90,12 +89,6 @@ export class AuthService {
 
   public isLoggedOut() {
     return !this.isLoggedIn();
-  }
-
-  getExpiration() {
-    const expiration = localStorage.getItem("expires_at");
-    const expiresAt = JSON.parse(expiration);
-    return moment(expiresAt);
   }
 
   getJWT() {

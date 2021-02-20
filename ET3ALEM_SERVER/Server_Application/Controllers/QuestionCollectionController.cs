@@ -22,7 +22,7 @@ namespace Server_Application.Controllers
 
         // GET api/<QuestionCollectionController>/userId
         [HttpGet("{userId}")]
-        public async Task<ActionResult<List<QuestionCollection>>> Get(string userId)
+        public async Task<ActionResult<List<QuestionCollection>>> GetQuestionCollections(string userId)
         {
             return await _IQuestionCollectionDsl.GetQuestionCollections(userId);
         }
@@ -32,6 +32,12 @@ namespace Server_Application.Controllers
         public async Task<ActionResult<QuestionCollection>> Post(QuestionCollection questionCollection)
         {
             return await _IQuestionCollectionDsl.InsertQuestionCollection(questionCollection);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<QuestionCollection>> DeleteQuestionCollection(int id)
+        {
+            return await _IQuestionCollectionDsl.DeleteQuestionCollection(id);
         }
     }
 }

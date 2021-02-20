@@ -16,6 +16,20 @@ namespace DataServiceLayer
             _IQuizAttemptDal = IQuizAttemptDal;
             _IQuizDsl = IQuizDsl;
         }
+
+        public Task<QuizAttempt> GetQuizAttempt(int id)
+        {
+            return _IQuizAttemptDal.GetQuizAttempt(id);
+        }
+
+        public async Task<QuizAttempt> PutQuizAttempt(int id, QuizAttempt quizAttempt)
+        {
+            if (quizAttempt.SubmitTime != null)
+                quizAttempt.GradeQuiz();
+            return await _IQuizAttemptDal.PutQuizAttempt(id, quizAttempt);
+        }
+
+
         public async Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt)
         {
             var quiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
@@ -25,6 +39,10 @@ namespace DataServiceLayer
                 questionAttempt.Grade = questionAttempt.GradeQuestion();
             }
             return await _IQuizAttemptDal.InsertQuizAttempt(quizAttempt);
+        }
+        public Task<List<QuizAttempt>> GetQuizAttemptsForQuiz(int quizId, string userId)
+        {
+            return _IQuizAttemptDal.GetQuizAttemptsForQuiz(quizId, userId);
         }
     }
 }

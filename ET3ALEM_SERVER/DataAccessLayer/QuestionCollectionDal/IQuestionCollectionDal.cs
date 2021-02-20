@@ -10,5 +10,6 @@ namespace DataAccessLayer
     {
         Task<List<QuestionCollection>> GetQuestionCollections(string UserId);
         Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection);
+        Task<QuestionCollection> DeleteQuestionCollection(int id);
     }
 }

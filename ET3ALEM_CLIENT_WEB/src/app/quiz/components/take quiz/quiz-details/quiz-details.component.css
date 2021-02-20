@@ -48,3 +48,9 @@ a.startButton:hover{
     letter-spacing: 15px;
     margin-top: 30px;
 }
+
+.quizLimitReached{
+    font-size: 2.5em;
+    padding: 40px;
+    font-weight: 300;
+}

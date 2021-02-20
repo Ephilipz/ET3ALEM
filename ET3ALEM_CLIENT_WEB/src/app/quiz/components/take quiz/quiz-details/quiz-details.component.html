@@ -3,7 +3,8 @@
         <h1 class="mainTitle">{{quiz.Name}}</h1>
         <div class="quizDetailsRow d-flex justify-content-between">
             <h2>{{quiz.QuizQuestions.length}} Questions</h2>
-            <h2 *ngIf="!quiz.UnlimitedTime">{{quiz.DurationSeconds / 60}} {{ quiz.DurationSeconds / 60 > 1 ? 'Minutes' : 'Minute'}}</h2>
+            <h2 *ngIf="!quiz.UnlimitedTime">{{quiz.DurationSeconds / 60}} {{ quiz.DurationSeconds / 60 > 1 ? 'Minutes' :
+                'Minute'}}</h2>
             <h2 *ngIf="quiz.UnlimitedTime">Unlimited Time</h2>
             <h2 *ngIf="!quiz.NoDueDate">Due {{quiz.EndDate +'Z' | date:'dd/MM, h:mm a'}}</h2>
             <h2 *ngIf="quiz.NoDueDate">No Due Date</h2>
@@ -11,12 +12,20 @@
         <h1 class="instructionsHeading">Instructions</h1>
         <div [innerHTML]="quiz.Instructions" class="mt-4 mb-1 px-4 instructions"></div>
         <mat-divider class="my-4"></mat-divider>
-        <div class="d-flex flex-row justify-content-center" style="text-align: center;">
-            <a [routerLink]="[ './start']" class="startButton">
-                <img src="../../../../assets//images/undraw_To_the_stars_qhyy.svg" class="m-auto" width="45%"
+        <div class="d-flex flex-row justify-content-center" style="text-align: center;" *ngIf="!quizAttemptLimitReached">
+            <a [routerLink]="[ './start']" class="startButton" *ngIf="!inProgress">
+                <img src="../../../../../assets/images/undraw_To_the_stars_qhyy.svg" class="m-auto" width="45%"
                     class="m-auto startQuizImage">
                 <h2 class="startText">Start</h2>
             </a>
+            <a [routerLink]="[ './start']" class="startButton" *ngIf="inProgress">
+                <img src="../../../../../assets/images/method-draw-image (1).svg" class="m-auto" width="45%"
+                    class="m-auto startQuizImage">
+                <h2 class="startText">Resume</h2>
+            </a>
+        </div>
+        <div class="d-flex flex-row justify-content-center" style="text-align: center;" *ngIf="quizAttemptLimitReached">
+            <h1 class="quizLimitReached">You have reached the limit for the allowed quiz attempts</h1>
         </div>
     </div>
     <mat-spinner *ngIf="!isLoaded" class="m-auto"></mat-spinner>

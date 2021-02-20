@@ -31,7 +31,7 @@
         <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
                 <mat-panel-title class="boldPanelTitle">
-                    Timing Settings
+                    Extra Settings
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
@@ -69,9 +69,25 @@
                     <mat-checkbox class="col-lg-2 largeCheckBox" [formControl]="noDueDate"
                         (change)="toggleDisable($event.checked, ['dueEnd'])">No Due Date</mat-checkbox>
                 </div>
+                <h2 class="mt-4">Quiz Attempts</h2>
+                <div class="row px-5 align-items-center">
+                    <mat-form-field class="smallMatInput col-2">
+                        <input matInput placeholder="Allowed Attempts" [formControl]="allowedAttempts" type="number"
+                            min="0">
+                        <mat-error>{{getControlErrors(allowedAttempts, 'attempts')}}</mat-error>
+                    </mat-form-field>
+                    <mat-checkbox class="col-2 largeCheckBox" [formControl]="unlimitedAttempts"
+                        (change)="toggleDisable($event.checked, ['allowedAttempts'])">Unlimited Attempts
+                    </mat-checkbox>
+                </div>
+                <h2 class="mt-4">Grading</h2>
+                <mat-checkbox class="px-5 col-2 largeCheckBox" [formControl]="showGrade">Show Grade After Quiz
+                </mat-checkbox>
+
             </div>
         </mat-expansion-panel>
 
+        <!-- Questions -->
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title class="boldPanelTitle">
@@ -104,6 +120,33 @@
 
                 <div class="row addQuestionRow">
                     <button mat-flat-button class="blue medium" (click)="addQuestion()">Add Question</button>
+                </div>
+
+            </div>
+        </mat-expansion-panel>
+
+        <!-- Question Settings -->
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title class="boldPanelTitle">
+                    Question Settings
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="container-fluid px-4">
+                <h2>Question Order</h2>
+                <div class="row align-items-center">
+                    <mat-checkbox class="largeCheckBox ml-5 col-3" [formControl]="randomOrderQuestions">Randomly Order
+                        Questions
+                    </mat-checkbox>
+
+                    <mat-form-field appearance="fill" class="selectFormField col-2" *ngIf="randomOrderQuestions.value">
+                        <mat-label>Randomize all except</mat-label>
+                        <mat-select [formControl]="nonRandomQuestions" multiple [disabled]="questions.length == 0">
+                            <mat-option *ngFor="let question of questions; let i = index" [value]="i">{{i + 1}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="questions.length == 0">There are no questions yet</mat-hint>
+                    </mat-form-field>
                 </div>
 
             </div>

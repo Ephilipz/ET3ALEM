@@ -8,7 +8,7 @@
                 <mat-form-field>
                     <mat-label>Enter Quiz Code</mat-label>
                     <input matInput name="quizCode" autofocus (input)="getQuizFromCode($event)" maxlength="5"
-                        [(ngModel)]="quizCode">
+                        [(ngModel)]="quizCode" autocomplete="off">
                 </mat-form-field>
             </div>
             <div class="buttonRow mx-auto mt-4" *ngIf="quizTitle.length > 0 && quizCode.length == 5">

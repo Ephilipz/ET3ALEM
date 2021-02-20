@@ -71,6 +71,7 @@ export class ConcreteAnswerQuestionMCQComponent extends AC_ConcreteAnswerQuestio
   }
 
   getSelected(){
-    return this.question.McqAnswerType == McqAnswerType.MultipleChoice ? this.selectedChoices : [this.selectedChoice];
+    const choiceBodies = this.question.McqAnswerType == McqAnswerType.MultipleChoice ? this.selectedChoices : [this.selectedChoice];
+    return choiceBodies.map(num => new Choice(num));
   }
 }

@@ -17,6 +17,7 @@ namespace DataAccessLayer
         {
             _context = context;
         }
+
         public async Task<List<QuestionCollection>> GetQuestionCollections(string userId)
         {
             var collections = await _context.QuestionCollections.Where(collection => collection.UserId == userId)
@@ -29,6 +30,16 @@ namespace DataAccessLayer
         {
             await _context.QuestionCollections.AddAsync(questionCollection);
             await _context.SaveChangesAsync();
+            return questionCollection;
+        }
+        public async Task<QuestionCollection> DeleteQuestionCollection(int id)
+        {
+            QuestionCollection questionCollection = _context.QuestionCollections.Where(q => q.Id == id).FirstOrDefault();
+            if(questionCollection != null)
+            {
+                _context.QuestionCollections.Remove(questionCollection);
+                await _context.SaveChangesAsync();
+            }
             return questionCollection;
         }
     }

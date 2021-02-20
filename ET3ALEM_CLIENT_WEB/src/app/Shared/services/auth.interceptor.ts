@@ -48,6 +48,11 @@ export class AuthInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.JWT);
           return next.handle(this.addToken(request, token.JWT))
+        }),
+        catchError((err) => {
+          alert('You must login again');
+          this.authService.logout();
+          return throwError(err);
         }));
     } else {
       return this.refreshTokenSubject.pipe(

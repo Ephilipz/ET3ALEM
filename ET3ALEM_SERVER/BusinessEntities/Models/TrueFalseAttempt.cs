@@ -14,7 +14,7 @@ namespace BusinessEntities.Models
             IsGraded = true;
             TrueFalseQuestion tfQuestion = QuizQuestion.Question as TrueFalseQuestion;
             double grade = tfQuestion.Answer == Answer ? QuizQuestion.Grade : 0;
-            return grade * QuizQuestion.Grade;
+            return grade;
         }
     }
 }

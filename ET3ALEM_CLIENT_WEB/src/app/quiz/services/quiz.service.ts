@@ -9,7 +9,6 @@ import { environment } from 'src/environments/environment';
 
 export class QuizService {
 
-
   private baseRoute = environment.baseUrl + '/api/Quiz';
 
   constructor(private http: HttpClient) { }

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Claims;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Helpers;
 
 namespace Server_Application.Controllers
 {
@@ -75,14 +76,8 @@ namespace Server_Application.Controllers
         [HttpGet]
         public async Task<IEnumerable<Quiz>> GetQuizzes()
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            string userId = string.Empty;
-            if (identity != null)
-            {
-                IEnumerable<Claim> claims = identity.Claims;
-                userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            }
-                return await _IQuizDsl.GetQuizzes(userId);
+            string userId = AccountHelper.getUserId(HttpContext, User);
+            return await _IQuizDsl.GetQuizzes(userId);
         }
 
         // POST: api/Quiz

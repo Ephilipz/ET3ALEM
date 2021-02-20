@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server_Application.Data;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210130105444_QuizQuestionSequence")]
+    partial class QuizQuestionSequence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,9 +124,6 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AllowedAttempts")
-                        .HasColumnType("int");
-
                     b.Property<string>("Code")
                         .HasColumnType("longtext");
 
@@ -144,23 +143,11 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("NoDueDate")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("NonShuffleQuestions")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("ShowGrade")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("ShuffleQuestions")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("TotalGrade")
                         .HasColumnType("int");
-
-                    b.Property<bool>("UnlimitedAttempts")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("UnlimitedTime")
                         .HasColumnType("tinyint(1)");
@@ -189,9 +176,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("SubmitTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserId")

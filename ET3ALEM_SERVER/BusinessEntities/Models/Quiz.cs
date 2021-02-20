@@ -27,5 +27,10 @@ namespace BusinessEntities.Models
         [Required]
         public string UserId { get; set; }
         public virtual IdentityUser User { get; set; }
+        public int AllowedAttempts { get; set; }
+        public bool UnlimitedAttempts { get; set; }
+        public bool ShowGrade { get; set; }
+        public bool ShuffleQuestions { get; set; }
+        public string? NonShuffleQuestions { get; set; }
     }
 }

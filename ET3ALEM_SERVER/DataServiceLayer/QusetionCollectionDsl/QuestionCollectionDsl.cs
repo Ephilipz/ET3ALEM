@@ -15,6 +15,8 @@ namespace DataServiceLayer
         {
             _IQuestionCollectionDal = IQuestionCollectionDal;
         }
+
+
         public async Task<List<QuestionCollection>> GetQuestionCollections(string userId)
         {
             return await _IQuestionCollectionDal.GetQuestionCollections(userId);
@@ -24,6 +26,10 @@ namespace DataServiceLayer
         {
             await _IQuestionCollectionDal.InsertQuestionCollection(questionCollection);
             return questionCollection;
+        }
+        public Task<QuestionCollection> DeleteQuestionCollection(int id)
+        {
+            return _IQuestionCollectionDal.DeleteQuestionCollection(id);
         }
     }
 }

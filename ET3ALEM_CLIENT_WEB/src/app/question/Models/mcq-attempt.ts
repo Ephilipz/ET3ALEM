@@ -3,8 +3,8 @@ import { QuestionAttempt } from "./question-attempt";
 
 export class MCQAttempt extends QuestionAttempt {
     Choices: Array<Choice>;
-    constructor(Id, QuizQuestionId, Grade, Choices = []){
-        super(Id, QuizQuestionId, Grade);
+    constructor(Id, QuizQuestion, Grade, Choices = []){
+        super(Id, QuizQuestion, Grade);
         this.Choices = Choices;
     }
 }

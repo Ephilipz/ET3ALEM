@@ -14,6 +14,11 @@ mat-form-field {
     font-size: 1.7em;
 }
 
+.selectFormField {
+    width: 300px;
+    font-size: 1.2em;
+}
+
 mat-expansion-panel {
     margin-bottom: 20px;
     padding: 10px 0;
@@ -32,7 +37,7 @@ ejs-richtexteditor {
 
 h2 {
     font-size: 1.8em;
-    font-weight: normal;
+    font-weight: 400;
 }
 
 .questionTitle {
@@ -49,10 +54,6 @@ h2 {
 .parentContainer {
     background-color: #f6f6f6;
     min-height: 100%;
-}
-
-.largeCheckBox {
-    font-size: 1.7em;
 }
 
 mat-checkbox ::ng-deep .mat-checkbox-inner-container {
@@ -72,12 +73,13 @@ mat-checkbox ::ng-deep .mat-checkbox-inner-container {
     color: rgb(180, 25, 25);
     transform: scale(1.6);
 }
+
 .copyIconButton {
     color: rgb(25, 92, 180);
     transform: scale(1.6);
 }
 
-.dragHandle{
+.dragHandle {
     left: 0;
     color: #ccc;
     cursor: move;
@@ -92,11 +94,22 @@ mat-checkbox ::ng-deep .mat-checkbox-inner-container {
                 0 8px 10px 1px rgba(0, 0, 0, 0.14),
                 0 3px 14px 2px rgba(0, 0, 0, 0.12);
   } */
-  
-  .cdk-drag-placeholder {
+
+.cdk-drag-placeholder {
     opacity: 0;
-  }
-  
-  .cdk-drag-animating {
+}
+
+.cdk-drag-animating {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
+}
+
+.additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+}
+
+::ng-deep .mat-expansion-indicator::after{
+    width: 15px;
+    height: 15px;
+    color: black;
+}

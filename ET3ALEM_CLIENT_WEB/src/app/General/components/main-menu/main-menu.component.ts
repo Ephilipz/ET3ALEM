@@ -25,8 +25,8 @@ export class MainMenuComponent implements OnInit {
         this.router.navigate(['']);
       },
       (err) => {
-        this.toastr.error('unable to log out');
         console.error('logout error', err);
+        this.router.navigate(['']);
       }
     )
 
