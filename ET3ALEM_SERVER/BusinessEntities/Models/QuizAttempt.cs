@@ -14,7 +14,7 @@ namespace BusinessEntities.Models
         public int Id { get; set; }
         [Required]
         public string UserId { get; set; }
-        public virtual IdentityUser User { get; set; }
+        public virtual User User { get; set; }
         [Required]
         public int QuizId { get; set; }
         public virtual Quiz Quiz { get; set; }

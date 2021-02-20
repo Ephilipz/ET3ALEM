@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Server_Application.Data;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using BusinessEntities.Models;
 
 namespace Server_Application
 {
@@ -57,7 +58,7 @@ namespace Server_Application
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors());
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 3;
                 options.Password.RequireDigit = false;
@@ -67,7 +68,7 @@ namespace Server_Application
                 options.User.RequireUniqueEmail = true;
             })
               .AddEntityFrameworkStores<ApplicationContext>()
-              .AddTokenProvider("UserRefresh", typeof(DataProtectorTokenProvider<IdentityUser>));
+              .AddTokenProvider("UserRefresh", typeof(DataProtectorTokenProvider<User>));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
