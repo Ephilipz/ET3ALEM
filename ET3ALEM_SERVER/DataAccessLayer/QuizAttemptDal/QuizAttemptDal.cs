@@ -22,10 +22,13 @@ namespace DataAccessLayer
             return _context.QuizAttempts.Where(qA => qA.Id == id).Include(qA => qA.QuestionsAttempts).FirstAsync();
         }
 
-        public async Task<QuizAttempt> PutQuizAttempt(int id, QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> PutQuizAttempt(int id,QuizAttempt quizAttempt)
         {
-            //QuizAttempt quizAttemptDB = await _context.QuizAttempts.Where(qA => qA.Id == id).Include(qA => qA.QuestionsAttempts).FirstOrDefaultAsync();
-            //quizAttemptDB = quizAttempt;
+            quizAttempt.QuestionsAttempts.ForEach(qA => qA.QuizQuestion = null);
+            foreach (var item in quizAttempt.QuestionsAttempts.OfType<MCQAttmept>().SelectMany(mcqA=>mcqA.Choices))
+            {
+                _context.Entry(item).State = EntityState.Unchanged;
+            }
             _context.Update(quizAttempt);
             await _context.SaveChangesAsync();
             return quizAttempt;

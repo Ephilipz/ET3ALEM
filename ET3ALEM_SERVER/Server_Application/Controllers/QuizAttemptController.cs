@@ -42,7 +42,7 @@ namespace Server_Application.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<QuizAttempt>> PutQuizAttempt(int id, QuizAttempt quizAttempt)
         {
-            await _IQuizAttemptDsl.PutQuizAttempt(id, quizAttempt);
+            await _IQuizAttemptDsl.PutQuizAttempt(id, AccountHelper.getUserId(HttpContext, User), quizAttempt);
             return NoContent();
         }
 

@@ -22,8 +22,9 @@ namespace DataServiceLayer
             return _IQuizAttemptDal.GetQuizAttempt(id);
         }
 
-        public async Task<QuizAttempt> PutQuizAttempt(int id, QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> PutQuizAttempt(int id,string userId, QuizAttempt quizAttempt)
         {
+            quizAttempt.UserId = userId;
             if (quizAttempt.SubmitTime != null)
                 quizAttempt.GradeQuiz();
             return await _IQuizAttemptDal.PutQuizAttempt(id, quizAttempt);
