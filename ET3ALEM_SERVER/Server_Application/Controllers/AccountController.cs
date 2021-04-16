@@ -16,6 +16,10 @@ using System.Security.Cryptography;
 using BusinessEntities.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using BusinessEntities.Models;
+using DataServiceLayer;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System.Globalization;
 
 namespace Server_Application.Controllers
 {
@@ -25,13 +29,13 @@ namespace Server_Application.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _IConfiguration;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration IConfiguration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _configuration = configuration;
+            _IConfiguration = IConfiguration;
 
         }
 
@@ -156,17 +160,17 @@ namespace Server_Application.Controllers
             return await _userManager.GetAuthenticationTokenAsync(user, "UserRefresh", "RefreshToken");
         }
 
-        private string GenerateJwt(IEnumerable<Claim> claims)
+        private string GenerateJwt(IEnumerable<Claim> claims, int? duration = null)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:JwtKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_IConfiguration["Authentication:JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             //var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Authentication:JwtExpireDays"]));
 
             var token = new JwtSecurityToken(
-                _configuration["Authentication:JwtIssuer"],
-                _configuration["Authentication:JwtIssuer"],
+                _IConfiguration["Authentication:JwtIssuer"],
+                _IConfiguration["Authentication:JwtIssuer"],
                 claims,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(duration ?? 5),
                 signingCredentials: creds
             );
 
@@ -190,7 +194,7 @@ namespace Server_Application.Controllers
             {
                 ValidateAudience = false,
                 ValidateIssuer = false,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:JwtKey"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_IConfiguration["Authentication:JwtKey"])),
                 ValidateLifetime = false
             };
 
@@ -210,5 +214,60 @@ namespace Server_Application.Controllers
                 throw e;
             }
         }
+
+        [HttpPost("sendRecoveryMail")]
+        public async Task<IActionResult> SendRecoveryMail(ResetPasswordVM resetPasswordVM)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordVM.Email);
+            if (user == null)
+                return NotFound("Invalid Email");
+            var apiKey = _IConfiguration.GetSection("EmailConfiguration").GetValue<string>("ApiKey");
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress(_IConfiguration.GetSection("EmailConfiguration").GetValue<string>("Sender"), _IConfiguration.GetSection("EmailConfiguration").GetValue<string>("User"));
+            var to = new EmailAddress(user.Email, user.UserName);
+            var subject = "Reset Password";
+            // remove previous token
+            await _userManager.RemoveAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken");
+            var passwordRecoveryToken = GenerateRecoveryToken(user.Email);
+            await _userManager.SetAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken", passwordRecoveryToken);
+            var resetUrl = $"{ _IConfiguration.GetValue<string>("ClientUrl")}/auth/reset?token={passwordRecoveryToken}";
+            var htmlContent = $@"<a href=""{resetUrl}"">follow this link to reset your password</a>";
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
+            _ = client.SendEmailAsync(msg).ConfigureAwait(false);
+            return Ok();
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM resetPasswordVM)
+        {
+            string email = new JwtSecurityToken(resetPasswordVM.RecoveryToken).Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            User user = await _userManager.FindByEmailAsync(email);
+            string recoveryToken = await _userManager.GetAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken");
+            var token = recoveryToken != null ? new JwtSecurityToken(recoveryToken) : null;
+            if (user == null || token?.ValidTo < DateTime.UtcNow || string.IsNullOrEmpty(recoveryToken))
+            {
+                if (user != null)
+                    await _userManager.RemoveAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken");
+                return NotFound();
+            }
+            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordVM.Password);
+            if (passwordChangeResult.Succeeded)
+            {
+                await _userManager.RemoveAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken");
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        private string GenerateRecoveryToken(string email)
+        {
+            return GenerateJwt(new List<Claim> { new Claim(JwtRegisteredClaimNames.Sub, email) }, 15);
+        }
+
+
     }
 }

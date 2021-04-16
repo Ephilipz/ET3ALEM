@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { PasswordRecoverComponent } from './components/password-recover/password-recover.component';
@@ -9,19 +10,22 @@ import { RouterModule } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../Shared/services/auth.interceptor';
 import { AuthGuardService } from './services/auth-guard.service';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegisterComponent,
-    PasswordRecoverComponent],
+    PasswordRecoverComponent,
+    ResetPasswordComponent],
   imports: [
     AuthRoutingModule,
     ReactiveFormsModule,
     AngularMaterialModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    CommonModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
