@@ -75,12 +75,9 @@ export class AuthService {
   }
 
   logout() {
-    return this.http.get(environment.baseUrl + '/api/Account/Logout').pipe(
-      tap(() => {
-        localStorage.removeItem(this.JWT);
-        localStorage.removeItem(this.Refresh);
-      })
-    );
+    localStorage.removeItem(this.JWT);
+    localStorage.removeItem(this.Refresh);
+    return this.http.get(environment.baseUrl + '/api/Account/Logout');
   }
 
   public isLoggedIn() {

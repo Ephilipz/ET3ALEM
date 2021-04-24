@@ -132,6 +132,8 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     let quizQuestionToDelete: QuizQuestion = this.currentQuiz?.QuizQuestions.find(qQ => qQ.QuestionId == question.Id);
     if (quizQuestionToDelete) {
       quizQuestionToDelete.Id = quizQuestionToDelete.Id * -1;
+      quizQuestionToDelete.QuestionId *= -1;
+      quizQuestionToDelete.Question.Id *= -1;
     }
 
     let index = this.questions.findIndex(q => q.Id == question.Id);
@@ -187,6 +189,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     await Promise.all(this.createQuestionComponents.map(async (component, i) => {
       let question = await component.saveQuestion(this.mode);
       let grade = component.getGrade();
+      question.Id = 0;
       quizQuestions.push(new QuizQuestion(question, grade, 0, i));
     }));
 
@@ -227,11 +230,11 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       //if not, insert it
       else {
         question.Id = 0;
-        this.currentQuiz.QuizQuestions.push(new QuizQuestion(question, grade, i));
+        this.currentQuiz.QuizQuestions.push(new QuizQuestion(question, grade, 0, i));
       }
     }));
 
-    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.randomOrderQuestions.value, (<Array<number>>this.nonRandomQuestions.value).join(','));
+    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.randomOrderQuestions.value, (<Array<number>>this.nonRandomQuestions?.value)?.join(','));
 
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
       () => {

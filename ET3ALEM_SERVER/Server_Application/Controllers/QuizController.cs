@@ -83,7 +83,7 @@ namespace Server_Application.Controllers
         // POST: api/Quiz
         [HttpPost]
         public async Task<ActionResult<Quiz>> PostQuiz(Quiz quiz)
-        {
+         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
             {

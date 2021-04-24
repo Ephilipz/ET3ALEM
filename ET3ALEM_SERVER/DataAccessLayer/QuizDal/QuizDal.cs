@@ -61,6 +61,8 @@ namespace DataAccessLayer
 
         public async Task<Quiz> InsertQuiz(Quiz quiz)
         {
+            if (quiz.QuizQuestions.Count != 0)
+                quiz.TotalGrade = quiz.QuizQuestions.Sum(question => question.Grade);
             await _context.Quizzes.AddAsync(quiz);
             await _context.SaveChangesAsync();
             quiz.Code = QuizHelper.GetCode(quiz.Id);
@@ -84,13 +86,14 @@ namespace DataAccessLayer
                 else
                     _context.Entry(quizQuestion).State = EntityState.Modified;
             }
+            quiz.TotalGrade = quiz.QuizQuestions.Sum(question => question.Grade);
             _context.Entry(quiz).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
         public Task<Quiz> GetBasicQuizByCode(string code)
         {
-            return _context.Quizzes.Where(q => q.Code.ToLower() == code.ToLower()).Include(q => q.QuizQuestions).FirstAsync();
+            return _context.Quizzes.Where(q => q.Code.ToLower() == code.ToLower()).Include(q => q.QuizQuestions).AsNoTracking().FirstAsync();
         }
 
         public Task<Quiz> GetFullQuizByCode(string code)

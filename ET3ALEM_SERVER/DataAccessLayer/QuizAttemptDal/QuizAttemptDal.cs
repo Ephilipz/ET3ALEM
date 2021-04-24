@@ -19,13 +19,25 @@ namespace DataAccessLayer
 
         public Task<QuizAttempt> GetQuizAttempt(int id)
         {
-            return _context.QuizAttempts.Where(qA => qA.Id == id).Include(qA => qA.QuestionsAttempts).FirstAsync();
+            return _context.QuizAttempts.AsSplitQuery().Where(qA => qA.Id == id).Include(qA => qA.QuestionsAttempts).AsNoTracking().FirstAsync();
         }
 
-        public async Task<QuizAttempt> PutQuizAttempt(int id,QuizAttempt quizAttempt)
+        public Task<QuizAttempt> GetQuizAttemptWithQuiz(int id)
+        {
+            return _context.QuizAttempts.AsSplitQuery().Where(qA => qA.Id == id)
+                .Include(qA => qA.Quiz)
+                .Include(qA => qA.QuestionsAttempts)
+                .ThenInclude(qAS => ((MCQAttmept)qAS).Choices)
+                .Include(qA => qA.QuestionsAttempts)
+                .ThenInclude(qAS => qAS.QuizQuestion)
+                .ThenInclude(quizQuestion => quizQuestion.Question)
+                .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).AsNoTracking().FirstAsync();
+        }
+
+        public async Task<QuizAttempt> PutQuizAttempt(int id, QuizAttempt quizAttempt)
         {
             quizAttempt.QuestionsAttempts.ForEach(qA => qA.QuizQuestion = null);
-            foreach (var item in quizAttempt.QuestionsAttempts.OfType<MCQAttmept>().SelectMany(mcqA=>mcqA.Choices))
+            foreach (var item in quizAttempt.QuestionsAttempts.OfType<MCQAttmept>().SelectMany(mcqA => mcqA.Choices))
             {
                 _context.Entry(item).State = EntityState.Unchanged;
             }
@@ -40,9 +52,33 @@ namespace DataAccessLayer
             await _context.SaveChangesAsync();
             return quizAttempt;
         }
+
+        public async Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
+        {
+
+            //detach child entities that will not be tracked
+            quizAttempt.QuestionsAttempts.ForEach(qA => qA.QuizQuestion = null);
+            quizAttempt.QuestionsAttempts.OfType<MCQAttmept>().ToList().ForEach(mcqA => mcqA.Choices = null);
+            quizAttempt.Quiz = null;
+
+            _context.Update(quizAttempt);
+            await _context.SaveChangesAsync();
+            return quizAttempt;
+        }
+
         public async Task<List<QuizAttempt>> GetQuizAttemptsForQuiz(int quizId, string userId)
         {
             return await _context.QuizAttempts.Where(qA => qA.QuizId == quizId && qA.UserId == userId).ToListAsync();
+        }
+
+        public async Task<List<QuizAttempt>> GetQuizAttempts(string userId)
+        {
+            return await _context.QuizAttempts.Where(qA => qA.UserId == userId).ToListAsync();
+        }
+
+        public async Task<List<QuizAttempt>> GetUngradedQuizAttempts(string userId)
+        {
+            return await _context.QuizAttempts.AsSplitQuery().Where(quizAttempt => !quizAttempt.IsGraded && quizAttempt.Quiz.UserId == userId).Include(qA => qA.User).ToListAsync();
         }
     }
 }

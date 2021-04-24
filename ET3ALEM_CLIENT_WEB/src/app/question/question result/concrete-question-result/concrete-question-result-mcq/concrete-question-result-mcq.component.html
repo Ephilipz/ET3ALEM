@@ -1,0 +1,17 @@
+<div class="container-fluid">
+    <div *ngFor="let choice of choices" class="row choiceContainer">
+        <div class="choice col-9" [ngClass]="{'correctChoice': isSelected(choice)}">
+            <h1>{{choice.Body}}</h1>
+        </div>
+        <div class="col-3">
+            <div *ngIf="choice.IsAnswer" class="sideBubble isAnswer">
+                <h2 *ngIf="isSelected(choice)">Your answer was correct</h2>
+                <h2 *ngIf="!isSelected(choice)">Correct Answer</h2>
+            </div>
+            <div *ngIf="!choice.IsAnswer && isSelected(choice)" class="sideBubble isWrongAnswer">
+                <h2>Your answer was incorrect</h2>
+            </div>
+        </div>
+    </div>
+
+</div>

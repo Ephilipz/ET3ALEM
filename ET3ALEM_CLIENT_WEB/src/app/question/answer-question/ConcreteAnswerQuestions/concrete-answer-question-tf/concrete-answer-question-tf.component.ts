@@ -24,6 +24,6 @@ export class ConcreteAnswerQuestionTFComponent extends AC_ConcreteAnswerQuestion
   }
   
   getAnswers() {
-    return new TrueFalseAttempt(0, this.quizQuestion, 0, false);
+    return new TrueFalseAttempt(0, this.quizQuestion, 0, this.Answer);
   }
 }

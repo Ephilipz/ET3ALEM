@@ -8,6 +8,9 @@ import { ConcreteAnswerQuestionTFComponent } from "../answer-question/ConcreteAn
 import { QuestionAttempt } from "../Models/question-attempt";
 import { MCQAttempt } from "../Models/mcq-attempt";
 import { TrueFalseAttempt } from "../Models/true-false-attempt";
+import { ConcreteQuestionResultMCQComponent } from "../question result/concrete-question-result/concrete-question-result-mcq/concrete-question-result-mcq.component";
+import { ConcreteQuestionResultTFComponent } from "../question result/concrete-question-result/concrete-question-result-tf/concrete-question-result-tf.component";
+import { Question } from "../Models/question";
 
 /**
  * A shared class with the question type dictionaries for the creation of specific questions 
@@ -24,6 +27,11 @@ export class QuestionTypeResolver {
     public static answerQuestionComponentMap = {
         MCQ: ConcreteAnswerQuestionMCQComponent,
         TrueFalse: ConcreteAnswerQuestionTFComponent
+    }
+
+    public static viewQuestionResultComponentMap = {
+        MCQ: ConcreteQuestionResultMCQComponent,
+        TrueFalse: ConcreteQuestionResultTFComponent
     }
 
     public static questionTypeNames = [
@@ -55,17 +63,21 @@ export class QuestionTypeResolver {
         }
     }
 
-    public static getSpecificQuestionAttempt(questionAttempt: QuestionAttempt): any {
-        const type = (<any>questionAttempt)?.QuizQuestion?.Question?.QuestionType;
-        if (!type)
-            return null;
-        switch (type) {
-            case QuestionType.MCQ:
-                return new MCQAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<MCQAttempt>questionAttempt).Choices);
-            case QuestionType.TrueFalse:
-                return new TrueFalseAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<TrueFalseAttempt>questionAttempt).Answer);
-            default:
-                return questionAttempt;
-        }
+    public static getSpecificQuestionAttempt(questionAttempts: QuestionAttempt[]): QuestionAttempt[] {
+        if (!questionAttempts) return [];
+        questionAttempts.map(questionAttempt => {
+            const type = (<any>questionAttempt)?.QuizQuestion?.Question?.QuestionType;
+            if (!type)
+                return null;
+            switch (type) {
+                case QuestionType.MCQ:
+                    return new MCQAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<MCQAttempt>questionAttempt).Choices);
+                case QuestionType.TrueFalse:
+                    return new TrueFalseAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<TrueFalseAttempt>questionAttempt).Answer);
+                default:
+                    return questionAttempt;
+            }
+        });
+        return questionAttempts;
     }
 }

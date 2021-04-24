@@ -9,12 +9,12 @@ namespace BusinessEntities.Models
     public class TrueFalseAttempt : QuestionAttempt
     {
         public bool Answer { get; set; }
-        public override double GradeQuestion()
+        public override void GradeQuestion()
         {
             IsGraded = true;
             TrueFalseQuestion tfQuestion = QuizQuestion.Question as TrueFalseQuestion;
             double grade = tfQuestion.Answer == Answer ? QuizQuestion.Grade : 0;
-            return grade;
+            this.Grade = grade;
         }
     }
 }

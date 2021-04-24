@@ -11,7 +11,9 @@ namespace DataAccessLayer
         Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt);
         Task<QuizAttempt> GetQuizAttempt(int id);
         Task<QuizAttempt> PutQuizAttempt(int id, QuizAttempt quizAttempt);
+        Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt);
         Task<List<QuizAttempt>> GetQuizAttemptsForQuiz(int quizId, string userId);
-
+        Task<QuizAttempt> GetQuizAttemptWithQuiz(int id);
+        Task<List<QuizAttempt>> GetQuizAttempts(string userId);
     }
 }

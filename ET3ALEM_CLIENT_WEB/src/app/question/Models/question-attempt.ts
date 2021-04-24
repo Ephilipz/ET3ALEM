@@ -16,7 +16,7 @@ export abstract class QuestionAttempt {
         this.Grade = Grade;
     }
 
-    UpdateQuestionType(){
+    public UpdateQuestionType(){
         this.questionType = this.QuizQuestion?.Question?.QuestionType;
     }
 

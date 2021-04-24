@@ -1,0 +1,68 @@
+.resultsHeaderRow {
+    background-color: #426280;
+    border-radius: 20px;
+    margin: 60px auto 30px;
+    width: 70%;
+    padding: 20px 10px;
+}
+
+.resultsHeaderRow h2 {
+    color: white;
+    margin: auto 20px;
+    font-size: 2em;
+}
+
+.resultsHeaderRow h2 span {
+    font-weight: 300;
+}
+
+.resultsHeaderRow h2 mat-icon {
+    transform: scale(2);
+    margin: 0 20px;
+}
+
+.questionContainer {
+    margin: 0 auto;
+    min-width: fit-content;
+    width: 70%;
+}
+
+.QuestionTitle h2 {
+    font-size: 2.3em;
+    font-weight: 700;
+}
+
+.questionResultComponent {
+    margin-left: 30px;
+}
+
+.QuestionTitle{
+    margin: 0px 20px 0px;
+}
+
+.gradeDiv {
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    font-size: 5px;
+}
+
+.gradeDiv h2 {
+    font-size: 30px;
+    margin: auto 3px;
+}
+
+.gradeDiv mat-form-field{
+    width: 70px;
+    text-align: center;
+}
+
+.inputGrade {
+    font-size: 25px;
+    color: blue;
+    font-weight: 700;
+}
+
+.bottomRow1{
+    margin-bottom: 50px;
+}

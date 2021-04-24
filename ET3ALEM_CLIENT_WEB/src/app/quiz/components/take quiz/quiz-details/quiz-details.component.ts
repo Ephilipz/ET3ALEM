@@ -22,6 +22,8 @@ export class QuizDetailsComponent implements OnInit {
   latestQuizAttempt: QuizAttempt = null;
   inProgress = false;
   quizAttemptLimitReached = false;
+  dueDatePassed = false;
+  readonly secondsBuffer = 10;
 
   constructor(private route: ActivatedRoute, private quizService: QuizService, private quizAttemptService: QuizAttemptService, private toastr: ToastrService, private router: Router) { }
 
@@ -34,7 +36,7 @@ export class QuizDetailsComponent implements OnInit {
           this.quizAttemptService.getQuizAttemptsForQuiz(quiz.Id).subscribe(
             (quizAttemptList) => {
               this.quizAttempts = plainToClass(QuizAttempt, quizAttemptList)?.sort(qA => qA.StartTime.getMilliseconds())?.reverse();
-              this.checkQuizAttempts();
+              this.checkQuizValidityAndProgress();
               this.isLoaded = true;
             },
             (err) => {
@@ -50,14 +52,43 @@ export class QuizDetailsComponent implements OnInit {
     });
   }
 
-  checkQuizAttempts() {
+  resumeQuiz() {
+    this.checkQuizValidityAndProgress();
+    if (!this.inProgress) {
+      this.toastr.info('Unable to resume. The time finished for your previous quiz attempt.');
+      return;
+    }
+    this.router.navigate(['./start'], { relativeTo: this.route, state: { quizAttemptId: this.latestQuizAttempt.Id } })
+    // this.router.navigateByUrl('/user', { state: { orderId: 1234 } });
+  }
+
+  startQuiz() {
+    this.checkQuizValidityAndProgress();
+    if (this.inProgress) {
+      this.toastr.info('Unable to start a new quiz. This quiz is now in progress.');
+      return;
+    }
+    this.router.navigate(['./start'], { relativeTo: this.route, state: { quizAttemptId: null } })
+  }
+
+  checkQuizValidityAndProgress() {
+    const currentTime = moment.utc();
+
+    //check due date
+    if (!this.quiz.NoDueDate) {
+      const endTime = moment.utc(this.quiz.EndDate.toString() + 'Z');
+      this.dueDatePassed = endTime.isBefore(currentTime);
+      if (this.dueDatePassed)
+        return;
+    }
+
+    //check previous attempts
     if (!this.quizAttempts || this.quizAttempts.length == 0)
       return;
     this.latestQuizAttempt = this.quizAttempts[0];
-    const endTime = moment.utc(this.latestQuizAttempt.StartTime.toString()+'Z').add(this.quiz.DurationSeconds, 'seconds');
-    const currentTime = moment.utc();
-    this.inProgress = endTime.isAfter(currentTime) && this.latestQuizAttempt.SubmitTime == null;
-    this.quizAttemptLimitReached = this.quizAttempts.length == this.quiz.AllowedAttempts && !this.quiz.UnlimitedAttempts;
+    const latestQuizEndTime = moment.utc(this.latestQuizAttempt.StartTime.toString() + 'Z').add(this.quiz.DurationSeconds + this.secondsBuffer, 'seconds');
+    this.inProgress = latestQuizEndTime.isAfter(currentTime) && this.latestQuizAttempt.SubmitTime == null;
+    this.quizAttemptLimitReached = this.quizAttempts.length >= this.quiz.AllowedAttempts && !this.quiz.UnlimitedAttempts && !this.inProgress;
   }
 
 }

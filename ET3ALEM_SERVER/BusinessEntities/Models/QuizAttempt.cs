@@ -26,7 +26,11 @@ namespace BusinessEntities.Models
 
         public void GradeQuiz()
         {
-            QuestionsAttempts.ForEach(qA => qA.GradeQuestion());
+            QuestionsAttempts.ForEach(qA =>
+            {
+                qA.GradeQuestion();
+                Grade += qA.Grade;
+            });
         }
     }
 }

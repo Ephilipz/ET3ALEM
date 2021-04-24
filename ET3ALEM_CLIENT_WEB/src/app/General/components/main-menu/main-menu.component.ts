@@ -25,6 +25,7 @@ export class MainMenuComponent implements OnInit {
         this.router.navigate(['']);
       },
       (err) => {
+        this.isLoggedIn = this.auth.isLoggedIn();
         console.error('logout error', err);
         this.router.navigate(['']);
       }

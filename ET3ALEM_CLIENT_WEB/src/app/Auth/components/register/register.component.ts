@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent extends ExtraFormOptions implements OnInit {
 
-  studentForm = new FormGroup({
+  registerForm = new FormGroup({
     name: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -39,9 +39,9 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
 
   register() {
     let registerUserObject: RegisterUser = new RegisterUser(
-      this.studentForm.get('name').value,
-      this.studentForm.get('email').value,
-      this.studentForm.get('password').value,
+      this.registerForm.get('name').value,
+      this.registerForm.get('email').value,
+      this.registerForm.get('password').value,
       Role.Student
     );
     this.AuthService.register(registerUserObject).subscribe(

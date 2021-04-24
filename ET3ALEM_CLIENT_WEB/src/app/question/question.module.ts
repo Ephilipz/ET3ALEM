@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EditOrCreateQuestionHeaderComponent } from './edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component';
-import { ViewQuestionComponent } from './view-question/view-question.component';
 import { AngularMaterialModule } from '../Shared/modules/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedComponentsModule } from '../Shared/modules/shared-components/shared-components.module';
@@ -16,9 +15,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { ListQuestionCollectionsComponent } from './question collections/list-question-collections/list-question-collections.component';
 import { EditOrCreateQuestionCollectionComponent } from './question collections/edit-or-create-question-collection/edit-or-create-question-collection.component';
+import { QuestionResultHeaderComponent } from './question result/question-result-header/question-result-header.component';
+import { ConcreteQuestionResultMCQComponent } from './question result/concrete-question-result/concrete-question-result-mcq/concrete-question-result-mcq.component';
+import { ConcreteQuestionResultTFComponent } from './question result/concrete-question-result/concrete-question-result-tf/concrete-question-result-tf.component';
 
 @NgModule({
-  declarations: [EditOrCreateQuestionHeaderComponent, ViewQuestionComponent, ConcreteQuestionMCQComponent, ConcreteQuestionTrueFalseComponent, DynamicComponentHostDirective, AnswerQuestionHeaderComponent, ConcreteAnswerQuestionMCQComponent, ConcreteAnswerQuestionTFComponent, ListQuestionCollectionsComponent, EditOrCreateQuestionCollectionComponent],
+  declarations: [EditOrCreateQuestionHeaderComponent, ConcreteQuestionMCQComponent, ConcreteQuestionTrueFalseComponent, DynamicComponentHostDirective, AnswerQuestionHeaderComponent, ConcreteAnswerQuestionMCQComponent, ConcreteAnswerQuestionTFComponent, ListQuestionCollectionsComponent, EditOrCreateQuestionCollectionComponent, QuestionResultHeaderComponent,
+    ConcreteQuestionResultMCQComponent,
+    ConcreteQuestionResultTFComponent],
   imports: [
     CommonModule,
     AngularMaterialModule,
@@ -29,6 +33,7 @@ import { EditOrCreateQuestionCollectionComponent } from './question collections/
   ],
   exports: [
     EditOrCreateQuestionHeaderComponent,
-    AnswerQuestionHeaderComponent]
+    AnswerQuestionHeaderComponent,
+    QuestionResultHeaderComponent]
 })
 export class QuestionModule { }

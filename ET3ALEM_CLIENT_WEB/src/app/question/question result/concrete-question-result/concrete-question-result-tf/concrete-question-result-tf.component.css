@@ -1,0 +1,17 @@
+.mat-button-toggle-group{
+    width: 70%;
+    margin: auto 0px;
+    padding: 0px;
+}
+
+.mat-button-toggle{
+    width: 50%;
+    font-size: 1.5em;
+    color: black;
+    background-color: rgb(221, 221, 221);
+}
+
+.mat-button-toggle-group .isAnswer{
+    /* background-color: rgb(206, 84, 84); */
+    border: 5px solid black;
+}

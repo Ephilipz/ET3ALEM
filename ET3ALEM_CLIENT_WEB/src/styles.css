@@ -11,7 +11,7 @@ body {
 
 /* Used to override bootstrap styling on angular material buttons */
 
-.mat-flat-button:focus, .mat-flat-button:active:focus, .mat-flat-button.active:focus, .mat-icon-button:focus, .mat-icon-button.active:focus, .mat-icon-button:active:focus{
+.mat-flat-button:focus, .mat-flat-button:active:focus, .mat-flat-button.active:focus, .mat-icon-button:focus, .mat-icon-button.active:focus, .mat-icon-button:active:focus {
     outline: none !important;
     outline-style: none !important;
 }
@@ -56,4 +56,54 @@ body {
 .largeCheckBox {
     font-size: 1.7em;
     font-weight: 300;
+}
+
+h1.topBoldTitle {
+    font-size: 4em;
+    font-weight: 900;
+    text-align: center;
+}
+
+h2.secondaryTitle{
+    font-size: 4em;
+    font-weight: 200;
+    text-align: center;
+}
+
+.sideBubble {
+    height: 100%;
+    background: green;
+    color: white;
+    position: relative;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    display: flex;
+    margin-left: 30px;
+}
+
+.sideBubble::before{
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 30%;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-right: 26px solid green;
+    border-bottom: 13px solid transparent;
+}
+
+.isWrongAnswer{
+    background-color:rgb(168, 48, 48);
+}
+
+.sideBubble.isWrongAnswer::before{
+    /* border-right: red; */
+    border-right-color: rgb(168, 48, 48);
+}
+
+.sideBubble h2{
+    text-align: center;
+    margin: auto;
 }

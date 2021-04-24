@@ -21,9 +21,16 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     return next.handle(req).pipe(catchError(error => {
+      //if unauthenticated, try to refresh the token
       if (error instanceof HttpErrorResponse && error.status === 401) {
         return this.handle401Error(req, next);
-      } else {
+      }
+      //if unable to refresh token, logout
+      else if (req.url.toLowerCase().includes('refresh')) {
+        this.authService.logout();
+        return;
+      }
+      else {
         return throwError(error);
       }
     }));
@@ -48,11 +55,6 @@ export class AuthInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.JWT);
           return next.handle(this.addToken(request, token.JWT))
-        }),
-        catchError((err) => {
-          alert('You must login again');
-          this.authService.logout();
-          return throwError(err);
         }));
     } else {
       return this.refreshTokenSubject.pipe(

@@ -17,6 +17,7 @@ export class Quiz {
     ShowGrade: boolean;
     ShuffleQuestions: boolean;
     NonShuffleQuestions: string;
+    TotalGrade: number;
 
     @Type(() => QuizQuestion)
     QuizQuestions: Array<QuizQuestion> = [];

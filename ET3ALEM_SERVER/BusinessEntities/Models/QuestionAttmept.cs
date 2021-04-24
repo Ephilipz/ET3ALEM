@@ -17,6 +17,6 @@ namespace BusinessEntities.Models
         public virtual QuizQuestion QuizQuestion { get; set; }
         public double Grade { get; set; }
         public bool IsGraded { get; set; }
-        public abstract double GradeQuestion();
+        public abstract void GradeQuestion();
     }
 }

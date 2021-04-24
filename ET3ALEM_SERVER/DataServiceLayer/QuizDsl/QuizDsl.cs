@@ -75,6 +75,10 @@ namespace DataServiceLayer
                 {
                     Qquestion.QuestionId = _IQuestionDsl.InsertQuestion(Qquestion.Question).Id;
                 }
+                else if(Qquestion.Question.Id < 0)
+                {
+                    await _IQuestionDsl.DeleteQuestion(Qquestion.Question.Id);
+                }
                 else
                 {
                     await _IQuestionDsl.PutQuestion(Qquestion.Question);

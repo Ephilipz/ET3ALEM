@@ -6,6 +6,8 @@ import { AccessQuizComponent } from './components/take quiz/access-quiz/access-q
 import { EditOrCreateQuizComponent } from './components/edit-create-quiz/edit-or-create-quiz.component';
 import { QuizDetailsComponent } from './components/take quiz/quiz-details/quiz-details.component';
 import { TakeQuizComponent } from './components/take quiz/take-quiz/take-quiz.component';
+import { ViewQuizResultComponent } from './components/quiz-results/view-quiz-result/view-quiz-result.component';
+import { GradeQuizComponent } from './components/grade-quiz/grade-quiz.component';
 
 
 const routes: Routes = [
@@ -17,6 +19,8 @@ const routes: Routes = [
   { path: 'take', component: AccessQuizComponent },
   { path: 'take/:code', component: QuizDetailsComponent },
   { path: 'take/:code/start', component: TakeQuizComponent },
+  { path: 'viewAttempt/:id', component: ViewQuizResultComponent },
+  { path: 'gradeAttempt/:id', component: GradeQuizComponent },
 ];
 
 @NgModule({

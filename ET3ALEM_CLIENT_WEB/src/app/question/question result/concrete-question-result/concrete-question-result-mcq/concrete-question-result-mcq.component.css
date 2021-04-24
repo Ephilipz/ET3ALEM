@@ -1,0 +1,19 @@
+.choiceContainer{
+    padding: 15px 0px;
+}
+
+.choice {
+    background-color: rgb(221, 221, 221);
+    padding: 15px 30px;
+    /* margin: 15px 0px auto; */
+    border-radius: 20px;
+}
+
+.correctChoice {
+    /* background-color:  rgb(87, 221, 87); */
+    border: 5px solid black;
+}
+
+.choice h1 {
+    margin: auto;
+}

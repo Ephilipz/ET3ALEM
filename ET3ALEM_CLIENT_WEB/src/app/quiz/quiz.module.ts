@@ -16,9 +16,12 @@ import { EditOrCreateQuizComponent } from './components/edit-create-quiz/edit-or
 import { QuizDetailsComponent } from './components/take quiz/quiz-details/quiz-details.component';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { ViewQuizResultComponent } from './components/quiz-results/view-quiz-result/view-quiz-result.component';
+import { GradeQuizComponent } from './components/grade-quiz/grade-quiz.component';
+import { QuizAttemptHistoryComponent } from './components/quiz-attempt-history/quiz-attempt-history.component';
 
 @NgModule({
-  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent, AccessQuizComponent, QuizDetailsComponent],
+  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent, AccessQuizComponent, QuizDetailsComponent, ViewQuizResultComponent, GradeQuizComponent, QuizAttemptHistoryComponent],
   imports: [
     CommonModule,
     QuizRoutingModule,
