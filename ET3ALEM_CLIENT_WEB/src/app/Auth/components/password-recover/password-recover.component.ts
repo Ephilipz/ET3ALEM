@@ -10,17 +10,16 @@ import { AuthService } from '../../services/auth.service';
 })
 export class PasswordRecoverComponent extends ExtraFormOptions implements OnInit {
 
-  constructor(private AuthService : AuthService) { 
+  constructor(private AuthService: AuthService) {
     super();
   }
-
   email = new FormControl('', [Validators.email, Validators.required]);
 
   ngOnInit(): void {
   }
 
-  sendRecoveryMail(){
-    
+  sendRecoveryMail() {
+    this.AuthService.sendRecoveryMail(this.email.value).subscribe();
   }
 
 }
