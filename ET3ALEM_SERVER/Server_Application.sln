@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Validation", "Validation\Va
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExceptionHandling", "ExceptionHandling\ExceptionHandling.csproj", "{9104A7BD-E763-4EDD-930E-0F7280905073}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{5A88E884-0491-43DE-9A32-4A5594D7A97B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helpers", "Helpers\Helpers.csproj", "{5A88E884-0491-43DE-9A32-4A5594D7A97B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E03F41B-737B-464B-A564-14CBBF830E53}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
