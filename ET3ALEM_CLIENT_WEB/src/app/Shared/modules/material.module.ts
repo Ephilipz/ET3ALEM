@@ -22,8 +22,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import {MatDialogModule} from '@angular/material/dialog';
 
 
 
@@ -52,7 +53,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
         MatCheckboxModule,
         MatSortModule,
         MatProgressSpinnerModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        MatDialogModule
     ],
     exports: [
         MatButtonModule,
@@ -76,7 +78,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
         MatCheckboxModule,
         MatSortModule,
         MatProgressSpinnerModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        MatDialogModule
     ],
     providers: [
         MatDatepickerModule,

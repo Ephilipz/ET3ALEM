@@ -9,9 +9,9 @@ import { AuthGuardService } from './auth/services/auth-guard.service';
 
 
 const routes: Routes = [
-  // { path: '', redirectTo: 'quiz', pathMatch: 'full' },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule', canActivate: [AuthGuardService] },
   { path: 'quiz', loadChildren: './quiz/quiz.module#QuizModule', canActivate: [AuthGuardService] },
+  { path: 'questionCollection', loadChildren: './question-collection/question-collection.module#QuestionCollectionModule', canActivate: [AuthGuardService] },
   { path: 'contact', component: ContactComponent },
   { path: '', component: HomeComponent },
   { path: '**', component: NotFoundComponent },

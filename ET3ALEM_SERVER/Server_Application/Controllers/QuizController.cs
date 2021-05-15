@@ -77,7 +77,8 @@ namespace Server_Application.Controllers
         public async Task<IEnumerable<Quiz>> GetQuizzes()
         {
             string userId = AccountHelper.getUserId(HttpContext, User);
-            return await _IQuizDsl.GetQuizzes(userId);
+            IEnumerable<Quiz> quizList = await _IQuizDsl.GetQuizzes(userId);
+            return quizList;
         }
 
         // POST: api/Quiz

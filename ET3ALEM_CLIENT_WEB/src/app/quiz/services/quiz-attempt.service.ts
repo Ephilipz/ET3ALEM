@@ -22,7 +22,11 @@ export class QuizAttemptService {
   }
   
   public getQuizAttemptsForQuiz(quizId: number) {
-    return this.httpClient.get<Array<QuizAttempt>>(this.baseRoute + '/GetQuizAttemptsForQuiz/' + quizId);
+    return this.httpClient.get<Array<QuizAttempt>>(this.baseRoute + '/GetUserQuizAttemptsForQuiz/' + quizId);
+  }
+  
+  public getAllQuizAttemptsForQuiz(quizId: number) {
+    return this.httpClient.get<Array<QuizAttempt>>(this.baseRoute + '/GetAllQuizAttemptsForQuiz/' + quizId);
   }
   
   public getQuizAttemptWithQuiz(quizAttempt: number) {

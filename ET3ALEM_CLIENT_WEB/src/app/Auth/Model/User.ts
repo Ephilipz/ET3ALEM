@@ -1,22 +1,20 @@
 import { Role } from './UserEnums';
 
 export class LoginUser {
-    public email: String;
-    public password: String;
+    public Email: String;
+    public Password: String;
 
     constructor(email: string, password: string) {
-        this.email = email;
-        this.password = password;
+        this.Email = email;
+        this.Password = password;
     }
 }
 
 export class RegisterUser extends LoginUser {
-    public name: string;
-    public role: Role
+    public Name: string;
 
     constructor(name: string, email: string, password: string, role: Role) {
         super(email, password);
-        this.name = name;
-        this.role = role;
+        this.Name = name;
     }
 }

@@ -40,9 +40,8 @@ export class AuthService {
 
   register(registerUserObject: RegisterUser) {
     return this.http.post<Tokens>(environment.baseUrl + '/api/Account/Register', {
-      'Email': registerUserObject.email,
-      'Password': registerUserObject.password,
-      'ConfirmPassword': registerUserObject.password
+      ...registerUserObject,
+      'ConfirmPassword': registerUserObject.Password
     }).pipe(
       tap(
         token => {

@@ -19,9 +19,10 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { ViewQuizResultComponent } from './components/quiz-results/view-quiz-result/view-quiz-result.component';
 import { GradeQuizComponent } from './components/grade-quiz/grade-quiz.component';
 import { QuizAttemptHistoryComponent } from './components/quiz-attempt-history/quiz-attempt-history.component';
+import { QuizGradesComponent } from './components/quiz-grades/quiz-grades.component';
 
 @NgModule({
-  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent, AccessQuizComponent, QuizDetailsComponent, ViewQuizResultComponent, GradeQuizComponent, QuizAttemptHistoryComponent],
+  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent, AccessQuizComponent, QuizDetailsComponent, ViewQuizResultComponent, GradeQuizComponent, QuizAttemptHistoryComponent, QuizGradesComponent],
   imports: [
     CommonModule,
     QuizRoutingModule,

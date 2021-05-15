@@ -1,6 +1,6 @@
 .questionsContainer {
     margin: 0 auto;
-    min-width: fit-content;
+    /* min-width: fit-content; */
     width: 60%;
 }
 

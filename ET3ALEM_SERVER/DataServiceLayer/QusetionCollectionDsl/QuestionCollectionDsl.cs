@@ -22,11 +22,22 @@ namespace DataServiceLayer
             return await _IQuestionCollectionDal.GetQuestionCollections(userId);
         }
 
+        public async Task<QuestionCollection> GetQuestionCollection(int id, string userId)
+        {
+            return await _IQuestionCollectionDal.GetQuestionCollection(id, userId);
+        }
+
         public async Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection)
         {
             await _IQuestionCollectionDal.InsertQuestionCollection(questionCollection);
             return questionCollection;
         }
+
+        public async Task PutQuestionCollection(QuestionCollection questionCollection)
+        {
+            await _IQuestionCollectionDal.PutQuestionCollection(questionCollection);
+        }
+
         public Task<QuestionCollection> DeleteQuestionCollection(int id)
         {
             return _IQuestionCollectionDal.DeleteQuestionCollection(id);

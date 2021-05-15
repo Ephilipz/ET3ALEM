@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessEntities.Enumerators;
 
 namespace DataServiceLayer
 {
@@ -28,10 +29,10 @@ namespace DataServiceLayer
             return _IQuizAttemptDal.GetQuizAttemptWithQuiz(id);
         }
 
-        public async Task<QuizAttempt> PutQuizAttempt(int id,string userId, QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> PutQuizAttempt(int id, string userId, QuizAttempt quizAttempt)
         {
             quizAttempt.UserId = userId;
-            if (quizAttempt.SubmitTime != null)
+            if (quizAttempt.SubmitTime != null && quizAttempt.Quiz.AutoGrade)
                 quizAttempt.GradeQuiz();
             return await _IQuizAttemptDal.PutQuizAttempt(id, quizAttempt);
         }
@@ -50,22 +51,60 @@ namespace DataServiceLayer
         public async Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt)
         {
             var quiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
-            foreach (var questionAttempt in quizAttempt.QuestionsAttempts)
+            foreach (var quizQuestion in quiz.QuizQuestions)
             {
-                questionAttempt.QuizQuestion = quiz.QuizQuestions.Find(quizQuestion => quizQuestion.Id == questionAttempt.QuizQuestionId);
-                questionAttempt.GradeQuestion();
-                quizAttempt.Grade += questionAttempt.Grade;
+                quizAttempt.QuestionsAttempts.Add(GetQuestionAttemptFromQuizQuestion(quizQuestion));
             }
             return await _IQuizAttemptDal.InsertQuizAttempt(quizAttempt);
         }
-        public Task<List<QuizAttempt>> GetQuizAttemptsForQuiz(int quizId, string userId)
+        public Task<List<QuizAttempt>> GetUserQuizAttemptsForQuiz(int quizId, string userId)
         {
-            return _IQuizAttemptDal.GetQuizAttemptsForQuiz(quizId, userId);
+            return _IQuizAttemptDal.GetUserQuizAttemptsForQuiz(quizId, userId);
+        }
+        public Task<List<QuizAttempt>> GetAllQuizAttemptsForQuiz(int quizId)
+        {
+            return _IQuizAttemptDal.GetAllQuizAttemptsForQuiz(quizId);
         }
 
         public Task<List<QuizAttempt>> GetQuizAttempts(string userId)
         {
             return _IQuizAttemptDal.GetQuizAttempts(userId);
+        }
+
+        private QuestionAttempt GetQuestionAttemptFromQuizQuestion(QuizQuestion quizQuestion)
+        {
+            switch (quizQuestion.Question.QuestionType)
+            {
+                case QuestionType.MCQ:
+                    MultipleChoiceQuestion MCQquestion = (MultipleChoiceQuestion)quizQuestion.Question;
+                    List<Choice> choices = MCQquestion.Choices.Select(c =>
+                    {
+                        return new Choice()
+                        {
+                            Body = c.Body,
+                            Id = 0,
+                            IsAnswer = c.IsAnswer,
+                        };
+                    }).ToList();
+                    return new MCQAttmept()
+                    {
+                        QuizQuestion = quizQuestion,
+                        QuizQuestionId = quizQuestion.Id,
+                        Choices = choices,
+                        Id = 0
+                    };
+                case QuestionType.TrueFalse:
+                    TrueFalseQuestion TFquestion = (TrueFalseQuestion)quizQuestion.Question;
+                    return new TrueFalseAttempt()
+                    {
+                        QuizQuestion = quizQuestion,
+                        QuizQuestionId = quizQuestion.Id,
+                        Id = 0,
+                        Answer = TFquestion.Answer
+                    };
+                default:
+                    return new TrueFalseAttempt();
+            }
         }
     }
 }

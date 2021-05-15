@@ -1,4 +1,5 @@
 import { Transform, Type } from "class-transformer";
+import { RegisterUser } from "src/app/auth/Model/User";
 import { MCQAttempt } from "src/app/question/Models/mcq-attempt";
 import { QuestionAttempt } from "src/app/question/Models/question-attempt";
 import { QuestionType } from "src/app/question/Models/question-type.enum";
@@ -9,6 +10,8 @@ import { Quiz } from "./quiz";
 export class QuizAttempt {
     Id: number;
     UserId: string;
+    @Type(()=> RegisterUser)
+    User;
     QuizId: number;
     @Type(() => Quiz)
     Quiz: Quiz;

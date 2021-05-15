@@ -65,4 +65,7 @@
 
 .bottomRow1{
     margin-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }

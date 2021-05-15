@@ -20,13 +20,25 @@ namespace Server_Application.Controllers
             _IQuestionCollectionDsl = IQuestionCollectionDsl;
         }
 
-        // GET api/<QuestionCollectionController>/userId
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<List<QuestionCollection>>> GetQuestionCollections(string userId)
+        // GET api/<QuestionCollectionController>
+        [HttpGet]
+        public async Task<ActionResult<List<QuestionCollection>>> GetQuestionCollections()
         {
+            string userId = Helpers.AccountHelper.getUserId(HttpContext, User);
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest();
             return await _IQuestionCollectionDsl.GetQuestionCollections(userId);
         }
 
+        // GET api/<QuestionCollectionController>/:id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<QuestionCollection>> GetQuestionCollection(int id)
+        {
+            string userId = Helpers.AccountHelper.getUserId(HttpContext, User);
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest();
+            return await _IQuestionCollectionDsl.GetQuestionCollection(id, userId);
+        }
         // POST api/<QuestionCollectionController>
         [HttpPost]
         public async Task<ActionResult<QuestionCollection>> Post(QuestionCollection questionCollection)

@@ -22,6 +22,7 @@ namespace BusinessEntities.Models
         public int TotalGrade { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         public bool NoDueDate { get; set; }
         public int DurationSeconds { get; set; }
         public bool UnlimitedTime { get; set; }
@@ -31,6 +32,8 @@ namespace BusinessEntities.Models
         public int AllowedAttempts { get; set; }
         public bool UnlimitedAttempts { get; set; }
         public bool ShowGrade { get; set; }
+        public bool AutoGrade { get; set; }
+        public bool ShowCorrectAnswers { get; set; }
         public bool ShuffleQuestions { get; set; }
         public string? NonShuffleQuestions { get; set; }
     }

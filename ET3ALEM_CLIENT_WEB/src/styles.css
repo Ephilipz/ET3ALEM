@@ -53,6 +53,10 @@ body {
     font-weight: 300;
 }
 
+.mat-flat-button:hover{
+    opacity: 0.9;
+}
+
 .largeCheckBox {
     font-size: 1.7em;
     font-weight: 300;
@@ -99,7 +103,6 @@ h2.secondaryTitle{
 }
 
 .sideBubble.isWrongAnswer::before{
-    /* border-right: red; */
     border-right-color: rgb(168, 48, 48);
 }
 

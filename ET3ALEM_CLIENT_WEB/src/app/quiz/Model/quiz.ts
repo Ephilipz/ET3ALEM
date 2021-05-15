@@ -9,12 +9,18 @@ export class Quiz {
     Instructions: string;
     DurationSeconds: number;
     UnlimitedTime: boolean;
+    @Type(() => Date)
     StartDate: Date;
+    @Type(() => Date)
     EndDate: Date;
+    @Type(() => Date)
+    CreatedDate: Date;
     NoDueDate: boolean;
     AllowedAttempts: number;
     UnlimitedAttempts: boolean;
     ShowGrade: boolean;
+    AutoGrade:boolean;
+    ShowCorrectAnswers: boolean;
     ShuffleQuestions: boolean;
     NonShuffleQuestions: string;
     TotalGrade: number;
@@ -31,11 +37,14 @@ export class Quiz {
         UnlimitedTime: boolean,
         dateStart: Date,
         dueEnd: Date,
+        createdDate: Date,
         noDueDate: boolean,
         QuizQuestions?: Array<QuizQuestion>,
         AllowedAttempts: number = 1,
         UnlimitedAttempts: boolean = false,
         ShowGrade: boolean = true,
+        AutoGrade: boolean = true,
+        ShowCorrectAnswers: boolean = true,
         ShuffleQuestions: boolean = false,
         NonShuffleQuestions?: string) {
         this.Id = Id;
@@ -47,12 +56,15 @@ export class Quiz {
         this.StartDate = dateStart;
         this.EndDate = dueEnd;
         this.NoDueDate = noDueDate;
+        this.CreatedDate = createdDate;
         this.QuizQuestions = QuizQuestions;
         if (!this.UserId)
             this.UserId = 'NA';
         this.AllowedAttempts = AllowedAttempts;
         this.UnlimitedAttempts = UnlimitedAttempts;
         this.ShowGrade = ShowGrade,
+        this.AutoGrade = AutoGrade;
+        this.ShowCorrectAnswers = ShowCorrectAnswers;
         this.ShuffleQuestions = ShuffleQuestions,
         this.NonShuffleQuestions = NonShuffleQuestions;
     }
@@ -68,6 +80,8 @@ export class Quiz {
         AllowedAttempts: number = 1,
         UnlimitedAttempts: boolean = false,
         ShowGrade: boolean = true,
+        AutoGrade: boolean = true,
+        ShowCorrectAnswers: boolean = true,
         ShuffleQuestions: boolean = false,
         NonShuffleQuestions?: string) {
         this.Name = title;
@@ -81,6 +95,8 @@ export class Quiz {
         this.AllowedAttempts = AllowedAttempts;
         this.UnlimitedAttempts = UnlimitedAttempts;
         this.ShowGrade = ShowGrade,
+        this.AutoGrade = AutoGrade;
+        this.ShowCorrectAnswers = ShowCorrectAnswers;
         this.ShuffleQuestions = ShuffleQuestions,
         this.NonShuffleQuestions = NonShuffleQuestions;
     }

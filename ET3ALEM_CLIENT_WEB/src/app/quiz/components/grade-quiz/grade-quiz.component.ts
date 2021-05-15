@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { plainToClass } from 'class-transformer';
 import { ToastrService } from 'ngx-toastr';
 import { QuizAttempt } from '../../Model/quiz-attempt';
@@ -12,7 +12,7 @@ import { QuizAttemptService } from '../../services/quiz-attempt.service';
 })
 export class GradeQuizComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private quizAttemptService: QuizAttemptService, private toastr: ToastrService) { }
+  constructor(private route: ActivatedRoute, private quizAttemptService: QuizAttemptService, private toastr: ToastrService, private router: Router) { }
 
   quizAttempt: QuizAttempt = null;
   isLoaded = false;
@@ -33,19 +33,20 @@ export class GradeQuizComponent implements OnInit {
     });
   }
 
-  updateQuizGrade(){
+  updateQuizGrade() {
     this.quizAttemptService.updateQuizAttemptGrade(this.quizAttempt).subscribe(
       (res) => {
         this.toastr.success('Quiz grade updated successfully');
+        this.router.navigate(['../../grades/' + this.quizAttempt.QuizId], { relativeTo: this.route })
       },
       (err) => this.toastr.error('Unable to update quiz grade')
     )
   }
 
-  getCurrentGrade(){
+  getCurrentGrade() {
     let sum = 0;
-    this.quizAttempt.QuestionsAttempts.forEach(q => sum += q.Grade);
-    return sum;
+    this.quizAttempt.QuestionsAttempts.forEach(q => sum += +q.Grade);
+    return +sum.toFixed(2);
   }
 
 }

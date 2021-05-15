@@ -65,7 +65,7 @@ namespace Server_Application.Controllers
         public async Task<ActionResult<QuizAttempt>> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
         {
             string userId = AccountHelper.getUserId(HttpContext, User);
-            if(string.IsNullOrEmpty(userId) || userId != quizAttempt.UserId)
+            if(string.IsNullOrEmpty(userId) || userId != quizAttempt.Quiz.UserId)
             {
                 return BadRequest();
             }
@@ -73,13 +73,18 @@ namespace Server_Application.Controllers
             return NoContent();
         }
 
-        [HttpGet("GetQuizAttemptsForQuiz/{quizId}")]
-        public async Task<ActionResult<List<QuizAttempt>>> GetQuizAttemptsForQuiz(int quizId)
+        [HttpGet("GetUserQuizAttemptsForQuiz/{quizId}")]
+        public async Task<ActionResult<List<QuizAttempt>>> GetUserQuizAttemptsForQuiz(int quizId)
         {
             string userId = AccountHelper.getUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 return BadRequest(quizId);
-            return await _IQuizAttemptDsl.GetQuizAttemptsForQuiz(quizId, userId);
+            return await _IQuizAttemptDsl.GetUserQuizAttemptsForQuiz(quizId, userId);
+        } 
+        [HttpGet("GetAllQuizAttemptsForQuiz/{quizId}")]
+        public async Task<ActionResult<List<QuizAttempt>>> GetAllQuizAttemptsForQuiz(int quizId)
+        {
+            return await _IQuizAttemptDsl.GetAllQuizAttemptsForQuiz(quizId);
         }
     }
 }

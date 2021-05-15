@@ -1,22 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Quiz } from '../../Model/quiz';
 import { QuizService } from '../../services/quiz.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-list-quizzes',
   templateUrl: './list-quizzes.component.html',
   styleUrls: ['./list-quizzes.component.css']
 })
-export class ListQuizzesComponent implements OnInit {
+export class ListQuizzesComponent implements OnInit, AfterViewInit {
 
   quizListDS = new MatTableDataSource();
-  displayedColumns: string[] = ['index', 'Name', 'Code', 'StartDate', 'actions'];
+  displayedColumns: string[] = ['Name', 'Code', 'CreatedDate', 'Status', 'actions'];
   isLoaded = false;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort) matSort: MatSort;
 
   constructor(private quizService: QuizService, private toastr: ToastrService) { }
 
@@ -24,12 +25,16 @@ export class ListQuizzesComponent implements OnInit {
     this.loadQuizzes();
   }
 
+  ngAfterViewInit() {
+    this.quizListDS.sort = this.matSort;
+  }
+
   loadQuizzes() {
     this.quizService.getQuizzes().subscribe(
       res => {
-        this.quizListDS.data = res.map((x, i) => ({ ...x, 'index': i + 1 }));
+        this.quizListDS.data = res;
         this.isLoaded = true;
-        this.quizListDS.sort = this.sort;
+
       },
       err => {
         this.toastr.error('Unable to load quizzes');
@@ -55,6 +60,16 @@ export class ListQuizzesComponent implements OnInit {
         console.error(err);
       }
     )
+  }
+
+  getQuizStatus(quiz: Quiz) {
+    const isExpired = moment(quiz.EndDate).isBefore(moment.utc()) && !quiz.NoDueDate;
+    const isNotStarted = moment(quiz.StartDate).isAfter(moment.utc());
+    if (isExpired)
+      return 'Expired'
+    if (isNotStarted)
+      return 'Not Started'
+    return 'Active';
   }
 
 }
