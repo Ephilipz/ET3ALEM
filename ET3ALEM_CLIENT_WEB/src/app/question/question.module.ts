@@ -13,14 +13,12 @@ import { AnswerQuestionHeaderComponent } from './answer-question/answer-question
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { ListQuestionCollectionsComponent } from './question collections/list-question-collections/list-question-collections.component';
-import { EditOrCreateQuestionCollectionComponent } from './question collections/edit-or-create-question-collection/edit-or-create-question-collection.component';
 import { QuestionResultHeaderComponent } from './question result/question-result-header/question-result-header.component';
 import { ConcreteQuestionResultMCQComponent } from './question result/concrete-question-result/concrete-question-result-mcq/concrete-question-result-mcq.component';
 import { ConcreteQuestionResultTFComponent } from './question result/concrete-question-result/concrete-question-result-tf/concrete-question-result-tf.component';
 
 @NgModule({
-  declarations: [EditOrCreateQuestionHeaderComponent, ConcreteQuestionMCQComponent, ConcreteQuestionTrueFalseComponent, DynamicComponentHostDirective, AnswerQuestionHeaderComponent, ConcreteAnswerQuestionMCQComponent, ConcreteAnswerQuestionTFComponent, ListQuestionCollectionsComponent, EditOrCreateQuestionCollectionComponent, QuestionResultHeaderComponent,
+  declarations: [EditOrCreateQuestionHeaderComponent, ConcreteQuestionMCQComponent, ConcreteQuestionTrueFalseComponent, DynamicComponentHostDirective, AnswerQuestionHeaderComponent, ConcreteAnswerQuestionMCQComponent, ConcreteAnswerQuestionTFComponent, QuestionResultHeaderComponent,
     ConcreteQuestionResultMCQComponent,
     ConcreteQuestionResultTFComponent],
   imports: [

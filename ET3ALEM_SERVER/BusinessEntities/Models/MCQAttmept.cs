@@ -12,10 +12,20 @@ namespace BusinessEntities.Models
         public virtual List<Choice> Choices { get; set; }
         public override void GradeQuestion()
         {
-            IsGraded = true;
             MultipleChoiceQuestion mcq = QuizQuestion.Question as MultipleChoiceQuestion;
-            double grade = Choices.Count(choice => mcq.Choices.Where(choice => choice.IsAnswer).Any(rightAnswer => rightAnswer.Id == choice.Id)) / (double)mcq.Choices.Count(choice => choice.IsAnswer);
-            this.Grade = Math.Round(grade * QuizQuestion.Grade, 2);
+            //if no right answer exists mark the question as ungraded
+            if (!mcq.Choices.Any(choice => choice.IsAnswer))
+                return;
+            IsGraded = true;
+            //if the user did not choose an answer give them 0
+            if (Choices.Count == 0)
+            {
+                this.Grade = 0;
+            }
+            double incorrectChoices = mcq.Choices.Count(choice => !choice.IsAnswer && Choices.Any(selectedChoice => selectedChoice.Id == choice.Id));
+            double correctChoices = Choices.Count(choice => mcq.Choices.Where(choice => choice.IsAnswer).Any(rightAnswer => rightAnswer.Id == choice.Id));
+            double grade = (correctChoices - incorrectChoices) / (double)mcq.Choices.Count(choice => choice.IsAnswer);
+            this.Grade = Math.Max(Math.Round(grade * QuizQuestion.Grade, 2), 0);
         }
     }
 }

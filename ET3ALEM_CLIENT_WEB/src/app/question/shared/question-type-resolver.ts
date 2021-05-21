@@ -63,6 +63,10 @@ export class QuestionTypeResolver {
         }
     }
 
+    public static getSpecificQuestionList(questions: Array<Question>){
+        return questions.map(this.getSpecificQuestion);
+    }
+
     public static getSpecificQuestionAttempt(questionAttempts: QuestionAttempt[]): QuestionAttempt[] {
         if (!questionAttempts) return [];
         questionAttempts.map(questionAttempt => {

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input, ComponentFactoryResolver, ViewContainerRef, ComponentFactory, ComponentRef, Type, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component';
 import { Question } from '../../Models/question';
 import { McqAnswerType, MultipleChoiceQuestion } from '../../Models/mcq';
@@ -42,7 +42,7 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
 
   questionTypeFC: FormControl = new FormControl();
   questionContentFC: FormControl = new FormControl();
-  grade: FormControl = new FormControl();
+  grade: FormControl = new FormControl(null, [Validators.min(0)]);
 
   ngOnInit(): void {
     this.question = Helper.deepCopy(this.inputQuestion);
@@ -92,7 +92,7 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
   }
 
   public getGrade() : number{
-    return this.grade.value ?? 1;
+    return this.grade.value ? Math.max(0, this.grade.value) : 1;
   }
 
   ngOnDestroy(): void {

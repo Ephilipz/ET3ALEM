@@ -56,8 +56,8 @@ export class TakeQuizComponent implements OnInit {
             this.quizAttempt = new QuizAttempt(0, 0, this.quiz.Id, moment.utc());
             this.quizAttemptService.createQuizAttempt(this.quizAttempt).subscribe(
               (quizAttempt) => {
+                this.quizAttempt = plainToClass(QuizAttempt, quizAttempt);
                 this.quiz.QuizQuestions.sort(Qq => Qq.Sequence);
-                this.quizAttempt.Id = quizAttempt.Id;
                 this.isLoaded = true;
               },
               (err) => this.errorLoadingQuiz(err)
@@ -97,6 +97,7 @@ export class TakeQuizComponent implements OnInit {
 
   submitQuiz() {
     this.getQuestionAttempts();
+    this.quizAttempt.Quiz = this.quiz;
     this.quizAttempt.SubmitTime = moment.utc().toDate();
     this.quizAttempt.UpdateQuestionTypes();
     this.quizAttemptService.updateQuizAttempt(this.quizAttempt).subscribe(

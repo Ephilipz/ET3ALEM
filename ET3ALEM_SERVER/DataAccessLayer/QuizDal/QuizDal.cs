@@ -36,7 +36,7 @@ namespace DataAccessLayer
             Quiz quiz = await _context.Quizzes.Where(q => q.Id == quizId)
                 .Include(quiz => quiz.QuizQuestions)
                 .ThenInclude(quizQuestion => quizQuestion.Question)
-                .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).FirstAsync();
+                .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).AsNoTracking().FirstAsync();
 
             return quiz;
         }

@@ -26,11 +26,24 @@ namespace DataAccessLayer
             return collections;
         }
 
+        public async Task<QuestionCollection> GetQuestionCollection(int id, string userId)
+        {
+            return await _context.QuestionCollections.Where(collection => collection.Id == id && collection.UserId == userId)
+                .Include(collection => collection.Questions)
+                .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).FirstAsync();
+        }
+
         public async Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection)
         {
             await _context.QuestionCollections.AddAsync(questionCollection);
             await _context.SaveChangesAsync();
             return questionCollection;
+        }
+
+        public async Task PutQuestionCollection(QuestionCollection collection)
+        {
+            _context.Update(collection);
+            await _context.SaveChangesAsync();
         }
         public async Task<QuestionCollection> DeleteQuestionCollection(int id)
         {

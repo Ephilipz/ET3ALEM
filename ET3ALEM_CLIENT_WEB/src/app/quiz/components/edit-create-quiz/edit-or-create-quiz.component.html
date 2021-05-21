@@ -81,8 +81,13 @@
                     </mat-checkbox>
                 </div>
                 <h2 class="mt-4">Grading</h2>
-                <mat-checkbox class="px-5 col-2 largeCheckBox" [formControl]="showGrade">Show Grade After Quiz
+                <div class="row">
+                    <mat-checkbox class="px-5 col-3 largeCheckBox" [formControl]="showGrade">Show Grade After Quiz
                 </mat-checkbox>
+                <mat-checkbox class="px-5 col-3 largeCheckBox" [formControl]="autoGrade">Auto Grade The Quiz</mat-checkbox>
+                <mat-checkbox class="px-5 col-3 largeCheckBox" [formControl]="showCorrectAnswers">Show Correct Answers</mat-checkbox>
+                </div>
+                
 
             </div>
         </mat-expansion-panel>
@@ -120,6 +125,7 @@
 
                 <div class="row addQuestionRow">
                     <button mat-flat-button class="blue medium" (click)="addQuestion()">Add Question</button>
+                    <button mat-flat-button class="darkBlue medium" (click)="addFromCollection()">Add From Collection</button>
                 </div>
 
             </div>

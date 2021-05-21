@@ -8,12 +8,14 @@ import { QuizDetailsComponent } from './components/take quiz/quiz-details/quiz-d
 import { TakeQuizComponent } from './components/take quiz/take-quiz/take-quiz.component';
 import { ViewQuizResultComponent } from './components/quiz-results/view-quiz-result/view-quiz-result.component';
 import { GradeQuizComponent } from './components/grade-quiz/grade-quiz.component';
+import { QuizGradesComponent } from './components/quiz-grades/quiz-grades.component';
 
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: QuizHomeComponent },
   { path: 'create', component: EditOrCreateQuizComponent },
   { path: 'edit/:id', component: EditOrCreateQuizComponent },
+  { path: 'grades/:id', component: QuizGradesComponent },
   { path: 'manage', component: ListQuizzesComponent },
   { path: 'edit', component: EditOrCreateQuizComponent },
   { path: 'take', component: AccessQuizComponent },

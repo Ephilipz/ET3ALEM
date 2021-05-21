@@ -31,6 +31,7 @@
     </div>
 
     <div class="container-fluid bottomRow1" style="text-align: center;">
+        <button mat-flat-button class="large red" [routerLink]="'../../grades/'+ quizAttempt.QuizId">Cancel</button>
         <button mat-flat-button class="large green" (click)="updateQuizGrade()">Update Grade</button>
     </div>
 
