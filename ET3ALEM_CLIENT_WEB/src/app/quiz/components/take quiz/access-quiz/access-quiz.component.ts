@@ -12,6 +12,7 @@ export class AccessQuizComponent implements OnInit {
 
   quizTitle: string = '';
   quizCode: string = '';
+  isLoaded = true;
 
   constructor(private quizService: QuizService, private toastr: ToastrService, private route: Router, private activatedRoute: ActivatedRoute) { }
 
@@ -20,13 +21,16 @@ export class AccessQuizComponent implements OnInit {
 
   getQuizFromCode(e) {
     if (this.quizCode.length == 5) {
+      this.isLoaded = false;
       this.quizService.getQuizTitleFromCode(this.quizCode).subscribe(
         obj => {
           this.quizTitle = obj["title"];
+          this.isLoaded = true;
         },
         err => {
           this.toastr.info('No quiz found with the entered code');
           this.quizTitle = '';
+          this.isLoaded = true;
         });
     }
     else {

@@ -38,7 +38,6 @@ export class ResetPasswordComponent extends ExtraFormOptions implements OnInit {
   }
 
   resetPassword() {
-
     let resetPasswordVM = {
       recoveryToken: this.token,
       password: this.form.get('password').value,

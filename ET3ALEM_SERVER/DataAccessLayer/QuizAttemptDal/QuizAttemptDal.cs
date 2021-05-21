@@ -84,7 +84,7 @@ namespace DataAccessLayer
 
         public async Task<List<QuizAttempt>> GetQuizAttempts(string userId)
         {
-            return await _context.QuizAttempts.AsNoTracking().Where(qA => qA.UserId == userId).ToListAsync();
+            return await _context.QuizAttempts.Where(qA => qA.UserId == userId).Include(qA => qA.Quiz).OrderBy(qA => qA.SubmitTime).AsNoTracking().ToListAsync();
         }
 
         public async Task<List<QuizAttempt>> GetUngradedQuizAttempts(string userId)

@@ -27,13 +27,6 @@ table {
     text-align: center;
 }
 
-.tableTitle {
-    font-size: 3em;
-    color: #5F8EBA;
-    font-weight: 500;
-    margin-bottom: 0px;
-}
-
 mat-form-field {
     width: 15vw;
     font-size: 1.5em;

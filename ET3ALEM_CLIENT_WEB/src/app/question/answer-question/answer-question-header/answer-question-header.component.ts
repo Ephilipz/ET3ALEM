@@ -17,7 +17,7 @@ export class AnswerQuestionHeaderComponent implements OnInit {
   dynamicComponentHost: DynamicComponentHostDirective;
   componentRef: ComponentRef<AC_ConcreteAnswerQuestion>;
 
-  @Input() quizQuestion: QuizQuestion;
+  @Input() questionAttempt: QuestionAttempt;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
@@ -26,7 +26,7 @@ export class AnswerQuestionHeaderComponent implements OnInit {
   }
 
   createQuestionComponent() {
-    const question = this.quizQuestion.Question;
+    const question = this.questionAttempt.QuizQuestion.Question;
     const questionTypeString = QuestionType[question.QuestionType];
     const component: Type<AC_ConcreteAnswerQuestion> = QuestionTypeResolver.answerQuestionComponentMap[questionTypeString];
     if (!component)
@@ -37,7 +37,7 @@ export class AnswerQuestionHeaderComponent implements OnInit {
     viewContainerRef.clear();
 
     this.componentRef = viewContainerRef.createComponent(componentFactory);
-    this.componentRef.instance.quizQuestion = this.quizQuestion;
+    this.componentRef.instance.questionAttempt = this.questionAttempt;
   }
 
   getQuestionAttempt(): QuestionAttempt {

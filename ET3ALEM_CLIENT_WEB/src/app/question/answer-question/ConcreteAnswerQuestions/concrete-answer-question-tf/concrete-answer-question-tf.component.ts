@@ -11,7 +11,7 @@ import { AC_ConcreteAnswerQuestion } from '../ac-concrete-answer-question';
 })
 export class ConcreteAnswerQuestionTFComponent extends AC_ConcreteAnswerQuestion implements OnInit {
 
-  @Input() quizQuestion: QuizQuestion;
+  @Input() questionAttempt: TrueFalseAttempt;
   question: TrueFalseQuestion;
   Answer: boolean;
   
@@ -20,10 +20,11 @@ export class ConcreteAnswerQuestionTFComponent extends AC_ConcreteAnswerQuestion
   }
   
   ngOnInit(): void {
-    this.question = <TrueFalseQuestion>this.quizQuestion.Question;
+    this.question = <TrueFalseQuestion>this.questionAttempt.QuizQuestion.Question;
   }
   
   getAnswers() {
-    return new TrueFalseAttempt(0, this.quizQuestion, 0, this.Answer);
+    this.questionAttempt.Answer = this.Answer;
+    return this.questionAttempt;
   }
 }

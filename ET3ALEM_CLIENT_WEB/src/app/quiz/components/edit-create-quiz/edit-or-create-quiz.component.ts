@@ -58,6 +58,8 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   showGrade = new FormControl(true);
   autoGrade = new FormControl(true);
   showCorrectAnswers = new FormControl(true);
+  includeAllQuestions = new FormControl(true);
+  includedQuestions = new FormControl(null);
 
   constructor(private toastr: ToastrService, private quizService: QuizService, private route: ActivatedRoute, private router: Router) {
     super();

@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { plainToClass } from 'class-transformer';
 import { ToastrService } from 'ngx-toastr';
+import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
 import { Quiz } from '../../Model/quiz';
 import { QuizAttempt } from '../../Model/quiz-attempt';
 import { QuizAttemptService } from '../../services/quiz-attempt.service';
@@ -30,7 +31,7 @@ export class QuizGradesComponent implements OnInit {
       this.quizAttemptService.getAllQuizAttemptsForQuiz(id).subscribe(
         (quizAttempts) => {
           this.quizAttemptListDS.data = plainToClass(QuizAttempt, quizAttempts);
-          this.quizAttemptListDS.sortingDataAccessor = (obj, property) => this.getProperty(obj, property);
+          this.quizAttemptListDS.sortingDataAccessor = (obj, property) => Helper.getProperty(obj, property);
           this.quizAttemptListDS.sort = this.sort;
           this.quiz = quizAttempts.length > 0 ? this.quizAttemptListDS.data[0].Quiz : null;
           this.isLoaded = true;
@@ -43,19 +44,19 @@ export class QuizGradesComponent implements OnInit {
     });
   }
 
-  getAverage(): number {
+  getAverage() {
     if (this.isLoaded) {
       let totalGrades = 0;
       this.quizAttemptListDS.data.forEach(qa => totalGrades += qa.Grade);
-      return +(totalGrades / this.quizAttemptListDS.data.length).toFixed(2);;
+      return (totalGrades / this.quizAttemptListDS.data.length / this.quiz.TotalGrade * 100).toFixed(2) + '%';
     }
   }
 
-  getHighestScore(): number {
+  getHighestScore() {
     if (this.isLoaded) {
       let maxGrade = 0;
       this.quizAttemptListDS.data.forEach(qa => maxGrade = Math.max(qa.Grade, maxGrade))
-      return maxGrade;
+      return (maxGrade / this.quiz.TotalGrade * 100).toFixed(2) + '%';
     }
   }
 
@@ -63,9 +64,5 @@ export class QuizGradesComponent implements OnInit {
     if (this.isLoaded)
       return [...new Set(this.quizAttemptListDS.data.map(qa => qa.UserId))].length;
   }
-
-  getProperty = (obj, path) => (
-    path.split('.').reduce((o, p) => o && o[p], obj)
-  )
 
 }

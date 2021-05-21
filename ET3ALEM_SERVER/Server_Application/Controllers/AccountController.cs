@@ -36,7 +36,6 @@ namespace Server_Application.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _IConfiguration = IConfiguration;
-
         }
 
         [HttpPost("Register")]
@@ -200,19 +199,12 @@ namespace Server_Application.Controllers
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;
-            try
-            {
-                ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-                JwtSecurityToken jwtSecurityToken = securityToken as JwtSecurityToken;
-                //check that the algorithm used to sign key is valid
-                if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCulture))
-                    throw new SecurityTokenException("Invalid Token");
-                return principal;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            JwtSecurityToken jwtSecurityToken = securityToken as JwtSecurityToken;
+            //check that the algorithm used to sign key is valid
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCulture))
+                throw new SecurityTokenException("Invalid Token");
+            return principal;
         }
 
         [HttpPost("sendRecoveryMail")]

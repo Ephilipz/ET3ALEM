@@ -24,9 +24,11 @@ namespace DataServiceLayer
             return _IQuizAttemptDal.GetQuizAttempt(id);
         }
 
-        public Task<QuizAttempt> GetQuizAttemptWithQuiz(int id)
+        public async Task<QuizAttempt> GetQuizAttemptWithQuiz(int id)
         {
-            return _IQuizAttemptDal.GetQuizAttemptWithQuiz(id);
+            QuizAttempt attempt = await _IQuizAttemptDal.GetQuizAttemptWithQuiz(id);
+            attempt.QuestionsAttempts = attempt.QuestionsAttempts.OrderBy(qA => qA.QuizQuestion.Sequence).ToList();
+            return attempt;
         }
 
         public async Task<QuizAttempt> PutQuizAttempt(int id, string userId, QuizAttempt quizAttempt)
@@ -39,11 +41,9 @@ namespace DataServiceLayer
 
         public async Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
         {
-            quizAttempt.QuestionsAttempts.ForEach(qA =>
-            {
-                qA.IsGraded = true;
-            });
-            quizAttempt.Grade = Math.Round(quizAttempt.QuestionsAttempts.Sum(qA => qA.Grade), 2, MidpointRounding.AwayFromZero);
+            quizAttempt.QuestionsAttempts.ForEach(qA => qA.IsGraded = true);
+            quizAttempt.Grade = Math.Round(quizAttempt.QuestionsAttempts.Sum(qA => qA.Grade));
+            quizAttempt.IsGraded = true;
             return await _IQuizAttemptDal.UpdateQuizAttemptGrade(quizAttempt);
         }
 
@@ -77,20 +77,10 @@ namespace DataServiceLayer
             {
                 case QuestionType.MCQ:
                     MultipleChoiceQuestion MCQquestion = (MultipleChoiceQuestion)quizQuestion.Question;
-                    List<Choice> choices = MCQquestion.Choices.Select(c =>
-                    {
-                        return new Choice()
-                        {
-                            Body = c.Body,
-                            Id = 0,
-                            IsAnswer = c.IsAnswer,
-                        };
-                    }).ToList();
                     return new MCQAttmept()
                     {
                         QuizQuestion = quizQuestion,
                         QuizQuestionId = quizQuestion.Id,
-                        Choices = choices,
                         Id = 0
                     };
                 case QuestionType.TrueFalse:
@@ -100,7 +90,6 @@ namespace DataServiceLayer
                         QuizQuestion = quizQuestion,
                         QuizQuestionId = quizQuestion.Id,
                         Id = 0,
-                        Answer = TFquestion.Answer
                     };
                 default:
                     return new TrueFalseAttempt();

@@ -11,10 +11,11 @@
                         [(ngModel)]="quizCode" autocomplete="off">
                 </mat-form-field>
             </div>
-            <div class="buttonRow mx-auto mt-4" *ngIf="quizTitle.length > 0 && quizCode.length == 5">
+            <div class="buttonRow mx-auto mt-4" *ngIf="isLoaded && quizTitle.length > 0 && quizCode.length == 5">
                 <button mat-flat-button class="large darkBlue takeQuizButton"
                     (click)="quizClick()">{{quizTitle}}</button>
             </div>
+            <mat-spinner class="mx-auto" *ngIf="!isLoaded"></mat-spinner>
         </div>
         <div class="col-sm">
             <img src="../../../../assets/images/method-draw-image.svg" width="100%">

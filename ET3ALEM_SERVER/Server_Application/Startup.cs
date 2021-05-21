@@ -68,6 +68,7 @@ namespace Server_Application
                 options.User.RequireUniqueEmail = true;
             })
               .AddEntityFrameworkStores<ApplicationContext>()
+              .AddDefaultTokenProviders()
               .AddTokenProvider("UserRefresh", typeof(DataProtectorTokenProvider<User>));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims

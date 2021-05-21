@@ -1,12 +1,12 @@
 <div class="container-fluid m-0" *ngIf="isLoaded">
     <h1 class="quizTitle">{{quiz.Name}}</h1>
-    <div *ngFor="let quizQuestion of quiz.QuizQuestions; let i = index" class="questionsContainer">
+    <div *ngFor="let questionAttempt of quizAttempt.QuestionsAttempts; let i = index" class="questionsContainer">
         <div class="row question">
             <h2 class="QuestionTitle" style="width: fit-content;">Question {{i+1}}</h2>
-            <h2 style="margin-left: auto;">{{quizQuestion.Grade.toString() + (quizQuestion.Grade > 1 ? ' Points' : '
+            <h2 style="margin-left: auto;">{{questionAttempt.QuizQuestion.Grade.toString() + (questionAttempt.QuizQuestion.Grade > 1 ? ' Points' : '
                 Point') }}</h2>
         </div>
-        <answer-question-header #AnswerQuestion class="answerQuestionComponent row" [quizQuestion]="quizQuestion">
+        <answer-question-header #AnswerQuestion class="answerQuestionComponent row" [questionAttempt]="questionAttempt">
         </answer-question-header>
         <!-- <mat-divider class="my-5"></mat-divider> -->
         <hr style="background-color: #474747; margin: 100px auto;">

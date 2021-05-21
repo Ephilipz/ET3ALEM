@@ -110,3 +110,13 @@ h2.secondaryTitle{
     text-align: center;
     margin: auto;
 }
+
+.questionBody{
+    font-size: 1.8em;
+    line-height: 1.2em;
+}
+
+.alignRight {
+    text-align: right;
+    justify-content: flex-end;
+}

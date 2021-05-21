@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Choice } from 'src/app/question/Models/choice';
 import { McqAnswerType, MultipleChoiceQuestion } from 'src/app/question/Models/mcq';
 import { MCQAttempt } from 'src/app/question/Models/mcq-attempt';
+import { QuestionAttempt } from 'src/app/question/Models/question-attempt';
 import { QuizQuestion } from 'src/app/quiz/Model/quizQuestion';
 import { AC_ConcreteAnswerQuestion } from '../ac-concrete-answer-question';
 
@@ -29,7 +30,8 @@ import { AC_ConcreteAnswerQuestion } from '../ac-concrete-answer-question';
 
 export class ConcreteAnswerQuestionMCQComponent extends AC_ConcreteAnswerQuestion implements OnInit {
 
-  @Input() quizQuestion: QuizQuestion;
+  @Input() questionAttempt: MCQAttempt;
+  quizQuestion = null;
   question: MultipleChoiceQuestion;
   selectedChoices: Array<number> = [];
   selectedChoice: number = null;
@@ -40,13 +42,15 @@ export class ConcreteAnswerQuestionMCQComponent extends AC_ConcreteAnswerQuestio
   }
 
   ngOnInit(): void {
+    this.quizQuestion = this.questionAttempt.QuizQuestion;
     this.question = <MultipleChoiceQuestion>this.quizQuestion.Question;
     if(this.question.McqAnswerType == McqAnswerType.MultipleChoice)
       this.headerText = 'select all that apply'
   }
 
   getAnswers() {
-    return new MCQAttempt(0, this.quizQuestion, 0, this.getSelected())
+    this.questionAttempt.Choices = this.getSelected();
+    return this.questionAttempt;
   }
 
   selectChoice(choice: Choice) {

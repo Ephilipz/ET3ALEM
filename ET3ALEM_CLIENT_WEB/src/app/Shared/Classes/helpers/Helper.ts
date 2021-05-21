@@ -25,4 +25,8 @@ export class Helper {
     static getUTCFromLocal(date: Date): Date {
         return moment(date).utc().toDate();
     }
+
+    static getProperty(obj, path) {
+        return path.split('.').reduce((o, p) => o && o[p], obj);
+    }
 }

@@ -26,7 +26,7 @@ namespace Server_Application
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService <ApplicationContext>();
+                    var context = services.GetRequiredService<ApplicationContext>();
                     context.Database.Migrate();
                 }
                 catch (Exception ex)

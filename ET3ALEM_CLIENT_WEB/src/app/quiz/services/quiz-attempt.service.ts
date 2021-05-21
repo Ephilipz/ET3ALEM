@@ -40,4 +40,8 @@ export class QuizAttemptService {
   public updateQuizAttemptGrade(quizAttempt: QuizAttempt) {
     return this.httpClient.put(this.baseRoute + `/UpdateQuizAttemptGrade`, quizAttempt);
   }
+
+  public getQuizAttemptsForUser(){
+    return this.httpClient.get(this.baseRoute);
+  }
 }

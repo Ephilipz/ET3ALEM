@@ -1,7 +1,6 @@
-<div class="container-fluid mainContainer">
-    <h1 class="title">Manage</h1>
-    <div class="row px-3 mt-5">
-        <h2 class="tableTitle mb-3">My Quizzes</h2>
+<div class="container-fluid mainContainer p-5">
+    <h1 class="title">Created Quizzes</h1>
+    <div class="row px-3 mt-3">
         <mat-form-field class="ml-auto" *ngIf="quizListDS.data.length > 0">
             <mat-label>Search</mat-label>
             <input matInput type="search" (keyup)="applyFilter($event)">
@@ -33,7 +32,7 @@
 
         <!-- Status Column -->
         <ng-container matColumnDef="Status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <th mat-header-cell *matHeaderCellDef> Status </th>
             <td mat-cell *matCellDef="let element"> {{getQuizStatus(element)}} </td>
         </ng-container>
 

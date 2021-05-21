@@ -109,6 +109,7 @@ export class AuthService {
         return of(false);
       }));
   }
+
   resetPassword(resetPasswordVM: { recoveryToken: string, password: string, confirmPassword: string }) {
     return this.http.post(environment.baseUrl + '/api/Account/ResetPassword', resetPasswordVM).pipe(
       tap(() => this.toastyService.success('password is reset', 'success')),

@@ -52,12 +52,11 @@ export class TakeQuizComponent implements OnInit {
         this.quizService.getFullQuizFromCode(code).subscribe(
           (quiz) => {
             this.quiz = plainToClass(Quiz, quiz);
-            this.endDate = moment.utc().add(this.quiz.DurationSeconds, 'seconds').toDate();
             this.quizAttempt = new QuizAttempt(0, 0, this.quiz.Id, moment.utc());
             this.quizAttemptService.createQuizAttempt(this.quizAttempt).subscribe(
               (quizAttempt) => {
                 this.quizAttempt = plainToClass(QuizAttempt, quizAttempt);
-                this.quiz.QuizQuestions.sort(Qq => Qq.Sequence);
+                this.endDate = moment.utc().add(this.quiz.DurationSeconds, 'seconds').toDate();
                 this.isLoaded = true;
               },
               (err) => this.errorLoadingQuiz(err)
@@ -73,11 +72,8 @@ export class TakeQuizComponent implements OnInit {
       this.quizAttemptService.getQuizAttemptWithQuiz(this.id).subscribe(
         (quizAttempt) => {
           this.quizAttempt = plainToClass(QuizAttempt, quizAttempt);
-          this.quizAttempt.Quiz.QuizQuestions = this.quizAttempt.QuestionsAttempts.map(qA => qA.QuizQuestion);
           this.quiz = plainToClass(Quiz, quizAttempt.Quiz);
           this.endDate = moment.utc(this.quizAttempt.StartTime.toString() + 'Z').add(this.quiz.DurationSeconds, 'seconds').toDate();
-          if (!this.quizAttempt.QuestionsAttempts)
-            this.quizAttempt.QuestionsAttempts = new Array<QuestionAttempt>();
           this.isLoaded = true;
         },
         (err) => this.errorLoadingQuiz(err)
@@ -96,8 +92,10 @@ export class TakeQuizComponent implements OnInit {
   }
 
   submitQuiz() {
+    //in create quiz the quiz is not retrieved with the attempt so it must be set
+    if (!this.quizAttempt.Quiz)
+      this.quizAttempt.Quiz = this.quiz;
     this.getQuestionAttempts();
-    this.quizAttempt.Quiz = this.quiz;
     this.quizAttempt.SubmitTime = moment.utc().toDate();
     this.quizAttempt.UpdateQuestionTypes();
     this.quizAttemptService.updateQuizAttempt(this.quizAttempt).subscribe(
@@ -111,9 +109,9 @@ export class TakeQuizComponent implements OnInit {
   }
 
   private getQuestionAttempts() {
-    this.AnswerQuestionComponents.forEach((component) => {
+    this.AnswerQuestionComponents.forEach((component, i) => {
       const attempt = component.getQuestionAttempt();
-      this.quizAttempt.QuestionsAttempts.push(attempt);
+      this.quizAttempt.QuestionsAttempts[i] = attempt;
     });
   }
 

@@ -9,6 +9,7 @@ import { TakeQuizComponent } from './components/take quiz/take-quiz/take-quiz.co
 import { ViewQuizResultComponent } from './components/quiz-results/view-quiz-result/view-quiz-result.component';
 import { GradeQuizComponent } from './components/grade-quiz/grade-quiz.component';
 import { QuizGradesComponent } from './components/quiz-grades/quiz-grades.component';
+import { QuizAttemptHistoryComponent } from './components/quiz-attempt-history/quiz-attempt-history.component';
 
 
 const routes: Routes = [
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'take/:code/start', component: TakeQuizComponent },
   { path: 'viewAttempt/:id', component: ViewQuizResultComponent },
   { path: 'gradeAttempt/:id', component: GradeQuizComponent },
+  { path: 'history', component: QuizAttemptHistoryComponent },
 ];
 
 @NgModule({

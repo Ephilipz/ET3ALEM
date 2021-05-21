@@ -21,16 +21,18 @@ namespace BusinessEntities.Models
         public DateTime StartTime { get; set; }
         public List<QuestionAttempt> QuestionsAttempts { get; set; }
         public double Grade { get; set; }
-        public bool IsGraded => QuestionsAttempts != null ? QuestionsAttempts.Count(questionAttempt => questionAttempt.IsGraded) == QuestionsAttempts.Count : false;
+        public bool IsGraded { get; set; }
         public DateTime? SubmitTime { get; set; }
 
         public void GradeQuiz()
         {
+            Grade = 0;
             QuestionsAttempts.ForEach(qA =>
             {
                 qA.GradeQuestion();
                 Grade += qA.Grade;
             });
+            IsGraded = true;
         }
     }
 }

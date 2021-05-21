@@ -1,0 +1,12 @@
+table{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.mat-header-cell {
+    font-size: 1.2em;
+}
+
+.mat-cell {
+    font-size: 1.2em;
+}

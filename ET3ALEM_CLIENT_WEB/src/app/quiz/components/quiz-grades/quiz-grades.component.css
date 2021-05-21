@@ -15,9 +15,6 @@ table.mat-table {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-}
-
-.alignRight {
-    text-align: right;
-    justify-content: flex-end;
+    width: 80%;
+    margin: 0 auto;
 }
