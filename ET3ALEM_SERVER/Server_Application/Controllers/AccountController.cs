@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +13,10 @@ using Microsoft.IdentityModel.Tokens;
 using Server_Application.Models.Account;
 using System.Security.Cryptography;
 using BusinessEntities.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using BusinessEntities.Models;
 using DataServiceLayer;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System.Globalization;
 
 namespace Server_Application.Controllers
 {
@@ -30,18 +27,21 @@ namespace Server_Application.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _IConfiguration;
+        private readonly IEmailDsl _IEmailDsl;
+        private const string PasswordRecoveryToken = "PasswordRecoveryToken";
+        private const string RefreshToken = "RefreshToken";
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration IConfiguration)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration IConfiguration, IEmailDsl IEmailDsl)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _IConfiguration = IConfiguration;
+            _IEmailDsl = IEmailDsl;
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterVM registerVM)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(registerVM);
@@ -63,7 +63,7 @@ namespace Server_Application.Controllers
                 };
 
             Tokens newTokens = new Tokens(GenerateJwt(claims), GenerateRefreshToken());
-            await saveRefreshToken(user, newTokens.RefreshToken);
+            await SaveToken(user, newTokens.RefreshToken, RefreshToken);
             return Ok(newTokens);
         }
 
@@ -88,11 +88,10 @@ namespace Server_Application.Controllers
                 };
 
                 Tokens newTokens = new Tokens(GenerateJwt(claims), GenerateRefreshToken());
-                await deleteRefreshToken(user);
-                await saveRefreshToken(user, newTokens.RefreshToken);
+                await DeleteToken(user, RefreshToken);
+                await SaveToken(user, newTokens.RefreshToken, RefreshToken);
                 return Ok(newTokens);
             }
-
             else
             {
                 ModelState.AddModelError("", "Invalid UserName or Password");
@@ -111,7 +110,7 @@ namespace Server_Application.Controllers
                 return BadRequest();
             }
 
-            string savedRefreshToken = await GetRefreshToken(user);
+            string savedRefreshToken = await GetToken(user, RefreshToken);
             if (savedRefreshToken != tokens.RefreshToken)
             {
                 throw new SecurityTokenException("Invalid refresh token");
@@ -121,15 +120,14 @@ namespace Server_Application.Controllers
             {
                 string newJWT = GenerateJwt(principal.Claims);
                 string newRefreshToken = GenerateRefreshToken();
-                await deleteRefreshToken(user);
-                await saveRefreshToken(user, newRefreshToken);
+                await DeleteToken(user, RefreshToken);
+                await SaveToken(user, newRefreshToken, RefreshToken);
                 return Ok(new Tokens(newJWT, newRefreshToken));
             }
             catch (Exception e)
             {
                 return BadRequest(e);
             }
-
         }
 
         [HttpGet("Logout")]
@@ -138,25 +136,93 @@ namespace Server_Application.Controllers
             var userPrincipal = HttpContext.User;
             if (userPrincipal != null)
             {
-                await deleteRefreshToken(await _userManager.GetUserAsync(userPrincipal));
+                await DeleteToken(await _userManager.GetUserAsync(userPrincipal), RefreshToken);
             }
             await _signInManager.SignOutAsync();
-
         }
 
-        private async Task saveRefreshToken(User user, string newRefreshToken)
+
+        [HttpPost("sendRecoveryMail")]
+        public async Task<IActionResult> SendRecoveryMail(ResetPasswordVM resetPasswordVM)
         {
-            await _userManager.SetAuthenticationTokenAsync(user, "UserRefresh", "RefreshToken", newRefreshToken);
+            var user = await _userManager.FindByEmailAsync(resetPasswordVM.Email);
+            if (user == null)
+                return NotFound("Invalid Email");
+            // remove previous token
+            await DeleteToken(user, PasswordRecoveryToken);
+            var recoveryToken = GenerateJwt(new List<Claim> { new Claim(JwtRegisteredClaimNames.Sub, user.Email) }, 15);
+            await SaveToken(user, recoveryToken, PasswordRecoveryToken);
+            var resetUrl = $"{ _IConfiguration.GetValue<string>("ClientUrl")}/auth/reset?token={recoveryToken}";
+            var htmlContent = $@"<a href=""{resetUrl}"">follow this link to reset your password</a>";
+            _IEmailDsl.SendEmail("Reset Password", string.Empty, htmlContent, user.Email, user.UserName);
+            return Ok();
         }
 
-        private async Task deleteRefreshToken(User user)
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM resetPasswordVM)
         {
-            await _userManager.RemoveAuthenticationTokenAsync(user, "UserRefresh", "RefreshToken");
+            string email = new JwtSecurityToken(resetPasswordVM.RecoveryToken).Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            User user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                string recoveryToken = await GetToken(user, PasswordRecoveryToken);
+                var token = recoveryToken != null ? new JwtSecurityToken(recoveryToken) : null;
+                if (token?.ValidTo < DateTime.UtcNow || string.IsNullOrEmpty(recoveryToken))
+                {
+                    await DeleteToken(user, PasswordRecoveryToken);
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordVM.Password);
+            if (passwordChangeResult.Succeeded)
+            {
+                await DeleteToken(user, PasswordRecoveryToken);
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
-        private async Task<string> GetRefreshToken(User user)
+        private string GenerateRefreshToken()
         {
-            return await _userManager.GetAuthenticationTokenAsync(user, "UserRefresh", "RefreshToken");
+            byte[] randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        private async Task<string> GetToken(User user, string tokenName)
+        {
+            return await _userManager.GetAuthenticationTokenAsync(user, GetLoginProvider(tokenName), tokenName);
+        }
+
+        private async Task DeleteToken(User user, string tokenName)
+        {
+            await _userManager.RemoveAuthenticationTokenAsync(user, GetLoginProvider(tokenName), tokenName);
+        }
+
+        private async Task SaveToken(User user, string token, string tokenName)
+        {
+            await _userManager.SetAuthenticationTokenAsync(user, GetLoginProvider(tokenName), tokenName, token);
+        }
+
+        private string GetLoginProvider(string tokenName)
+        {
+            return tokenName switch
+            {
+                PasswordRecoveryToken => "UserPasswordRecovery",
+                RefreshToken => "UserRefresh",
+                _ => throw new ArgumentException("invalid token name"),
+            };
         }
 
         private string GenerateJwt(IEnumerable<Claim> claims, int? duration = null)
@@ -174,17 +240,6 @@ namespace Server_Application.Controllers
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-
-        }
-
-        public string GenerateRefreshToken()
-        {
-            byte[] randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
         }
 
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
@@ -198,68 +253,19 @@ namespace Server_Application.Controllers
             };
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken securityToken;
-            ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            JwtSecurityToken jwtSecurityToken = securityToken as JwtSecurityToken;
-            //check that the algorithm used to sign key is valid
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCulture))
-                throw new SecurityTokenException("Invalid Token");
-            return principal;
-        }
-
-        [HttpPost("sendRecoveryMail")]
-        public async Task<IActionResult> SendRecoveryMail(ResetPasswordVM resetPasswordVM)
-        {
-            var user = await _userManager.FindByEmailAsync(resetPasswordVM.Email);
-            if (user == null)
-                return NotFound("Invalid Email");
-            var apiKey = _IConfiguration.GetSection("EmailConfiguration").GetValue<string>("ApiKey");
-            var client = new SendGridClient(apiKey);
-            var from = new EmailAddress(_IConfiguration.GetSection("EmailConfiguration").GetValue<string>("Sender"), _IConfiguration.GetSection("EmailConfiguration").GetValue<string>("User"));
-            var to = new EmailAddress(user.Email, user.UserName);
-            var subject = "Reset Password";
-            // remove previous token
-            await _userManager.RemoveAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken");
-            var passwordRecoveryToken = GenerateRecoveryToken(user.Email);
-            await _userManager.SetAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken", passwordRecoveryToken);
-            var resetUrl = $"{ _IConfiguration.GetValue<string>("ClientUrl")}/auth/reset?token={passwordRecoveryToken}";
-            var htmlContent = $@"<a href=""{resetUrl}"">follow this link to reset your password</a>";
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
-            _ = client.SendEmailAsync(msg).ConfigureAwait(false);
-            return Ok();
-        }
-
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordVM resetPasswordVM)
-        {
-            string email = new JwtSecurityToken(resetPasswordVM.RecoveryToken).Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
-            User user = await _userManager.FindByEmailAsync(email);
-            string recoveryToken = await _userManager.GetAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken");
-            var token = recoveryToken != null ? new JwtSecurityToken(recoveryToken) : null;
-            if (user == null || token?.ValidTo < DateTime.UtcNow || string.IsNullOrEmpty(recoveryToken))
+            try
             {
-                if (user != null)
-                    await _userManager.RemoveAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken");
-                return NotFound();
+                ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+                JwtSecurityToken jwtSecurityToken = securityToken as JwtSecurityToken;
+                //check that the algorithm used to sign key is valid
+                if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCulture))
+                    throw new SecurityTokenException("Invalid Token");
+                return principal;
             }
-            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordVM.Password);
-            if (passwordChangeResult.Succeeded)
+            catch (Exception e)
             {
-                await _userManager.RemoveAuthenticationTokenAsync(user, "UserPasswordRecovery", "PasswordRecoveryToken");
-                return Ok();
-            }
-            else
-            {
-                return NotFound();
+                throw e;
             }
         }
-
-        private string GenerateRecoveryToken(string email)
-        {
-            return GenerateJwt(new List<Claim> { new Claim(JwtRegisteredClaimNames.Sub, email) }, 15);
-        }
-
-
     }
 }

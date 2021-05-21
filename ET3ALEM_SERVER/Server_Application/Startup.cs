@@ -17,6 +17,7 @@ using Newtonsoft.Json.Serialization;
 using Server_Application.Data;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using BusinessEntities.Models;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Server_Application
 {
@@ -57,7 +58,6 @@ namespace Server_Application
                     // Everything from this point on is optional but helps with debugging.
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors());
-
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 3;
@@ -68,9 +68,8 @@ namespace Server_Application
                 options.User.RequireUniqueEmail = true;
             })
               .AddEntityFrameworkStores<ApplicationContext>()
-              .AddDefaultTokenProviders()
-              .AddTokenProvider("UserRefresh", typeof(DataProtectorTokenProvider<User>));
-
+              .AddTokenProvider("UserRefresh", typeof(DataProtectorTokenProvider<User>))
+              .AddDefaultTokenProviders();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
                 .AddAuthentication(options =>
@@ -134,6 +133,7 @@ namespace Server_Application
             services.AddScoped<IQuestionCollectionDal, QuestionCollectionDal>();
             services.AddScoped<IQuizAttemptDal, QuizAttemptDal>();
             services.AddScoped<IQuizAttemptDsl, QuizAttemptDsl>();
+            services.AddScoped<IEmailDsl, SendGridEmailDsl>();
         }
     }
 }
