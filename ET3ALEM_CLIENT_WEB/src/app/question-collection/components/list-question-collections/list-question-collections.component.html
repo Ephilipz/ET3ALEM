@@ -1,1 +1,47 @@
-<p>list-question-collections works!</p>
+<div class="container-fluid mainContainer p-5">
+  <h1 class="title">Created Collection</h1>
+  <div class="row px-3 mt-3">
+    <mat-form-field class="ml-auto" *ngIf="collectionListDS.data.length > 0">
+      <mat-label>Search</mat-label>
+      <input matInput type="search" (keyup)="applyFilter($event)">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <mat-spinner *ngIf="!isLoaded" class="mx-auto my-5"></mat-spinner>
+
+
+  <table mat-table [dataSource]="collectionListDS" matSort class="mat-elevation-z3">
+    <!-- Name Column -->
+    <ng-container matColumnDef="Name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+    </ng-container>
+
+    <!-- Date Column -->
+    <ng-container matColumnDef="CreatedDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.CreatedDate.toString() + 'Z' | date:'d-MMM-YYYY, h:mm a'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="header-align-right"></th>
+      <td mat-cell *matCellDef="let element" class="header-align-right">
+        <button mat-icon-button color="primary" [routerLink]="[ '../edit', element.Id ]" matTooltip="Edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="delete(element.Id)" matTooltip="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div class="col emptyListCol" *ngIf="isLoaded">
+    <h1 class="emptyCollection" *ngIf="collectionListDS.data.length == 0">You do not have any collections yet</h1>
+    <button mat-flat-button class="blue large newQuizButton" [routerLink]="'create'">New Collection</button>
+  </div>
+</div>

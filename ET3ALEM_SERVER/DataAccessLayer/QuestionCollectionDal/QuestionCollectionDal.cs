@@ -20,9 +20,7 @@ namespace DataAccessLayer
 
         public async Task<List<QuestionCollection>> GetQuestionCollections(string userId)
         {
-            var collections = await _context.QuestionCollections.Where(collection => collection.UserId == userId)
-                .Include(collection => collection.Questions)
-                .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).ToListAsync();
+            var collections = await _context.QuestionCollections.Where(collection => collection.UserId == userId).ToListAsync();
             return collections;
         }
 

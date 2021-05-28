@@ -15,14 +15,26 @@ import { AccessQuizComponent } from './components/take quiz/access-quiz/access-q
 import { EditOrCreateQuizComponent } from './components/edit-create-quiz/edit-or-create-quiz.component';
 import { QuizDetailsComponent } from './components/take quiz/quiz-details/quiz-details.component';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ViewQuizResultComponent } from './components/quiz-results/view-quiz-result/view-quiz-result.component';
 import { GradeQuizComponent } from './components/grade-quiz/grade-quiz.component';
 import { QuizAttemptHistoryComponent } from './components/quiz-attempt-history/quiz-attempt-history.component';
 import { QuizGradesComponent } from './components/quiz-grades/quiz-grades.component';
 
 @NgModule({
-  declarations: [EditOrCreateQuizComponent, TakeQuizComponent, ViewQuizComponent, QuizHomeComponent, ListQuizzesComponent, AccessQuizComponent, QuizDetailsComponent, ViewQuizResultComponent, GradeQuizComponent, QuizAttemptHistoryComponent, QuizGradesComponent],
+  declarations: [
+    EditOrCreateQuizComponent,
+    TakeQuizComponent,
+    ViewQuizComponent,
+    QuizHomeComponent,
+    ListQuizzesComponent,
+    AccessQuizComponent,
+    QuizDetailsComponent,
+    ViewQuizResultComponent,
+    GradeQuizComponent,
+    QuizAttemptHistoryComponent,
+    QuizGradesComponent
+  ],
   imports: [
     CommonModule,
     QuizRoutingModule,

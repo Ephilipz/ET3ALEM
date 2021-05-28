@@ -5,13 +5,13 @@ import { ListQuestionCollectionsComponent } from './components/list-question-col
 
 
 const routes: Routes = [
-    { path: '', component: ListQuestionCollectionsComponent },
-    { path: 'create', component: EditOrCreateQuestionCollectionComponent },
-    { path: 'edit/:id', component: EditOrCreateQuestionCollectionComponent },
+  { path: '', component: ListQuestionCollectionsComponent },
+  { path: 'create', component: EditOrCreateQuestionCollectionComponent },
+  { path: 'edit/:id', component: EditOrCreateQuestionCollectionComponent },
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
 export class QuestionCollectionRoutingModule { }
