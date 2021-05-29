@@ -20,5 +20,13 @@ export class QuestionCollectionService {
   getCollections() {
     return this.http.get<Array<QuestionCollection>>(this.baseRoute);
   }
-
+  getCollection(id: number) {
+    return this.http.get<QuestionCollection>(this.baseRoute + `/${id}`);
+  }
+  createCollection(collection: QuestionCollection) {
+    return this.http.post(this.baseRoute, collection);
+  }
+  updateCollection(collection: QuestionCollection) {
+    return this.http.put(this.baseRoute + `/${collection.Id}`, collection);
+  }
 }

@@ -3,6 +3,7 @@ using DataAccessLayer;
 using DataServiceLayer;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,13 +30,18 @@ namespace DataServiceLayer
 
         public async Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection)
         {
+            questionCollection.CreatedDate = DateTime.UtcNow;
             await _IQuestionCollectionDal.InsertQuestionCollection(questionCollection);
             return questionCollection;
         }
 
-        public async Task PutQuestionCollection(QuestionCollection questionCollection)
+        public async Task PutQuestionCollection(int id, QuestionCollection updatedCollection)
         {
-            await _IQuestionCollectionDal.PutQuestionCollection(questionCollection);
+            var collection = await _IQuestionCollectionDal.GetQuestionCollection(id, updatedCollection.UserId);
+            collection.Name = updatedCollection.Name;
+            collection.Questions = updatedCollection.Questions;
+            collection.Questions.OfType<MultipleChoiceQuestion>().ToList().ForEach(mcq => mcq.Choices.ForEach(choice=>choice.Id = 0));
+            await _IQuestionCollectionDal.PutQuestionCollection(collection);
         }
 
         public Task<QuestionCollection> DeleteQuestionCollection(int id)

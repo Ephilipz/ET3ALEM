@@ -4,6 +4,8 @@ import { ListQuestionCollectionsComponent } from './components/list-question-col
 import { EditOrCreateQuestionCollectionComponent } from './components/edit-or-create-question-collection/edit-or-create-question-collection.component';
 import { AngularMaterialModule } from '../Shared/modules/material.module';
 import { QuestionCollectionRoutingModule } from './question-collection-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { QuestionModule } from '../question/question.module';
 
 
 
@@ -15,7 +17,9 @@ import { QuestionCollectionRoutingModule } from './question-collection-routing.m
   imports: [
     CommonModule,
     AngularMaterialModule,
-    QuestionCollectionRoutingModule
+    QuestionCollectionRoutingModule,
+    ReactiveFormsModule,
+    QuestionModule
   ]
 })
 export class QuestionCollectionModule { }

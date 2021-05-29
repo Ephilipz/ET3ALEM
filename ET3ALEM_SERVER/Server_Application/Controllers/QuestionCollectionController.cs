@@ -43,6 +43,10 @@ namespace Server_Application.Controllers
         [HttpPost]
         public async Task<ActionResult<QuestionCollection>> Post(QuestionCollection questionCollection)
         {
+            string userId = Helpers.AccountHelper.getUserId(HttpContext, User);
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest();
+            questionCollection.UserId = userId;
             return await _IQuestionCollectionDsl.InsertQuestionCollection(questionCollection);
         }
 
@@ -51,5 +55,14 @@ namespace Server_Application.Controllers
         {
             return await _IQuestionCollectionDsl.DeleteQuestionCollection(id);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutQuiz(int id, QuestionCollection questionCollection)
+        {
+            if (id != questionCollection.Id)
+                return BadRequest();
+            await _IQuestionCollectionDsl.PutQuestionCollection(id, questionCollection);
+            return NoContent();
+        }
     }
+
 }
