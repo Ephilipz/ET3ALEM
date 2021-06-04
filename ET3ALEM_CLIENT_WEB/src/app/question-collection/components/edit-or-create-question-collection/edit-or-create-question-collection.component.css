@@ -1,0 +1,111 @@
+.boldPanelTitle {
+  font-size: 1.8em;
+  font-weight: 500;
+  padding: 30px 0;
+  line-height: 1.2em;
+}
+
+mat-form-field.smallMatInput {
+  width: 5vw;
+}
+
+mat-form-field {
+  width: 25vw;
+  font-size: 1.7em;
+}
+
+.selectFormField {
+  width: 300px;
+  font-size: 1.2em;
+}
+
+mat-expansion-panel {
+  margin-bottom: 20px;
+  padding: 10px 0;
+}
+
+ejs-richtexteditor {
+  margin: 0 30px;
+}
+
+.blueHeader {
+  font-size: 3em;
+  font-weight: 700;
+  color: #5F8EBA;
+  letter-spacing: 0.1em;
+}
+
+h2 {
+  font-size: 1.8em;
+  font-weight: 400;
+}
+
+.questionTitle {
+  font-size: 1.6em;
+  font-weight: 300;
+  letter-spacing: 4px;
+}
+
+:host ::ng-deep .ck-editor__editable_inline {
+  min-height: 500px;
+  width: 80vw;
+}
+
+.parentContainer {
+  background-color: #f6f6f6;
+  min-height: 100%;
+}
+
+mat-checkbox ::ng-deep .mat-checkbox-inner-container {
+  width: 20px;
+  height: 20px;
+}
+
+.addQuestionIcon {
+  transform: scale(2.5);
+}
+
+.addQuestionRow {
+  justify-content: center;
+}
+
+.addQuestionRow>button {
+  margin: 10px;
+}
+
+.deleteIconButton {
+  color: rgb(180, 25, 25);
+  transform: scale(1.6);
+}
+
+.copyIconButton {
+  color: rgb(25, 92, 180);
+  transform: scale(1.6);
+}
+
+.dragHandle {
+  left: 0;
+  color: #ccc;
+  cursor: move;
+  width: 24px;
+  height: 24px;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.additional-selection {
+  opacity: 0.75;
+  font-size: 0.75em;
+}
+
+::ng-deep .mat-expansion-indicator::after {
+  width: 15px;
+  height: 15px;
+  color: black;
+}

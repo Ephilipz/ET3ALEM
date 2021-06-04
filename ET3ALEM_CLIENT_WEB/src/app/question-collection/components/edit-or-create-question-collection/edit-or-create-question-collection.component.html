@@ -3,7 +3,7 @@
 
   <div class="container-fluid px-5 py-3">
 
-      <!-- Quiz Basic Data -->
+      <!-- Collection Settings -->
       <mat-expansion-panel expanded>
           <mat-expansion-panel-header>
               <mat-panel-title class="boldPanelTitle">
@@ -14,7 +14,7 @@
               <mat-form-field class="mx-5">
                   <mat-label>Collection Name</mat-label>
                   <input matInput [formControl]="collectionName" required autofocus>
-                  <mat-error>{{getControlErrors(collectionName, 'quiz title')}}</mat-error>
+                  <mat-error>{{getControlErrors(collectionName, 'collection name')}}</mat-error>
               </mat-form-field>
           </div>
       </mat-expansion-panel>
@@ -27,7 +27,7 @@
               </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <div class="container-fluid px-2" (cdkDropListDropped)="drop($event)" cdkDropList>
+          <div class="container-fluid px-4" (cdkDropListDropped)="drop($event)" cdkDropList>
               <div class="row mb-3" *ngFor="let question of questions; let i = index" cdkDrag cdkDragLockAxis="y">
                   <div class="dragHandle m-auto" cdkDragHandle>
                       <mat-icon>open_with</mat-icon>
@@ -38,7 +38,7 @@
                               {{'Question ' + (i + 1)}}
                           </mat-panel-title>
                       </mat-expansion-panel-header>
-                      <app-create-question #CreateQuestionComponent [question]="question" ></app-create-question>
+                      <app-create-question #CreateQuestionComponent [question]="question" [hideGrade]="true" ></app-create-question>
                   </mat-expansion-panel>
 
                   <button mat-icon-button class="m-auto">

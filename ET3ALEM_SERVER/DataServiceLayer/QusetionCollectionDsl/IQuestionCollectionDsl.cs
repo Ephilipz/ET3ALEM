@@ -13,5 +13,6 @@ namespace DataServiceLayer
         Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection);
         Task PutQuestionCollection(int id, QuestionCollection questionCollection);
         Task<QuestionCollection> DeleteQuestionCollection(int id);
+        Task<bool> NameExists(string name);
     }
 }

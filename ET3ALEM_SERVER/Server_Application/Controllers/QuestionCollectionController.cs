@@ -50,7 +50,7 @@ namespace Server_Application.Controllers
             return await _IQuestionCollectionDsl.InsertQuestionCollection(questionCollection);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<ActionResult<QuestionCollection>> DeleteQuestionCollection(int id)
         {
             return await _IQuestionCollectionDsl.DeleteQuestionCollection(id);
@@ -62,6 +62,12 @@ namespace Server_Application.Controllers
                 return BadRequest();
             await _IQuestionCollectionDsl.PutQuestionCollection(id, questionCollection);
             return NoContent();
+        }
+        // GET api/<QuestionCollectionController>/IsNameUnique/:name
+        [HttpGet("NameExists/{name}")]
+        public async Task<ActionResult<bool>> NameExists(string name)
+        {
+            return await _IQuestionCollectionDsl.NameExists(name);
         }
     }
 

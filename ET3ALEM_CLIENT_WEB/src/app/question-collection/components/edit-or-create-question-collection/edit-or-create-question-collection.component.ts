@@ -1,19 +1,18 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component.js';
 import { Question } from 'src/app/question/Models/question.js';
 import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
 import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
 import { Helper } from 'src/app/Shared/Classes/helpers/Helper.js';
 import { plainToClass } from 'class-transformer';
-import { isUnionTypeNode } from 'typescript';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { QuestionCollectionService } from '../../question-collection.service';
 import { QuestionCollection } from '../../models/question-collection';
+
 
 @Component({
   selector: 'app-edit-or-create-question-collection',
@@ -31,8 +30,7 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
   deletedQuestions: Array<any> = [];
   isLoaded: boolean = false;
   today: Date = moment().toDate();
-  collectionName = new FormControl('', [Validators.required]);
-  includedQuestions = new FormControl(null);
+  collectionName = new FormControl('', Validators.required);
 
   constructor(
     private toastr: ToastrService,
@@ -79,10 +77,6 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
     });
   }
 
-  subtractDays(date: Date, days = 1) {
-    return moment(date).subtract(days, 'days').toDate();
-  }
-
   addQuestion() {
     this.questions.push(new MultipleChoiceQuestion(Helper.randomInteger(0, 100) * -1));
   }
@@ -103,15 +97,15 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
 
   duplicateQuestion(question: Question, i: number) {
     const oldQuestion: Question = this.createQuestionComponents.find((_, index) => index == i)?.getQuestion();
-    if (!oldQuestion)
+    if (!oldQuestion){
       return;
+    }
     const newQuestion = oldQuestion.duplicateQuestion();
     this.questions.push(newQuestion);
   }
 
   /**
    * For drag and drop event in reordering questions
-   * @param event
    */
   drop(event: CdkDragDrop<Question[]>) {
     const questionComponentsArray = this.createQuestionComponents.toArray();
@@ -124,8 +118,9 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
   }
 
   async createCollection() {
-    if (!this.validate())
+    if (!await this.validate(this.mode)) {
       return;
+    }
     const questions: Array<Question> = [];
 
     await Promise.all(this.createQuestionComponents.map(async (component, i) => {
@@ -147,20 +142,17 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
   }
 
   async updateCollection() {
-    if (!this.validate())
+    if (!await this.validate(this.mode)) {
       return;
-
+    }
     const questions: Array<Question> = [];
-
     await Promise.all(this.createQuestionComponents.map(async (component, i) => {
       const question = await component.saveQuestion(this.mode);
       question.Id = 0;
       questions.push(question);
     }));
-
     this.currentCollection.Name = this.collectionName.value;
     this.currentCollection.Questions = questions;
-
     this.questionCollectionService.updateCollection(this.currentCollection).subscribe(
       () => {
         this.toastr.success('Question Collection Updated');
@@ -169,14 +161,22 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
       () => {
         this.toastr.error('Question Collection not updated');
       }
-    )
+    );
   }
-  validate() {
-    if (!this.collectionName.valid) {
-      this.toastr.error('collection name must be unique');
-      return false;
+  async validate(pageMode: mode) {
+    if (pageMode === mode.edit && this.collectionName.value === this.currentCollection.Name) {
+      return true;
     }
-    return true;
+    else {
+      const nameExists = await this.questionCollectionService.nameExists(this.collectionName.value).toPromise();
+      if (nameExists) {
+        this.toastr.error('collection name must be unique');
+        return false;
+      }
+      else {
+        return true;
+      }
+    }
   }
 }
 

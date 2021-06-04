@@ -45,13 +45,19 @@ namespace DataAccessLayer
         }
         public async Task<QuestionCollection> DeleteQuestionCollection(int id)
         {
-            QuestionCollection questionCollection = _context.QuestionCollections.Where(q => q.Id == id).FirstOrDefault();
+            QuestionCollection questionCollection = await _context.QuestionCollections.Where(q => q.Id == id).Include(collection => collection.Questions)
+                .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).FirstAsync();
             if(questionCollection != null)
             {
                 _context.QuestionCollections.Remove(questionCollection);
                 await _context.SaveChangesAsync();
             }
             return questionCollection;
+        }
+
+        public Task<bool> NameExists(string name)
+        {
+            return _context.QuestionCollections.AnyAsync(collection => collection.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
