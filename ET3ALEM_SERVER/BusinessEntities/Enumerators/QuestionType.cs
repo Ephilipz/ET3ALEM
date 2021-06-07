@@ -7,6 +7,8 @@ namespace BusinessEntities.Enumerators
     public enum QuestionType : int
     {
         TrueFalse,
-        MCQ
+        MCQ,
+        ShortAnswer,
+        LongAnswer
     }
 }

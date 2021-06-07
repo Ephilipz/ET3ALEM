@@ -35,6 +35,7 @@ namespace BusinessEntities.Models
         public bool AutoGrade { get; set; }
         public bool ShowCorrectAnswers { get; set; }
         public bool ShuffleQuestions { get; set; }
-        public string? NonShuffleQuestions { get; set; }
+        public bool IncludeAllQuestions { get; set; }
+        public int? IncludedQuestionsCount { get; set; }
     }
 }

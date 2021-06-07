@@ -20,16 +20,25 @@ namespace Server_Application.Data
             modelBuilder.Entity<Question>().ToTable("Question")
                 .HasDiscriminator<QuestionType>("QuestionType")
                 .HasValue<MultipleChoiceQuestion>(QuestionType.MCQ)
-                .HasValue<TrueFalseQuestion>(QuestionType.TrueFalse);
+                .HasValue<TrueFalseQuestion>(QuestionType.TrueFalse)
+                .HasValue<ShortAnswerQuestion>(QuestionType.ShortAnswer);
+
             modelBuilder.Entity<QuizQuestion>().ToTable("QuizQuestion");
+
             modelBuilder.Entity<Quiz>().ToTable("Quiz");
+
             modelBuilder.Entity<Choice>().ToTable("Choice");
+
             modelBuilder.Entity<QuestionCollection>().ToTable("QuestionCollection");
+
             modelBuilder.Entity<QuizAttempt>().ToTable("QuizAttempt");
+
             modelBuilder.Entity<QuestionAttempt>().ToTable("QuestionAttempt")
                .HasDiscriminator<QuestionType>("QuestionType")
                .HasValue<MCQAttmept>(QuestionType.MCQ)
-               .HasValue<TrueFalseAttempt>(QuestionType.TrueFalse);
+               .HasValue<TrueFalseAttempt>(QuestionType.TrueFalse)
+               .HasValue<ShortAnswerAttempt>(QuestionType.ShortAnswer);
+
             modelBuilder.Entity<MCQAttmept>()
                .HasMany(mcqAttmep => mcqAttmep.Choices)
                .WithMany(choice => choice.MCQAttmepts)

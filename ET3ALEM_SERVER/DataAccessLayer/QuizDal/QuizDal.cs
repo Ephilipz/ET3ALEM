@@ -56,7 +56,7 @@ namespace DataAccessLayer
 
         public async Task<IEnumerable<Quiz>> GetQuizzes(string userId)
         {
-            return await _context.Quizzes.Where(quiz => string.Equals(userId, quiz.UserId)).ToListAsync();
+            return await _context.Quizzes.Where(quiz => string.Equals(userId, quiz.UserId)).OrderByDescending(quiz => quiz.CreatedDate).AsNoTracking().ToListAsync();
         }
 
         public async Task<Quiz> InsertQuiz(Quiz quiz)

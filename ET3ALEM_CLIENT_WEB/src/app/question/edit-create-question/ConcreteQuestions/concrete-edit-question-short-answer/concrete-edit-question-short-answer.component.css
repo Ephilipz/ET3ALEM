@@ -1,0 +1,9 @@
+.flexRow{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.addAnswerButton{
+    height: min-content;
+}

@@ -11,6 +11,7 @@ import { QuizAttemptService } from '../../services/quiz-attempt.service';
   templateUrl: './quiz-attempt-history.component.html',
   styleUrls: ['./quiz-attempt-history.component.css']
 })
+
 export class QuizAttemptHistoryComponent implements OnInit {
 
   isLoaded = false;
@@ -35,7 +36,7 @@ export class QuizAttemptHistoryComponent implements OnInit {
     );
   }
 
-  getGrade(attempt: QuizAttempt){
+  getGrade(attempt: QuizAttempt) {
     return attempt.IsGraded ? (attempt.Grade / attempt.Quiz.TotalGrade * 100).toFixed(2) + '%' : 'Not Graded Yet';
   }
 

@@ -7,18 +7,18 @@ import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
 export class MultipleChoiceQuestion extends Question {
     @Type(() => Choice)
     Choices: Array<Choice>;
-    
+
     McqAnswerType: McqAnswerType = McqAnswerType.SingleChoice;
-    
-    constructor(Id: number = 0, Body: string = '', choices = [new Choice(), new Choice()], mcqAnswerType: McqAnswerType = McqAnswerType.SingleChoice) {
-        super(Id, Body);
+
+    constructor(Id: number = 0, Body: string = '', choices = [new Choice(), new Choice()], mcqAnswerType: McqAnswerType = McqAnswerType.SingleChoice, Comment: string = null) {
+        super(Id, Body, Comment);
         this.QuestionType = QuestionType.MCQ;
         this.Choices = choices;
         this.McqAnswerType = mcqAnswerType;
     }
 
     protected duplicateQuestionAnswer(newQuestion: MultipleChoiceQuestion) {
-        newQuestion.Choices.forEach(choice => choice.Id = Helper.randomInteger(0,100)*-1);
+        newQuestion.Choices.forEach(choice => choice.Id = Helper.randomInteger(0, 100) * -1);
     }
 }
 

@@ -1,7 +1,7 @@
 <div class="d-flex align-items-stretch h-100 flex-wrap-reverse">
     <div class="col-lg-6 blueSec p-md-5 smallerMobileCol align-items-center">
         <div class="col h-50 flex-grow text-center justify-content-center hideMobile">
-            <h1>ET3ALEM</h1>
+            <h1>ET3ALLIM</h1>
             <h2 class="secondTitle">Easily Create Quizzes</h2>
         </div>
         <div class="col h-lg-50 flex-grow text-center justify-content-center align-items-center fullHeightMobile">
@@ -35,6 +35,7 @@
                     routerLink="../passwordRecover">Recover
                     Password</button>
             </div>
+            <mat-spinner class="my-5 mx-auto" *ngIf="isLoading"></mat-spinner>
         </div>
 
 

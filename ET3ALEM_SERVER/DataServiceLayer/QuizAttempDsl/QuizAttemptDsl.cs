@@ -51,7 +51,20 @@ namespace DataServiceLayer
         public async Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt)
         {
             var quiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
-            foreach (var quizQuestion in quiz.QuizQuestions)
+            List<QuizQuestion> assignedQuizQuestions = (!quiz.IncludeAllQuestions && quiz.IncludedQuestionsCount != null) ? quiz.QuizQuestions.Take((int)quiz.IncludedQuestionsCount).ToList() : quiz.QuizQuestions;
+            if (quiz.ShuffleQuestions)
+            {
+                Random random = new Random();
+                for (int i = assignedQuizQuestions.Count() - 1; i > 0; i--)
+                {
+                    int randomIndex = random.Next(0, i + 1);
+
+                    QuizQuestion temp = assignedQuizQuestions[i];
+                    assignedQuizQuestions[i] = assignedQuizQuestions[randomIndex];
+                    assignedQuizQuestions[randomIndex] = temp;
+                }
+            }
+            foreach (var quizQuestion in assignedQuizQuestions)
             {
                 quizAttempt.QuestionsAttempts.Add(GetQuestionAttemptFromQuizQuestion(quizQuestion));
             }
@@ -76,7 +89,6 @@ namespace DataServiceLayer
             switch (quizQuestion.Question.QuestionType)
             {
                 case QuestionType.MCQ:
-                    MultipleChoiceQuestion MCQquestion = (MultipleChoiceQuestion)quizQuestion.Question;
                     return new MCQAttmept()
                     {
                         QuizQuestion = quizQuestion,
@@ -84,7 +96,6 @@ namespace DataServiceLayer
                         Id = 0
                     };
                 case QuestionType.TrueFalse:
-                    TrueFalseQuestion TFquestion = (TrueFalseQuestion)quizQuestion.Question;
                     return new TrueFalseAttempt()
                     {
                         QuizQuestion = quizQuestion,

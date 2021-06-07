@@ -12,3 +12,9 @@ mat-form-field.smallMatInput {
     width: 3vw;
     font-size: larger;
 }
+
+mat-form-field.commentTextArea{
+    width: 70%;
+    min-width: 500px;
+    font-size: larger;
+}

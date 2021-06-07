@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent extends ExtraFormOptions implements OnInit {
 
+  isLoading = false;
+
   constructor(private authService: AuthService, private router: Router) {
     super();
   }
@@ -26,6 +28,7 @@ export class LoginComponent extends ExtraFormOptions implements OnInit {
   login() {
     let email = this.loginForm.get('email').value;
     let password = this.loginForm.get('password').value;
+    this.isLoading = true;
     this.authService.login(email, password).subscribe(
       res => {
         if(res){

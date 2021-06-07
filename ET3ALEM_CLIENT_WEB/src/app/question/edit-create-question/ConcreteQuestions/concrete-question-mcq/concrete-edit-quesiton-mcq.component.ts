@@ -7,11 +7,11 @@ import { McqAnswerType, MultipleChoiceQuestion } from 'src/app/question/Models/m
 import { AC_ConcreteEditQuestion } from '../ac-concrete-question';
 
 @Component({
-  selector: 'app-concrete-question-mcq',
-  templateUrl: './concrete-question-mcq.component.html',
-  styleUrls: ['./concrete-question-mcq.component.css']
+  selector: 'app-concrete-edit-question-mcq',
+  templateUrl: './concrete-edit-question-mcq.component.html',
+  styleUrls: ['./concrete-edit-question-mcq.component.css']
 })
-export class ConcreteQuestionMCQComponent extends AC_ConcreteEditQuestion implements OnInit {
+export class ConcreteEditQuestionMCQComponent extends AC_ConcreteEditQuestion implements OnInit {
 
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 

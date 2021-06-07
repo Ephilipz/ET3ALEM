@@ -21,10 +21,10 @@ export class Quiz {
     ShowGrade: boolean;
     AutoGrade:boolean;
     ShowCorrectAnswers: boolean;
-    ShuffleQuestions: boolean;
-    NonShuffleQuestions: string;
     TotalGrade: number;
-
+    ShuffleQuestions: boolean;
+    IncludeAllQuestions: boolean;
+    IncludedQuestionsCount: number;
     @Type(() => QuizQuestion)
     QuizQuestions: Array<QuizQuestion> = [];
 
@@ -46,7 +46,8 @@ export class Quiz {
         AutoGrade: boolean = true,
         ShowCorrectAnswers: boolean = true,
         ShuffleQuestions: boolean = false,
-        NonShuffleQuestions?: string) {
+        IncludeAllQuestions: boolean = true,
+        IncludedQuestionsCount: number = null) {
         this.Id = Id;
         this.Code = code;
         this.Name = title;
@@ -65,8 +66,9 @@ export class Quiz {
         this.ShowGrade = ShowGrade,
         this.AutoGrade = AutoGrade;
         this.ShowCorrectAnswers = ShowCorrectAnswers;
-        this.ShuffleQuestions = ShuffleQuestions,
-        this.NonShuffleQuestions = NonShuffleQuestions;
+        this.ShuffleQuestions = ShuffleQuestions;
+        this.IncludeAllQuestions = IncludeAllQuestions;
+        this.IncludedQuestionsCount = IncludedQuestionsCount;
     }
 
     public updateQuiz(title: string,
@@ -83,7 +85,8 @@ export class Quiz {
         AutoGrade: boolean = true,
         ShowCorrectAnswers: boolean = true,
         ShuffleQuestions: boolean = false,
-        NonShuffleQuestions?: string) {
+        IncludeAllQuestions: boolean = true,
+        IncludedQuestionsCount: number = null) {
         this.Name = title;
         this.Instructions = instructions;
         this.DurationSeconds = durationSeconds;
@@ -97,7 +100,8 @@ export class Quiz {
         this.ShowGrade = ShowGrade,
         this.AutoGrade = AutoGrade;
         this.ShowCorrectAnswers = ShowCorrectAnswers;
-        this.ShuffleQuestions = ShuffleQuestions,
-        this.NonShuffleQuestions = NonShuffleQuestions;
+        this.ShuffleQuestions = ShuffleQuestions;
+        this.IncludeAllQuestions = IncludeAllQuestions;
+        this.IncludedQuestionsCount = IncludedQuestionsCount ? IncludedQuestionsCount : QuizQuestions.length;
     }
 }

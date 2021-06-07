@@ -13,10 +13,12 @@ namespace DataServiceLayer
     {
         private readonly IQuizDal _IQuizDal;
         private readonly IQuestionDsl _IQuestionDsl;
-        public QuizDsl(IQuizDal IQuizDal, IQuestionDsl IQuestionDsl)
+        private readonly IQuizAttemptDal _IQuizAttemptDal;
+        public QuizDsl(IQuizDal IQuizDal, IQuestionDsl IQuestionDsl, IQuizAttemptDal IQuizAttemptDal)
         {
             _IQuizDal = IQuizDal;
             _IQuestionDsl = IQuestionDsl;
+            _IQuizAttemptDal = IQuizAttemptDal;
         }
 
         public Task<Quiz> GetQuiz(int quizId)
@@ -50,6 +52,9 @@ namespace DataServiceLayer
         }
         public async Task<Quiz> DeleteQuiz(int id)
         {
+            //remove quiz attempt
+            //await _IQuizAttemptDal.DeleteRelatedQuizAttempts(id);
+
             //remove quiz
             Quiz quiz = await _IQuizDal.DeleteQuiz(id);
 

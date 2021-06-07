@@ -37,6 +37,7 @@ namespace BusinessEntities.CustomConverters
             {
                 QuestionType.MCQ => new MultipleChoiceQuestion(),
                 QuestionType.TrueFalse => new TrueFalseQuestion(),
+                QuestionType.ShortAnswer => new ShortAnswerQuestion(),
                 _ => throw new ArgumentNullException(nameof(jObject)),
             };
         }

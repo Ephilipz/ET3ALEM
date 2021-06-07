@@ -43,11 +43,16 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
   questionTypeFC: FormControl = new FormControl();
   questionContentFC: FormControl = new FormControl();
   grade: FormControl = new FormControl(null, [Validators.min(0)]);
+  commentFC: FormControl = new FormControl(null);
+
+  showCommentBox: boolean = false;
 
   ngOnInit(): void {
     this.question = Helper.deepCopy(this.inputQuestion);
     this.questionContentFC.setValue(this.question.Body);
     this.grade.setValue(this.inputGrade);
+    this.commentFC.setValue(this.question.Comment);
+    this.showCommentBox = this.question.Comment != null;
     this.createQuestionComponent();
   }
 
@@ -81,6 +86,7 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
 
     this.question = this.componentRef.instance.saveQuestion();
     this.question.Body = this.questionContentFC.value;
+    this.question.Comment = this.showCommentBox ? this.commentFC.value.trim() : null;
 
     return this.question;
   }

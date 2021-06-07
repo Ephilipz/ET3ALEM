@@ -7,6 +7,7 @@ export abstract class QuestionAttempt {
     QuizQuestion: QuizQuestion;
     questionType: QuestionType;
     Grade: number;
+    Sequence: number;
     readonly IsGraded: boolean;
 
     constructor(Id = 0, QuizQuestion, Grade = 0){

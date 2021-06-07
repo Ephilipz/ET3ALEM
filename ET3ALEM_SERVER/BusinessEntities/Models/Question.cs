@@ -13,5 +13,6 @@ namespace BusinessEntities.Models
         [Required]
         public string Body { get; set; }
         public int? QuestionCollectionId { get; set; }
+        public string? Comment { get; set; }
     }
 }

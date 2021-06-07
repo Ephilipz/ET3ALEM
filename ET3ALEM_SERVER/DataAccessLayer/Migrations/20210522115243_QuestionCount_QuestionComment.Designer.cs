@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server_Application.Data;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210522115243_QuestionCount_QuestionComment")]
+    partial class QuestionCount_QuestionComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,9 +89,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("QuizQuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Sequence")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -478,19 +477,6 @@ namespace DataAccessLayer.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("BusinessEntities.Models.ShortAnswerQuestion", b =>
-                {
-                    b.HasBaseType("BusinessEntities.Models.Question");
-
-                    b.Property<bool>("CaseSensitive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("PossibleAnswers")
-                        .HasColumnType("longtext");
-
-                    b.HasDiscriminator().HasValue(2);
-                });
-
             modelBuilder.Entity("BusinessEntities.Models.TrueFalseQuestion", b =>
                 {
                     b.HasBaseType("BusinessEntities.Models.Question");
@@ -508,23 +494,12 @@ namespace DataAccessLayer.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("BusinessEntities.Models.ShortAnswerAttempt", b =>
-                {
-                    b.HasBaseType("BusinessEntities.Models.QuestionAttempt");
-
-                    b.Property<string>("Answer")
-                        .HasColumnType("longtext");
-
-                    b.HasDiscriminator().HasValue(2);
-                });
-
             modelBuilder.Entity("BusinessEntities.Models.TrueFalseAttempt", b =>
                 {
                     b.HasBaseType("BusinessEntities.Models.QuestionAttempt");
 
                     b.Property<bool>("Answer")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("TrueFalseAttempt_Answer");
+                        .HasColumnType("tinyint(1)");
 
                     b.HasDiscriminator().HasValue(0);
                 });

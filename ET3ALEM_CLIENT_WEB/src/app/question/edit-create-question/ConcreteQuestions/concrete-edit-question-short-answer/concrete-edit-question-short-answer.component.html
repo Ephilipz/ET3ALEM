@@ -1,0 +1,13 @@
+<div class="flexRow mx-auto">
+    <div class="mx-3" *ngFor="let answer of possibleAnswers">
+        <button mat-icon-button class="mr-2 my-auto" (click)="removeAnswer(answer.Id)" *ngIf="possibleAnswers.length > 1">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <mat-form-field class="answerInputText">
+            <mat-label>Answer</mat-label>
+            <input matInput placeholder="Answer" [(ngModel)]="answer.value">
+        </mat-form-field>
+    </div>
+
+    <button mat-flat-button class="grey addAnswerButton ml-4" (click)="addAnswer()">Add Another Answer</button>
+</div>

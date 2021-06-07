@@ -95,7 +95,7 @@
         </mat-expansion-panel>
 
         <!-- Questions -->
-        <mat-expansion-panel>
+        <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
                 <mat-panel-title class="boldPanelTitle">
                     Questions
@@ -107,7 +107,7 @@
                     <div class="dragHandle m-auto" cdkDragHandle>
                         <mat-icon>open_with</mat-icon>
                     </div>
-                    <mat-expansion-panel style="width: 90%" class="m-0">
+                    <mat-expansion-panel style="width: 90%" class="m-0" expanded>
                         <mat-expansion-panel-header>
                             <mat-panel-title class="questionTitle">
                                 {{'Question ' + (i + 1)}}
@@ -148,29 +148,24 @@
                         <mat-checkbox class="largeCheckBox ml-5 col-3" [formControl]="randomOrderQuestions">Randomly
                             Order Questions
                         </mat-checkbox>
-
-                        <mat-form-field appearance="fill" class="selectFormField col-2"
-                            *ngIf="randomOrderQuestions.value">
-                            <mat-label>Randomize all except</mat-label>
-                            <mat-select [formControl]="nonRandomQuestions" multiple [disabled]="questions.length == 0">
-                                <mat-option *ngFor="let question of questions; let i = index" [value]="i">{{i + 1}}
-                                </mat-option>
-                            </mat-select>
-                            <mat-hint *ngIf="questions.length == 0">There are no questions yet</mat-hint>
-                        </mat-form-field>
                     </div>
                 </div>
 
-                <div>
+                <div *ngIf="randomOrderQuestions.value">
                     <h2>Question Count</h2>
                     <div class="row align-items-center ">
                         <mat-checkbox class="largeCheckBox ml-5 col-3" [formControl]="includeAllQuestions">
                             Include All Questions
                         </mat-checkbox>
-
-                        <mat-form-field class="col-3" *ngIf="!includeAllQuestions.value">
-                            <input matInput placeholder="Question Count" type="number" min="1" [max]="questions.length" [formControl]="includedQuestions" >
-                        </mat-form-field>
+                        <div *ngIf="!includeAllQuestions.value && questions.length > 0">
+                            <mat-form-field class="col-3">
+                                <input matInput placeholder="Question Count" type="number" min="1"
+                                    [max]="questions.length" [formControl]="includedQuestionsCount">
+                                    <mat-error style="font-size: smaller;">{{getControlErrors(includedQuestionsCount, 'count')}}</mat-error>
+                            </mat-form-field>
+                            <span>only {{getIncludeQuestionsCountText()}} out of {{questions.length}} questions will be
+                                randomly picked for each attempt</span>
+                        </div>
 
                     </div>
                 </div>
@@ -181,8 +176,8 @@
         <div class="d-flex justify-content-around mt-4">
             <button mat-flat-button class="red large"
                 [routerLink]="mode == 1 ? '../manage' : '../../manage'">Cancel</button>
-            <button mat-flat-button class="blue large" [disabled]="!quizTitle.valid"
-                (click)="mode == 1 ? createQuiz() : updateQuiz()">Save</button>
+            <button mat-flat-button class="blue large" [disabled]="!quizTitle.valid || (!includeAllQuestions.value && !includedQuestionsCount.valid)"
+                (click)="mode == 1 ? createQuiz() : updateQuiz()" type="submit">Save</button>
         </div>
     </div>
 

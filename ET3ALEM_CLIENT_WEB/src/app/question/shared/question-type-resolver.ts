@@ -1,4 +1,4 @@
-import { ConcreteQuestionMCQComponent } from "../edit-create-question/ConcreteQuestions/concrete-question-mcq/concrete-quesiton-mcq.component";
+import { ConcreteEditQuestionMCQComponent } from "../edit-create-question/ConcreteQuestions/concrete-question-mcq/concrete-edit-quesiton-mcq.component";
 import { ConcreteQuestionTrueFalseComponent } from "../edit-create-question/ConcreteQuestions/concrete-question-true-false/concrete-question-true-false.component";
 import { MultipleChoiceQuestion } from "../Models/mcq";
 import { QuestionType } from "../Models/question-type.enum";
@@ -11,6 +11,8 @@ import { TrueFalseAttempt } from "../Models/true-false-attempt";
 import { ConcreteQuestionResultMCQComponent } from "../question result/concrete-question-result/concrete-question-result-mcq/concrete-question-result-mcq.component";
 import { ConcreteQuestionResultTFComponent } from "../question result/concrete-question-result/concrete-question-result-tf/concrete-question-result-tf.component";
 import { Question } from "../Models/question";
+import { ShortAnswerQuestion } from "../Models/short-answer-question";
+import { ConcreteEditQuestionShortAnswerComponent } from "../edit-create-question/ConcreteQuestions/concrete-edit-question-short-answer/concrete-edit-question-short-answer.component";
 
 /**
  * A shared class with the question type dictionaries for the creation of specific questions 
@@ -19,8 +21,9 @@ export class QuestionTypeResolver {
 
 
     public static editQuestionComponentsMap = {
-        MCQ: ConcreteQuestionMCQComponent,
-        TrueFalse: ConcreteQuestionTrueFalseComponent
+        MCQ: ConcreteEditQuestionMCQComponent,
+        TrueFalse: ConcreteQuestionTrueFalseComponent,
+        ShortAnswer: ConcreteEditQuestionShortAnswerComponent
     }
 
 
@@ -37,6 +40,8 @@ export class QuestionTypeResolver {
     public static questionTypeNames = [
         { text: 'True False', value: QuestionType.TrueFalse },
         { text: 'Multiple Choice', value: QuestionType.MCQ },
+        { text: 'Short Answer', value: QuestionType.ShortAnswer },
+        { text: 'Long Answer', value: QuestionType.LongAnswer },
     ];
 
     public static getNewQuestionInstance(type: QuestionType) {
@@ -45,6 +50,8 @@ export class QuestionTypeResolver {
                 return new MultipleChoiceQuestion();
             case QuestionType.TrueFalse:
                 return new TrueFalseQuestion();
+            case QuestionType.ShortAnswer:
+                return new ShortAnswerQuestion();
             default:
                 break;
         }
@@ -55,9 +62,11 @@ export class QuestionTypeResolver {
         let type: QuestionType = question.QuestionType;
         switch (type) {
             case QuestionType.MCQ:
-                return new MultipleChoiceQuestion(question.Id, question.Body, question.Choices, question.McqAnswerType);
+                return new MultipleChoiceQuestion(question.Id, question.Body, question.Choices, question.McqAnswerType, question.Comment);
             case QuestionType.TrueFalse:
-                return new TrueFalseQuestion(question.Id, question.Body, question.Answer);
+                return new TrueFalseQuestion(question.Id, question.Body, question.Answer, question.Comment);
+            case QuestionType.ShortAnswer:
+                return new ShortAnswerQuestion(question.Id, question.Body, question.Comment, question.PossibleAnswers);
             default:
                 return question;
         }

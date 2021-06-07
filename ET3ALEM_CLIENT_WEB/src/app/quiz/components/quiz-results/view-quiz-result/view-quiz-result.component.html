@@ -1,34 +1,43 @@
 <mat-spinner class="mx-auto my-5 p-5" *ngIf="!isLoaded"></mat-spinner>
 
-<div class="container-fluid p-4" *ngIf="isLoaded">
+<div class="container-fluid py-4 px-0" *ngIf="isLoaded">
     <div class="mb-5 title">
-        <h1 class="topBoldTitle pt-2 mb-4">{{quizAttempt.Quiz.Name}} Results</h1>
+        <h1 class="topBoldTitle pt-4">{{quizAttempt.Quiz.Name}} Results</h1>
     </div>
 
-    <div class="resultsHeaderRow d-flex justify-content-between">
-        <h2>
-            <mat-icon>schedule</mat-icon> <span>{{quizAttempt.StartTime +'Z' | date:'dd/MM/YYYY, h:mm a'}}</span>
-        </h2>
-        <h2>
-            <mat-icon>grading</mat-icon> <span>{{(quizAttempt.Grade/quizAttempt.Quiz.TotalGrade*100) | number :
-                '1.0-2'}}%</span>
-        </h2>
-    </div>
+    <div *ngIf="quizAttempt.Quiz.ShowGrade" class="p-2">
 
-    <div *ngFor="let questionAttempt of quizAttempt.QuestionsAttempts; let i = index" class="questionContainer">
-        <div class="row question m-0 QuestionTitle "
-            [ngClass]="{'wrongAnswer': questionAttempt.Grade != questionAttempt.QuizQuestion.Grade}">
-            <h2 style="width: fit-content;">Question {{i+1}}</h2>
-            <h2 style="margin-left: auto;">{{questionAttempt.Grade.toString() + '/' +
-                questionAttempt.QuizQuestion.Grade.toString()}} Points</h2>
+        <div class="resultsHeaderRow d-flex justify-content-between">
+            <h2>
+                <mat-icon>schedule</mat-icon> <span>{{quizAttempt.StartTime +'Z' | date:'dd/MM/YYYY, h:mm a'}}</span>
+            </h2>
+            <h2>
+                <mat-icon>grading</mat-icon> <span>{{(quizAttempt.Grade/quizAttempt.Quiz.TotalGrade*100) | number :
+                    '1.0-2'}}%</span>
+            </h2>
         </div>
-        <question-result-header #QuestionResult class="questionResultComponent row" [questionAttempt]="questionAttempt">
-        </question-result-header>
-        <hr style="background-color: #474747; margin: 40px 0;padding: 0;">
+
+        <div *ngFor="let questionAttempt of quizAttempt.QuestionsAttempts; let i = index" class="questionContainer">
+            <div class="row question m-0 QuestionTitle "
+                [ngClass]="{'wrongAnswer': questionAttempt.Grade != questionAttempt.QuizQuestion.Grade}">
+                <h2 style="width: fit-content;">Question {{i+1}}</h2>
+                <h2 style="margin-left: auto;">{{questionAttempt.Grade.toString() + '/' +
+                    questionAttempt.QuizQuestion.Grade.toString()}} Points</h2>
+            </div>
+            <question-result-header #QuestionResult class="questionResultComponent row"
+                [questionAttempt]="questionAttempt">
+            </question-result-header>
+            <hr style="background-color: #474747; margin: 40px 0;padding: 0;">
+        </div>
+    </div>
+
+
+    <div *ngIf="!quizAttempt.Quiz.ShowGrade" class="py-5 px-0" style="display: flex; align-items: center;">
+        <h2 class="secondaryTitle mx-auto">Quiz Results Are Hidden</h2>
+        <img src="../../../../../assets/images/undraw_secure_files_re_6vdh.svg" class="m-0" height="80%">
     </div>
 
     <div style="text-align: center;">
-        <button mat-flat-button class="red large"  [routerLink]="[ '../../history']">Back</button>
+        <button mat-flat-button class="red large" [routerLink]="[ '../../history']">Back</button>
     </div>
-
 </div>

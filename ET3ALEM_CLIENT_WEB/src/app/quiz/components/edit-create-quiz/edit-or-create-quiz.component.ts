@@ -51,15 +51,14 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   dueStart = new FormControl(moment().toDate());
   dueEnd = new FormControl(moment().add(3, 'days').toDate());
   noDueDate = new FormControl(false);
-  randomOrderQuestions = new FormControl(false);
-  nonRandomQuestions = new FormControl(null);
   allowedAttempts = new FormControl(1, [Validators.max(10), Validators.min(0)]);
   unlimitedAttempts = new FormControl(false);
   showGrade = new FormControl(true);
   autoGrade = new FormControl(true);
+  randomOrderQuestions = new FormControl(false);
   showCorrectAnswers = new FormControl(true);
   includeAllQuestions = new FormControl(true);
-  includedQuestions = new FormControl(null);
+  includedQuestionsCount = new FormControl(1, [Validators.min(1)]);
 
   constructor(private toastr: ToastrService, private quizService: QuizService, private route: ActivatedRoute, private router: Router) {
     super();
@@ -97,10 +96,13 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.dueEnd.setValue(Helper.getLocalDateFromUTC(this.currentQuiz.EndDate));
     this.noDueDate.setValue(this.currentQuiz.NoDueDate);
     this.randomOrderQuestions.setValue(this.currentQuiz.ShuffleQuestions);
-    this.nonRandomQuestions.setValue(this.currentQuiz.NonShuffleQuestions?.split(','));
     this.allowedAttempts.setValue(this.currentQuiz.AllowedAttempts);
     this.unlimitedAttempts.setValue(this.currentQuiz.UnlimitedAttempts);
     this.showGrade.setValue(this.currentQuiz.ShowGrade);
+    this.includeAllQuestions.setValue(this.currentQuiz.IncludeAllQuestions);
+    this.includedQuestionsCount.setValue(this.currentQuiz.IncludedQuestionsCount);
+    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length - 1)]);
+    this.includedQuestionsCount.updateValueAndValidity();
 
     if (this.currentQuiz.UnlimitedTime) {
       this.durationHours.disable();
@@ -129,10 +131,12 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
   addQuestion() {
     this.questions.push(new MultipleChoiceQuestion(Helper.randomInteger(0, 100) * -1));
+    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length - 1)]);
+    this.includedQuestionsCount.updateValueAndValidity();
   }
 
-  addFromCollection(){
-    
+  addFromCollection() {
+
   }
 
   deleteQuestion(question: Question) {
@@ -147,14 +151,18 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     let index = this.questions.findIndex(q => q.Id == question.Id);
     if (index > -1)
       this.questions.splice(index, 1);
+    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length - 1)]);
+    this.includedQuestionsCount.updateValueAndValidity();
   }
 
   duplicateQuestion(question: Question, i: number) {
     let oldQuestion: Question = this.createQuestionComponents.find((item, index) => index == i)?.getQuestion();
-    if(!oldQuestion)
+    if (!oldQuestion)
       return;
     const newQuestion = oldQuestion.duplicateQuestion();
     this.questions.push(newQuestion);
+    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length - 1)]);
+    this.includedQuestionsCount.updateValueAndValidity();
   }
 
   /**
@@ -175,6 +183,12 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     if (this.mode == mode.create) return 1;
     const grade = this.currentQuiz.QuizQuestions.find(qq => qq.QuestionId == question.Id)?.Grade;
     return grade ?? 1;
+  }
+
+  getIncludeQuestionsCountText(){
+    const questionCount = this.includedQuestionsCount.value;
+    if(questionCount)
+      return Math.min(this.includedQuestionsCount.value, this.questions.length - 1);
   }
 
   validate(): boolean {
@@ -201,9 +215,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       quizQuestions.push(new QuizQuestion(question, grade, 0, i));
     }));
 
-    const randomQuestions = this.randomOrderQuestions.value && this.nonRandomQuestions.value ? (<Array<number>>this.nonRandomQuestions.value).join(',') : null;
-
-    this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(), this.noDueDate.value, quizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.showCorrectAnswers.value, this.randomOrderQuestions.value, randomQuestions);
+    this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(), this.noDueDate.value, quizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.showCorrectAnswers.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
 
     this.quizService.createQuiz(this.currentQuiz).subscribe(
       (quiz: Quiz) => {
@@ -244,9 +256,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       }
     }));
 
-    const randomQuestions = this.randomOrderQuestions.value && this.nonRandomQuestions.value ? (<Array<number>>this.nonRandomQuestions.value).join(',') : null;
-
-    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.showCorrectAnswers.value, this.randomOrderQuestions.value, randomQuestions);
+    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.showCorrectAnswers.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
 
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
       () => {

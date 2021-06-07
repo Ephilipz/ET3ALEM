@@ -5,7 +5,7 @@ using BusinessEntities.Enumerators;
 
 namespace BusinessEntities.Models
 {
-    public class TrueFalseQuestion:Question
+    public class TrueFalseQuestion : Question
     {
         public bool Answer { get; set; }
         public TrueFalseQuestion()

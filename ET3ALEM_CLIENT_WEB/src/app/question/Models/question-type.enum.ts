@@ -1,4 +1,6 @@
 export enum QuestionType {
     TrueFalse,
-    MCQ
+    MCQ,
+    ShortAnswer,
+    LongAnswer
 }

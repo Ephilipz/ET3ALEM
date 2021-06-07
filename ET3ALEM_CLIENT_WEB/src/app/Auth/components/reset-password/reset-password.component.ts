@@ -19,6 +19,7 @@ export class ResetPasswordComponent extends ExtraFormOptions implements OnInit {
   }, { validators: this.checkMatch });
   token = '';
   matcher = new confirmPasswordErrorStateMatcher();
+  isLoading = false;
 
   constructor(private AuthService: AuthService, private route: ActivatedRoute, private router: Router) {
     super();
@@ -38,6 +39,7 @@ export class ResetPasswordComponent extends ExtraFormOptions implements OnInit {
   }
 
   resetPassword() {
+    this.isLoading = true;
     let resetPasswordVM = {
       recoveryToken: this.token,
       password: this.form.get('password').value,

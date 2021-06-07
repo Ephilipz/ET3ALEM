@@ -73,7 +73,7 @@ namespace DataAccessLayer
 
         public async Task<List<QuizAttempt>> GetUserQuizAttemptsForQuiz(int quizId, string userId)
         {
-            return await _context.QuizAttempts.Where(qA => qA.QuizId == quizId && qA.UserId == userId).ToListAsync();
+            return await _context.QuizAttempts.Where(qA => qA.QuizId == quizId && qA.UserId == userId).AsNoTracking().ToListAsync();
         }
 
         public async Task<List<QuizAttempt>> GetAllQuizAttemptsForQuiz(int quizId)
@@ -84,12 +84,24 @@ namespace DataAccessLayer
 
         public async Task<List<QuizAttempt>> GetQuizAttempts(string userId)
         {
-            return await _context.QuizAttempts.Where(qA => qA.UserId == userId).Include(qA => qA.Quiz).OrderBy(qA => qA.SubmitTime).AsNoTracking().ToListAsync();
+            return await _context.QuizAttempts.Where(qA => qA.UserId == userId).Include(qA => qA.Quiz).OrderByDescending(qA => qA.SubmitTime).AsNoTracking().ToListAsync();
         }
 
         public async Task<List<QuizAttempt>> GetUngradedQuizAttempts(string userId)
         {
             return await _context.QuizAttempts.Where(quizAttempt => !quizAttempt.IsGraded && quizAttempt.Quiz.UserId == userId).Include(qA => qA.User).AsSplitQuery().AsNoTracking().ToListAsync();
+        }
+
+        public async Task DeleteRelatedQuizAttempts(int id)
+        {
+            IEnumerable<QuizAttempt> attempts = _context.QuizAttempts.Where(qA => qA.QuizId == id).Include(qA => qA.QuestionsAttempts);
+            foreach (QuizAttempt attempt in attempts)
+            {
+                _context.Remove(attempt);
+                _context.RemoveRange(attempt.QuestionsAttempts);
+                _context.RemoveRange(attempt.QuestionsAttempts.Select(qA => ((MCQAttmept)qA).Choices));
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }
