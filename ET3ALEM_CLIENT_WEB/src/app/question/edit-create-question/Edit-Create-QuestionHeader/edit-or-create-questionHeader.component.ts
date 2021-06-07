@@ -27,13 +27,14 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
 
   }
 
-  @ViewChild('RichTextEditorComponent') 
+  @ViewChild('RichTextEditorComponent')
   richTextComponent: RichTextEditorComponent;
 
   isLoaded: boolean = false;
 
   @Input('question') inputQuestion: Question;
   @Input('grade') inputGrade: number = 1;
+  @Input() hideGrade: boolean = false;
 
   question: Question;
 

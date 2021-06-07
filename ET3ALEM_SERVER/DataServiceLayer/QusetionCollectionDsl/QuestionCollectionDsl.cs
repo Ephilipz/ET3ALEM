@@ -48,5 +48,10 @@ namespace DataServiceLayer
         {
             return _IQuestionCollectionDal.DeleteQuestionCollection(id);
         }
+
+        public Task<bool> NameExists(string name)
+        {
+            return _IQuestionCollectionDal.NameExists(name);
+        }
     }
 }

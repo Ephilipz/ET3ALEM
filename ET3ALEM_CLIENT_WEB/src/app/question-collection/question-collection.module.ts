@@ -6,6 +6,7 @@ import { AngularMaterialModule } from '../Shared/modules/material.module';
 import { QuestionCollectionRoutingModule } from './question-collection-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { QuestionModule } from '../question/question.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 
@@ -19,7 +20,8 @@ import { QuestionModule } from '../question/question.module';
     AngularMaterialModule,
     QuestionCollectionRoutingModule,
     ReactiveFormsModule,
-    QuestionModule
+    QuestionModule,
+    DragDropModule
   ]
 })
 export class QuestionCollectionModule { }

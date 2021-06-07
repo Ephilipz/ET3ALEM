@@ -29,4 +29,7 @@ export class QuestionCollectionService {
   updateCollection(collection: QuestionCollection) {
     return this.http.put(this.baseRoute + `/${collection.Id}`, collection);
   }
+  nameExists(collectionName: string) {
+    return this.http.get<boolean>(this.baseRoute + `/NameExists/${collectionName}`);
+  }
 }
