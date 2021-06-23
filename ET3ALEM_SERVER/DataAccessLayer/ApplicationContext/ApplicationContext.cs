@@ -22,7 +22,7 @@ namespace Server_Application.Data
                 .HasValue<MultipleChoiceQuestion>(QuestionType.MCQ)
                 .HasValue<TrueFalseQuestion>(QuestionType.TrueFalse)
                 .HasValue<ShortAnswerQuestion>(QuestionType.ShortAnswer);
-
+            modelBuilder.Entity<MultipleChoiceQuestion>().HasMany(mcq => mcq.Choices).WithOne().HasForeignKey("MCQId");
             modelBuilder.Entity<QuizQuestion>().ToTable("QuizQuestion");
 
             modelBuilder.Entity<Quiz>().ToTable("Quiz");

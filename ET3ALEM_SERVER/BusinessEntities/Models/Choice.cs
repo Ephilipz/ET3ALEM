@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace BusinessEntities.Models
@@ -11,7 +12,7 @@ namespace BusinessEntities.Models
         [Required]
         public string Body { get; set; }
         public bool IsAnswer { get; set; }
-        public virtual MultipleChoiceQuestion MCQ { get; set; }
+        public int MCQId { get; set; }
         public virtual ICollection<MCQAttmept> MCQAttmepts { get; set; }
 
     }
