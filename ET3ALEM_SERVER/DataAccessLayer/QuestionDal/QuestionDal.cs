@@ -74,7 +74,7 @@ namespace DataAccessLayer
                     bool wasMCQ = _context.Questions.Any(q => question.Id == q.Id && q.QuestionType == QuestionType.MCQ);
                     if (wasMCQ)
                     {
-                        var choices = _context.Choices.Where(c => c.MCQ.Id == question.Id);
+                        var choices = _context.Choices.Where(c => c.MCQId == question.Id);
                         _context.Choices.RemoveRange(choices);
                     }
                     break;
