@@ -1,68 +1,68 @@
 <div class="container-fluid p-5 parentContainer" *ngIf="isLoaded">
-  <h1 class="blueHeader">{{ mode == 1 ? 'Create Collection' : 'Edit Collection' }}</h1>
+    <h1 class="blueHeader">{{ mode == 1 ? 'Create Collection' : 'Edit Collection' }}</h1>
 
-  <div class="container-fluid px-5 py-3">
+    <div class="container-fluid px-5 py-3">
 
-      <!-- Collection Settings -->
-      <mat-expansion-panel expanded>
-          <mat-expansion-panel-header>
-              <mat-panel-title class="boldPanelTitle">
-                  Collection Settings
-              </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="container-fluid px-4">
-              <mat-form-field class="mx-5">
-                  <mat-label>Collection Name</mat-label>
-                  <input matInput [formControl]="collectionName" required autofocus>
-                  <mat-error>{{getControlErrors(collectionName, 'collection name')}}</mat-error>
-              </mat-form-field>
-          </div>
-      </mat-expansion-panel>
+        <!-- Collection Settings -->
+        <mat-expansion-panel expanded>
+            <mat-expansion-panel-header>
+                <mat-panel-title class="boldPanelTitle">
+                    Collection Settings
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="container-fluid px-4">
+                <mat-form-field class="mx-5">
+                    <mat-label>Collection Name</mat-label>
+                    <input matInput [formControl]="collectionName" required autofocus>
+                    <mat-error>{{getControlErrors(collectionName, 'collection name')}}</mat-error>
+                </mat-form-field>
+            </div>
+        </mat-expansion-panel>
 
-      <!-- Questions -->
-      <mat-expansion-panel>
-          <mat-expansion-panel-header>
-              <mat-panel-title class="boldPanelTitle">
-                  Questions
-              </mat-panel-title>
-          </mat-expansion-panel-header>
+        <!-- Questions -->
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title class="boldPanelTitle">
+                    Questions
+                </mat-panel-title>
+            </mat-expansion-panel-header>
 
-          <div class="container-fluid px-4" (cdkDropListDropped)="drop($event)" cdkDropList>
-              <div class="row mb-3" *ngFor="let question of questions; let i = index" cdkDrag cdkDragLockAxis="y">
-                  <div class="dragHandle m-auto" cdkDragHandle>
-                      <mat-icon>open_with</mat-icon>
-                  </div>
-                  <mat-expansion-panel style="width: 90%" class="m-0">
-                      <mat-expansion-panel-header>
-                          <mat-panel-title class="questionTitle">
-                              {{'Question ' + (i + 1)}}
-                          </mat-panel-title>
-                      </mat-expansion-panel-header>
-                      <app-create-question #CreateQuestionComponent [question]="question" [hideGrade]="true" ></app-create-question>
-                  </mat-expansion-panel>
+            <div class="container-fluid px-4" (cdkDropListDropped)="drop($event)" cdkDropList>
+                <div class="row mb-3" *ngFor="let question of questions; let i = index" cdkDrag cdkDragLockAxis="y">
+                    <div class="dragHandle m-auto" cdkDragHandle>
+                        <mat-icon>open_with</mat-icon>
+                    </div>
+                    <mat-expansion-panel style="width: 90%" class="m-0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="questionTitle">
+                                {{'Question ' + (i + 1)}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-create-question #CreateQuestionComponent [question]="question" [hideGrade]="true">
+                        </app-create-question>
+                    </mat-expansion-panel>
 
-                  <button mat-icon-button class="m-auto">
-                      <mat-icon class="copyIconButton" (click)="duplicateQuestion(question, i)">file_copy</mat-icon>
-                  </button>
-                  <button mat-icon-button class="m-auto">
-                      <mat-icon class="deleteIconButton" (click)="deleteQuestion(question)">delete</mat-icon>
-                  </button>
-              </div>
+                    <button mat-icon-button class="m-auto">
+                        <mat-icon class="copyIconButton" (click)="duplicateQuestion(question, i)">file_copy</mat-icon>
+                    </button>
+                    <button mat-icon-button class="m-auto">
+                        <mat-icon class="deleteIconButton" (click)="deleteQuestion(question)">delete</mat-icon>
+                    </button>
+                </div>
 
-              <div class="row addQuestionRow">
-                  <button mat-flat-button class="blue medium" (click)="addQuestion()">Add Question</button>
-              </div>
+                <div class="row addQuestionRow">
+                    <button mat-flat-button class="blue medium" (click)="addQuestion()">Add Question</button>
+                </div>
 
-          </div>
-      </mat-expansion-panel>
+            </div>
+        </mat-expansion-panel>
 
-      <div class="d-flex justify-content-around mt-4">
-          <button mat-flat-button class="red large"
-              [routerLink]="mode == 1 ? '../' : '../../'">Cancel</button>
-          <button mat-flat-button class="blue large" [disabled]="!collectionName.valid"
-              (click)="mode == 1 ? createCollection() : updateCollection()">Save</button>
-      </div>
-  </div>
+        <div class="d-flex justify-content-around mt-4">
+            <button mat-flat-button class="red large" [routerLink]="mode == 1 ? '../' : '../../'">Cancel</button>
+            <button mat-flat-button class="blue large" [disabled]="!collectionName.valid"
+                (click)="mode == 1 ? createCollection() : updateCollection()">Save</button>
+        </div>
+    </div>
 </div>
 
 <mat-spinner *ngIf="!isLoaded" class="my-5 mx-auto" style="text-align: center;"></mat-spinner>

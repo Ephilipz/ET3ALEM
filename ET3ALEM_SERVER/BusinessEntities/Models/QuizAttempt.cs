@@ -27,12 +27,13 @@ namespace BusinessEntities.Models
         public void GradeQuiz()
         {
             Grade = 0;
+            IsGraded = true;
             QuestionsAttempts.ForEach(qA =>
             {
                 qA.GradeQuestion();
                 Grade += qA.Grade;
+                IsGraded &= qA.IsGraded;
             });
-            IsGraded = true;
         }
     }
 }

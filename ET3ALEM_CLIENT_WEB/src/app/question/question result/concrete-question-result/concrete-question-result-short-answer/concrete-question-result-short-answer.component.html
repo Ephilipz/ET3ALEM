@@ -1,0 +1,19 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h3>Your Answer</h3>
+            <p class="ml-3">{{userAnswer}}</p>
+        </div>
+        <div *ngIf="isCorrectAnswer" class="sideBubble isAnswer col-3">
+            <h2>Correct</h2>
+        </div>
+        <div *ngIf="!isCorrectAnswer" class="sideBubble isWrongAnswer col-3">
+            <h2>Incorrect</h2>
+        </div>
+    </div>
+
+    <div>
+        <h3>Correct Answers</h3>
+        <p class="ml-3">{{correctAnswers}}</p>
+    </div>
+</div>

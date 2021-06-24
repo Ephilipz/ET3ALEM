@@ -102,6 +102,13 @@ namespace DataServiceLayer
                         QuizQuestionId = quizQuestion.Id,
                         Id = 0,
                     };
+                case QuestionType.ShortAnswer:
+                    return new ShortAnswerAttempt()
+                    {
+                        QuizQuestion = quizQuestion,
+                        QuizQuestionId = quizQuestion.Id,
+                        Id = 0
+                    };
                 default:
                     return new TrueFalseAttempt();
             }

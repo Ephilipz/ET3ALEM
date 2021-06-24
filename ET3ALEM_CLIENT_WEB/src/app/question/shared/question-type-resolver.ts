@@ -1,5 +1,5 @@
-import { ConcreteEditQuestionMCQComponent } from "../edit-create-question/ConcreteQuestions/concrete-question-mcq/concrete-edit-quesiton-mcq.component";
-import { ConcreteQuestionTrueFalseComponent } from "../edit-create-question/ConcreteQuestions/concrete-question-true-false/concrete-question-true-false.component";
+import { ConcreteEditQuestionMCQComponent } from "../edit-create-question/ConcreteQuestions/concrete-edit-question-mcq/concrete-edit-quesiton-mcq.component";
+import { ConcreteEditQuestionTrueFalseComponent } from "../edit-create-question/ConcreteQuestions/concrete-edit-question-true-false/concrete-edit-question-true-false.component";
 import { MultipleChoiceQuestion } from "../Models/mcq";
 import { QuestionType } from "../Models/question-type.enum";
 import { TrueFalseQuestion } from "../Models/true-false-question";
@@ -13,6 +13,9 @@ import { ConcreteQuestionResultTFComponent } from "../question result/concrete-q
 import { Question } from "../Models/question";
 import { ShortAnswerQuestion } from "../Models/short-answer-question";
 import { ConcreteEditQuestionShortAnswerComponent } from "../edit-create-question/ConcreteQuestions/concrete-edit-question-short-answer/concrete-edit-question-short-answer.component";
+import { ConcreteAnswerQuestionShortAnswerComponent } from "../answer-question/ConcreteAnswerQuestions/concrete-answer-question-short-answer/concrete-answer-question-short-answer.component";
+import { ConcreteQuestionResultShortAnswerComponent } from "../question result/concrete-question-result/concrete-question-result-short-answer/concrete-question-result-short-answer.component";
+import { ShortAnswerAttempt } from "../Models/short-answer-attempt";
 
 /**
  * A shared class with the question type dictionaries for the creation of specific questions 
@@ -22,19 +25,21 @@ export class QuestionTypeResolver {
 
     public static editQuestionComponentsMap = {
         MCQ: ConcreteEditQuestionMCQComponent,
-        TrueFalse: ConcreteQuestionTrueFalseComponent,
+        TrueFalse: ConcreteEditQuestionTrueFalseComponent,
         ShortAnswer: ConcreteEditQuestionShortAnswerComponent
     }
 
 
     public static answerQuestionComponentMap = {
         MCQ: ConcreteAnswerQuestionMCQComponent,
-        TrueFalse: ConcreteAnswerQuestionTFComponent
+        TrueFalse: ConcreteAnswerQuestionTFComponent,
+        ShortAnswer: ConcreteAnswerQuestionShortAnswerComponent
     }
 
     public static viewQuestionResultComponentMap = {
         MCQ: ConcreteQuestionResultMCQComponent,
-        TrueFalse: ConcreteQuestionResultTFComponent
+        TrueFalse: ConcreteQuestionResultTFComponent,
+        ShortAnswer: ConcreteQuestionResultShortAnswerComponent
     }
 
     public static questionTypeNames = [
@@ -87,6 +92,8 @@ export class QuestionTypeResolver {
                     return new MCQAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<MCQAttempt>questionAttempt).Choices);
                 case QuestionType.TrueFalse:
                     return new TrueFalseAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<TrueFalseAttempt>questionAttempt).Answer);
+                case QuestionType.ShortAnswer:
+                    return new ShortAnswerAttempt(questionAttempt.Id, questionAttempt.QuizQuestion,questionAttempt.Grade, (<ShortAnswerAttempt>questionAttempt).Answer);
                 default:
                     return questionAttempt;
             }
