@@ -52,21 +52,16 @@ namespace DataServiceLayer
         }
         public async Task<Quiz> DeleteQuiz(int id)
         {
-            //remove quiz attempt
-            //await _IQuizAttemptDal.DeleteRelatedQuizAttempts(id);
-
             //remove quiz
             Quiz quiz = await _IQuizDal.DeleteQuiz(id);
 
             if (quiz != null)
             {
                 //remove questions
-                List<int> relatedQuestions = quiz.QuizQuestions.Select(quizQuestion => quizQuestion.QuestionId).ToList();
-                foreach (int questionId in relatedQuestions)
+                foreach (int questionId in quiz.QuizQuestions.Select(quizQuestion => quizQuestion.QuestionId))
                 {
                     await _IQuestionDsl.DeleteQuestion(questionId);
                 }
-
             }
 
             return quiz;

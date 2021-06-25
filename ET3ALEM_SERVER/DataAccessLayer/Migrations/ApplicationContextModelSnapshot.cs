@@ -243,7 +243,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("QuizId")
+                    b.Property<int>("QuizId")
                         .HasColumnType("int");
 
                     b.Property<int>("Sequence")
@@ -579,7 +579,7 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("BusinessEntities.Models.QuizAttempt", b =>
                 {
                     b.HasOne("BusinessEntities.Models.Quiz", "Quiz")
-                        .WithMany()
+                        .WithMany("QuizAttempts")
                         .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -605,7 +605,9 @@ namespace DataAccessLayer.Migrations
 
                     b.HasOne("BusinessEntities.Models.Quiz", null)
                         .WithMany("QuizQuestions")
-                        .HasForeignKey("QuizId");
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Question");
                 });
@@ -683,6 +685,8 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("BusinessEntities.Models.Quiz", b =>
                 {
+                    b.Navigation("QuizAttempts");
+
                     b.Navigation("QuizQuestions");
                 });
 

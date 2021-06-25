@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Migrations
 {
-    public partial class initial_create : Migration
+    public partial class initialcreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,6 +27,7 @@ namespace DataAccessLayer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
+                    FullName = table.Column<string>(type: "longtext", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -160,7 +161,8 @@ namespace DataAccessLayer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: true),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,10 +187,19 @@ namespace DataAccessLayer.Migrations
                     TotalGrade = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     NoDueDate = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     DurationSeconds = table.Column<int>(type: "int", nullable: false),
                     UnlimitedTime = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    AllowedAttempts = table.Column<int>(type: "int", nullable: false),
+                    UnlimitedAttempts = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ShowGrade = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AutoGrade = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ShowCorrectAnswers = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ShuffleQuestions = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IncludeAllQuestions = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IncludedQuestionsCount = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -210,7 +221,10 @@ namespace DataAccessLayer.Migrations
                     QuestionType = table.Column<int>(type: "int", nullable: false),
                     Body = table.Column<string>(type: "longtext", nullable: false),
                     QuestionCollectionId = table.Column<int>(type: "int", nullable: true),
+                    Comment = table.Column<string>(type: "longtext", nullable: true),
                     McqAnswerType = table.Column<int>(type: "int", nullable: true),
+                    PossibleAnswers = table.Column<string>(type: "longtext", nullable: true),
+                    CaseSensitive = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     Answer = table.Column<bool>(type: "tinyint(1)", nullable: true)
                 },
                 constraints: table =>
@@ -232,7 +246,10 @@ namespace DataAccessLayer.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false),
                     QuizId = table.Column<int>(type: "int", nullable: false),
-                    Grade = table.Column<double>(type: "double", nullable: false)
+                    StartTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Grade = table.Column<double>(type: "double", nullable: false),
+                    IsGraded = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    SubmitTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -259,7 +276,7 @@ namespace DataAccessLayer.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Body = table.Column<string>(type: "longtext", nullable: false),
                     IsAnswer = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    MCQId = table.Column<int>(type: "int", nullable: true)
+                    MCQId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -269,7 +286,7 @@ namespace DataAccessLayer.Migrations
                         column: x => x.MCQId,
                         principalTable: "Question",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -278,9 +295,10 @@ namespace DataAccessLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Sequence = table.Column<int>(type: "int", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false),
-                    Grade = table.Column<int>(type: "int", nullable: false),
-                    QuizId = table.Column<int>(type: "int", nullable: true)
+                    QuizId = table.Column<int>(type: "int", nullable: false),
+                    Grade = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -296,7 +314,7 @@ namespace DataAccessLayer.Migrations
                         column: x => x.QuizId,
                         principalTable: "Quiz",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -308,9 +326,11 @@ namespace DataAccessLayer.Migrations
                     QuizQuestionId = table.Column<int>(type: "int", nullable: false),
                     Grade = table.Column<double>(type: "double", nullable: false),
                     IsGraded = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Sequence = table.Column<int>(type: "int", nullable: false),
                     QuestionType = table.Column<int>(type: "int", nullable: false),
                     QuizAttemptId = table.Column<int>(type: "int", nullable: true),
-                    Answer = table.Column<bool>(type: "tinyint(1)", nullable: true)
+                    Answer = table.Column<string>(type: "longtext", nullable: true),
+                    TrueFalseAttempt_Answer = table.Column<bool>(type: "tinyint(1)", nullable: true)
                 },
                 constraints: table =>
                 {

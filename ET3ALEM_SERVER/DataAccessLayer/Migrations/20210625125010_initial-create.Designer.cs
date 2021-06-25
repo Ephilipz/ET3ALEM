@@ -9,8 +9,8 @@ using Server_Application.Data;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210612020511_edit-entities")]
-    partial class editentities
+    [Migration("20210625125010_initial-create")]
+    partial class initialcreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,8 +33,7 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<int>("MCQId")
-                        .HasColumnType("int")
-                        .HasColumnName("MCQId");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -246,7 +245,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("QuizId")
+                    b.Property<int>("QuizId")
                         .HasColumnType("int");
 
                     b.Property<int>("Sequence")
@@ -582,7 +581,7 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("BusinessEntities.Models.QuizAttempt", b =>
                 {
                     b.HasOne("BusinessEntities.Models.Quiz", "Quiz")
-                        .WithMany()
+                        .WithMany("QuizAttempts")
                         .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -608,7 +607,9 @@ namespace DataAccessLayer.Migrations
 
                     b.HasOne("BusinessEntities.Models.Quiz", null)
                         .WithMany("QuizQuestions")
-                        .HasForeignKey("QuizId");
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Question");
                 });
@@ -686,6 +687,8 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("BusinessEntities.Models.Quiz", b =>
                 {
+                    b.Navigation("QuizAttempts");
+
                     b.Navigation("QuizQuestions");
                 });
 

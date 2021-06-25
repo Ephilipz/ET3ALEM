@@ -19,6 +19,7 @@ namespace BusinessEntities.Models
         public string Name { get; set; }
         public string Instructions { get; set; }
         public virtual List<QuizQuestion> QuizQuestions { get; set; }
+        public virtual List<QuizAttempt> QuizAttempts { get; set; }
         public int TotalGrade { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
