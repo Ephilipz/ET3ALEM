@@ -9,6 +9,7 @@ import { Tokens } from '../Model/Tokens';
 import { Observable, of, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { LocalstorgeService } from 'src/app/Shared/services/localstorge.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class AuthService {
   JWT = 'id_token';
   Refresh = 'refresh';
 
-  constructor(private http: HttpClient, private router: Router, private toastyService: ToastrService) { }
+  constructor(private http: HttpClient, private router: Router, private toastyService: ToastrService, private localstorgeService: LocalstorgeService) { }
 
   login(email: string, password: string): Observable<boolean> {
     return this.http.post<Tokens>(environment.baseUrl + '/api/Account/login', { email, password }).pipe(
@@ -70,13 +71,13 @@ export class AuthService {
   }
 
   setSession(tokens: Tokens) {
-    localStorage.setItem(this.JWT, tokens.JWT);
-    localStorage.setItem(this.Refresh, tokens.RefreshToken);
+    this.localstorgeService.JWT = tokens.JWT;
+    this.localstorgeService.RefreshToken = tokens.RefreshToken;
+    this.localstorgeService.UserId = tokens.UserId;
   }
 
   logout() {
-    localStorage.removeItem(this.JWT);
-    localStorage.removeItem(this.Refresh);
+    this.localstorgeService.clear();
     return this.http.get(environment.baseUrl + '/api/Account/Logout');
   }
 
@@ -89,11 +90,11 @@ export class AuthService {
   }
 
   getJWT() {
-    return localStorage.getItem(this.JWT);
+    return this.localstorgeService.JWT;
   }
 
   getRefreshToken() {
-    return localStorage.getItem(this.Refresh);
+    return this.localstorgeService.RefreshToken;
   }
 
   sendRecoveryMail(email: string) {
