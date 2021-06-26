@@ -62,7 +62,7 @@ namespace Server_Application.Controllers
                     new Claim(ClaimTypes.NameIdentifier, user.Id)
                 };
 
-            Tokens newTokens = new Tokens(GenerateJwt(claims), GenerateRefreshToken());
+            Tokens newTokens = new Tokens(GenerateJwt(claims), GenerateRefreshToken(), user.Id);
             await SaveToken(user, newTokens.RefreshToken, RefreshToken);
             return Ok(newTokens);
         }
@@ -87,7 +87,7 @@ namespace Server_Application.Controllers
                     new Claim(ClaimTypes.NameIdentifier, user.Id)
                 };
 
-                Tokens newTokens = new Tokens(GenerateJwt(claims), GenerateRefreshToken());
+                Tokens newTokens = new Tokens(GenerateJwt(claims), GenerateRefreshToken(), user.Id);
                 await DeleteToken(user, RefreshToken);
                 await SaveToken(user, newTokens.RefreshToken, RefreshToken);
                 return Ok(newTokens);
@@ -122,7 +122,7 @@ namespace Server_Application.Controllers
                 string newRefreshToken = GenerateRefreshToken();
                 await DeleteToken(user, RefreshToken);
                 await SaveToken(user, newRefreshToken, RefreshToken);
-                return Ok(new Tokens(newJWT, newRefreshToken));
+                return Ok(new Tokens(newJWT, newRefreshToken, user.Id));
             }
             catch (Exception e)
             {
@@ -133,15 +133,19 @@ namespace Server_Application.Controllers
         [HttpGet("Logout")]
         public async Task Logout()
         {
-            var userPrincipal = HttpContext.User;
-            if (userPrincipal != null)
+            try
             {
-                await DeleteToken(await _userManager.GetUserAsync(userPrincipal), RefreshToken);
+                var userPrincipal = HttpContext.User;
+                if (userPrincipal != null)
+                {
+                    await DeleteToken(await _userManager.GetUserAsync(userPrincipal), RefreshToken);
+                }
             }
-            await _signInManager.SignOutAsync();
+            finally
+            {
+                await _signInManager.SignOutAsync();
+            }
         }
-
-
         [HttpPost("sendRecoveryMail")]
         public async Task<IActionResult> SendRecoveryMail(ResetPasswordVM resetPasswordVM)
         {
