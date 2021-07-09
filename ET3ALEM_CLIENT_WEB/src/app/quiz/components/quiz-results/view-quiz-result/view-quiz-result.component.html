@@ -32,7 +32,8 @@
     </div>
 
 
-    <div *ngIf="!quizAttempt.Quiz.ShowGrade" class="py-5 px-0" style="display: flex; align-items: center;">
+    <div *ngIf="!quizAttempt.Quiz.ShowGrade || !quizAttempt.IsGraded" class="py-5 px-0"
+        style="display: flex; align-items: center;">
         <h2 class="secondaryTitle mx-auto">Quiz Results Are Hidden</h2>
         <img src="../../../../../assets/images/undraw_secure_files_re_6vdh.svg" class="m-0" height="80%">
     </div>

@@ -63,6 +63,7 @@ export class QuestionTypeResolver {
     }
 
     public static getSpecificQuestion(question: any) {
+        console.log('received', question);
         if (!question) return null;
         let type: QuestionType = question.QuestionType;
         switch (type) {

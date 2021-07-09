@@ -18,6 +18,13 @@
     text-underline-offset: 5px;
 }
 
+ul>li>ul {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 1;
+}
+
 @media all and (min-width: 992px) {
     .navbar .nav-item .dropdown-menu {
         display: none;
@@ -26,15 +33,14 @@
         display: block;
         /* background-color: #f3f3f3; */
     }
-    .navbar .nav-item:hover .dropdown-menu li a{
+    .navbar .nav-item:hover .dropdown-menu li a {
         padding: 10px auto;
         font-size: 1.2em;
     }
-    .navbar .nav-item:hover .dropdown-menu li:hover a{
+    .navbar .nav-item:hover .dropdown-menu li:hover a {
         font-weight: 500;
     }
-
-    .navbar .nav-item:hover .dropdown-menu li a.active{
+    .navbar .nav-item:hover .dropdown-menu li a.active {
         font-weight: 500;
         background-color: white;
         color: black;

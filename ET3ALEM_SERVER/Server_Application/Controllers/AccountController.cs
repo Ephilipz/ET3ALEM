@@ -17,6 +17,7 @@ using BusinessEntities.Models;
 using DataServiceLayer;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Server_Application.Controllers
 {
@@ -158,7 +159,7 @@ namespace Server_Application.Controllers
             await SaveToken(user, recoveryToken, PasswordRecoveryToken);
             var resetUrl = $"{ _IConfiguration.GetValue<string>("ClientUrl")}/auth/reset?token={recoveryToken}";
             var htmlContent = $@"<a href=""{resetUrl}"">follow this link to reset your password</a>";
-            _IEmailDsl.SendEmail("Reset Password", string.Empty, htmlContent, user.Email, user.UserName);
+            await _IEmailDsl.SendEmail("Reset Password", string.Empty, htmlContent, user.Email, user.UserName);
             return Ok();
         }
 
@@ -192,6 +193,25 @@ namespace Server_Application.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpPost("ChangePassword"), Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM changePasswordVM)
+        {
+            string userId = Helpers.AccountHelper.getUserId(HttpContext, User);
+            User user = await _userManager.FindByIdAsync(userId);
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            bool isValidPassword = await _userManager.CheckPasswordAsync(user, changePasswordVM.OldPassword);
+            if (!isValidPassword)
+            {
+                return BadRequest("Old password does is incorrect");
+            }
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, changePasswordVM.OldPassword, changePasswordVM.NewPassword);
+            return result.Succeeded ? Ok() : BadRequest("Unable to update the password");
         }
 
         private string GenerateRefreshToken()

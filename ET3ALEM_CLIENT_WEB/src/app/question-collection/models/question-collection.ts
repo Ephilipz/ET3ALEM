@@ -6,7 +6,7 @@ import { QuestionTypeResolver } from "src/app/question/shared/question-type-reso
 export class QuestionCollection {
     public Id: number;
     public Name: string;
-    @Transform((value, obj, type) => QuestionTypeResolver.getSpecificQuestion(value))
+    @Transform((value, obj, type) => QuestionTypeResolver.getSpecificQuestionList(value))
     public Questions: Array<Question>;
     public UserId: string;
     public User: RegisterUser;

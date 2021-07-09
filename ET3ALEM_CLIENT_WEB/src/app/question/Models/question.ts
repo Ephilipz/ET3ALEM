@@ -7,7 +7,7 @@ export abstract class Question {
     Body: string;
     QuestionType: QuestionType;
     Comment: string;
-    QuestionCollectionId?: number;
+    QuestionCollectionId: number;
 
     constructor(id: number, Body: string, Comment: string) {
         this.Id = id;

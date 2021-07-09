@@ -43,6 +43,7 @@ namespace Server_Application.Data
                .HasMany(mcqAttmep => mcqAttmep.Choices)
                .WithMany(choice => choice.MCQAttmepts)
                .UsingEntity(j => j.ToTable("ChoiceMcqAttempt"));
+            
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Question> Questions { get; set; }

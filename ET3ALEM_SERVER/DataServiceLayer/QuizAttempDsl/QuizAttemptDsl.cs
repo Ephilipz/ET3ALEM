@@ -42,7 +42,7 @@ namespace DataServiceLayer
         public async Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
         {
             quizAttempt.QuestionsAttempts.ForEach(qA => qA.IsGraded = true);
-            quizAttempt.Grade = Math.Round(quizAttempt.QuestionsAttempts.Sum(qA => qA.Grade));
+            quizAttempt.Grade = quizAttempt.QuestionsAttempts.Sum(qA => qA.Grade);
             quizAttempt.IsGraded = true;
             return await _IQuizAttemptDal.UpdateQuizAttemptGrade(quizAttempt);
         }

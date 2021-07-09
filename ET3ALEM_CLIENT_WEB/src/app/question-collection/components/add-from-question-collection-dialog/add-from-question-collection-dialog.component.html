@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Add Questions From a Collection</h1>
+<div mat-dialog-content class="pb-3">
+    <div class="questionCollectionSelectRow p-3" *ngIf="isLoadedInitial">
+        <mat-form-field style="font-size: 1.7em; width: 700px;">
+            <mat-label>Select Collection</mat-label>
+            <mat-select [(ngModel)]="questionCollectionId" name="collection" (selectionChange)="loadQuestions()">
+                <mat-option *ngFor="let collection of questionCollections" [value]="collection.Id">
+                    {{collection.Name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div class="questionRow" *ngIf="questionCollectionId && isLoadedQuestions">
+        <mat-selection-list [(ngModel)]="questionList">
+            <mat-list-option *ngFor="let question of questionCollection.Questions; let i = index"
+                 [value]="question">
+                <h3 style="font-size: 1.3em;">Question {{i + 1}} </h3>
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+    <mat-spinner class="m-auto" *ngIf="questionCollectionId != null && !isLoadedQuestions"></mat-spinner>
+</div>`
+<div mat-dialog-actions style="justify-content: center; margin-top: auto;">
+    <button mat-flat-button class="red medium mx-3" (click)="onNoClick()">Cancel</button>
+    <button mat-flat-button class="blue medium mx-3" (click)="closeDialog()">Add Questions</button>
+</div>

@@ -7,7 +7,7 @@ import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions.
 import { ToastrService } from 'ngx-toastr';
 import { Quiz } from '../../Model/quiz.js';
 import { QuizService } from '../../services/quiz.service.js';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component.js';
 import { Question } from 'src/app/question/Models/question.js';
 import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
@@ -17,6 +17,8 @@ import { Helper } from 'src/app/Shared/Classes/helpers/Helper.js';
 import { plainToClass } from 'class-transformer';
 import { isUnionTypeNode } from 'typescript';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { AddFromQuestionCollectionDialogComponent } from 'src/app/question-collection/components/add-from-question-collection-dialog/add-from-question-collection-dialog.component.js';
 
 @Component({
   selector: 'app-create-quiz',
@@ -60,7 +62,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   includeAllQuestions = new FormControl(true);
   includedQuestionsCount = new FormControl(1, [Validators.min(1)]);
 
-  constructor(private toastr: ToastrService, private quizService: QuizService, private route: ActivatedRoute, private router: Router) {
+  constructor(private toastr: ToastrService, private quizService: QuizService, private route: ActivatedRoute, private router: Router, public dialog: MatDialog) {
     super();
   }
 
@@ -135,8 +137,16 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.includedQuestionsCount.updateValueAndValidity();
   }
 
+  //opens dialog to add questions from a question collection
   addFromCollection() {
-
+    this.dialog.open(AddFromQuestionCollectionDialogComponent).afterClosed().subscribe(
+      result => {
+        if (result)
+          result.forEach(
+            question => this.questions.push(question)
+          );
+      }
+    )
   }
 
   deleteQuestion(question: Question) {
@@ -155,7 +165,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.includedQuestionsCount.updateValueAndValidity();
   }
 
-  duplicateQuestion(question: Question, i: number) {
+  duplicateQuestion(i: number) {
     let oldQuestion: Question = this.createQuestionComponents.find((item, index) => index == i)?.getQuestion();
     if (!oldQuestion)
       return;
@@ -167,7 +177,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
   /**
    * For drag and drop event in reordering questions
-   * @param event 
+   * @param event : drag or drop event
    */
   drop(event: CdkDragDrop<Question[]>) {
     const questionComponentsArray = this.createQuestionComponents.toArray();
@@ -185,9 +195,9 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     return grade ?? 1;
   }
 
-  getIncludeQuestionsCountText(){
+  getIncludeQuestionsCountText() {
     const questionCount = this.includedQuestionsCount.value;
-    if(questionCount)
+    if (questionCount)
       return Math.min(this.includedQuestionsCount.value, this.questions.length - 1);
   }
 
@@ -233,7 +243,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       return;
 
     await this.richTextComponent.removeUnusedImages();
-
 
     await Promise.all(this.createQuestionComponents.map(async (component, i) => {
       let question = await component.saveQuestion(this.questions[i].Id > 0 ? mode.edit : mode.create);

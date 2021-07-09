@@ -107,7 +107,6 @@ namespace Server_Application
                                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                                 options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new DefaultNamingStrategy() };
                             });
-            //) AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; options.JsonSerializerOptions. });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

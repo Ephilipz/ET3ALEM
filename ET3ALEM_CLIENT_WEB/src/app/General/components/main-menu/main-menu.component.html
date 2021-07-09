@@ -15,7 +15,8 @@
       <li class="nav-item dropdown" *ngIf="isLoggedIn" [ngClass]="{'active': routeContains('quiz')}">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown"> Quizzes </a>
         <ul class="dropdown-menu ml-auto">
-          <li><a class="dropdown-item" [routerLink]="[ '/quiz/take' ]" [ngClass]="{'active': routeContains('quiz/take')}">Take Quiz</a></li>
+          <li><a class="dropdown-item" [routerLink]="[ '/quiz/take' ]"
+              [ngClass]="{'active': routeContains('quiz/take')}">Take Quiz</a></li>
           <li><a class="dropdown-item" [routerLink]="[ '/quiz/create' ]">New Quiz</a></li>
           <li><a class="dropdown-item" [routerLink]="[ '/quiz/manage' ]">Created Quizzes</a></li>
           <li><a class="dropdown-item" [routerLink]="[ '/quiz/history' ]">Quiz History</a></li>
@@ -27,10 +28,11 @@
       <li class="nav-item">
         <a class="nav-link" [routerLink]="[ '/contact' ]"> Contact Us </a>
       </li>
-      <li class="nav-item dropdown" *ngIf="isLoggedIn" [ngClass]="{'active': routeContains('auth')}">
+      <li class="nav-item dropdown" *ngIf="isLoggedIn" [ngClass]="{'active': routeContains('auth')}" style="margin-right: 90px">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown"> Profile </a>
-        <ul class="dropdown-menu mr-5">
-          <li><a class="dropdown-item" [routerLink]="[ '/auth/changePassword' ]" [ngClass]="{'active': routeContains('auth/changePassword')}">Change Password</a></li>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" [routerLink]="[ '/auth/changePassword' ]"
+              [ngClass]="{'active': routeContains('auth/changePassword')}">Change Password</a></li>
           <li><a class="dropdown-item" [routerLink]="" (click)="logout()">Logout</a></li>
         </ul>
       </li>

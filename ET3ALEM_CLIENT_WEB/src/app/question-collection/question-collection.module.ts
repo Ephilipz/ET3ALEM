@@ -4,16 +4,18 @@ import { ListQuestionCollectionsComponent } from './components/list-question-col
 import { EditOrCreateQuestionCollectionComponent } from './components/edit-or-create-question-collection/edit-or-create-question-collection.component';
 import { AngularMaterialModule } from '../Shared/modules/material.module';
 import { QuestionCollectionRoutingModule } from './question-collection-routing.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuestionModule } from '../question/question.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AddFromQuestionCollectionDialogComponent } from './components/add-from-question-collection-dialog/add-from-question-collection-dialog.component';
 
 
 
 @NgModule({
   declarations: [
     ListQuestionCollectionsComponent,
-    EditOrCreateQuestionCollectionComponent
+    EditOrCreateQuestionCollectionComponent,
+    AddFromQuestionCollectionDialogComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +23,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     QuestionCollectionRoutingModule,
     ReactiveFormsModule,
     QuestionModule,
-    DragDropModule
+    DragDropModule,
+    FormsModule
   ]
 })
 export class QuestionCollectionModule { }

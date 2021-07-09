@@ -97,7 +97,7 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
 
   duplicateQuestion(question: Question, i: number) {
     const oldQuestion: Question = this.createQuestionComponents.find((_, index) => index == i)?.getQuestion();
-    if (!oldQuestion){
+    if (!oldQuestion) {
       return;
     }
     const newQuestion = oldQuestion.duplicateQuestion();
@@ -163,6 +163,7 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
       }
     );
   }
+  
   async validate(pageMode: mode) {
     if (pageMode === mode.edit && this.collectionName.value === this.currentCollection.Name) {
       return true;
