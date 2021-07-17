@@ -133,6 +133,8 @@ namespace Server_Application
             services.AddScoped<IQuizAttemptDal, QuizAttemptDal>();
             services.AddScoped<IQuizAttemptDsl, QuizAttemptDsl>();
             services.AddScoped<IEmailDsl, SendGridEmailDsl>();
+            services.AddScoped<IContactUsDsl, ContactUsDsl>();
+            services.AddScoped<IContactUsDal, ContactUsDal>();
         }
     }
 }

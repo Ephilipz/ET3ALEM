@@ -1,3 +1,32 @@
-<div class="container-fluid p-5">
-    <h1 class="topBoldTitle">Contact</h1>
+<div class="d-flex align-items-stretch h-100 flex-wrap-reverse">
+  <div class="col-lg-6 blueSec p-md-5 smallerMobileCol align-items-center">
+      <div class="col h-50 flex-grow text-center justify-content-center hideMobile">
+          <h1>ET3ALLIM</h1>
+          <h2 class="secondTitle">Contact Us</h2>
+      </div>
+  </div>
+  <div class="col-lg-6 d-flex-col mainSec px-0 py-md-5 py-2 LargerMobileCol justify-content-between">
+      <div class="container-fluid fromSection">
+          <form class="col text-center align-middle" [formGroup]="contactForm" #formDirective="ngForm" (submit)="onSubmit(contactForm,formDirective)">
+              <mat-form-field hideRequiredMarker="true" class="row-12">
+                <mat-label>Your Email Address</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="you@example.com">
+              </mat-form-field>
+             <mat-form-field hideRequiredMarker="true" class="row-12">
+                <mat-label>Subject</mat-label>
+                <input matInput type="text" formControlName="subject" placeholder="(optional but helpful)">
+              </mat-form-field>
+              <mat-form-field hideRequiredMarker="true" class="row-12">
+                <mat-label>Your Message</mat-label>
+                <textarea
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="3"
+                matInput formControlName="message" ></textarea>
+              </mat-form-field>
+              <div class="row-12 text-center mt-4">
+                <button mat-flat-button class="red" color="primary" type="submit" [disabled]="contactForm.invalid">send my message</button>
+              </div>
+          </form>
+      </div>
+  </div>
 </div>
