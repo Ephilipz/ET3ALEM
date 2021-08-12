@@ -9,8 +9,8 @@ using Server_Application.Data;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210717131134_add_contact_us")]
-    partial class add_contact_us
+    [Migration("20210722223613_LongAnswer1")]
+    partial class LongAnswer1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,11 +44,12 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("BusinessEntities.Models.ContactUsMessage", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<string>("Message")
                         .HasColumnType("longtext");
@@ -56,7 +57,29 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("Subject")
                         .HasColumnType("longtext");
 
+                    b.HasKey("Id");
+
                     b.ToTable("ContactUsMessage");
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.LongAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("LongAnswerAttemptId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LongAnswerAttemptId")
+                        .IsUnique();
+
+                    b.ToTable("LongAnswer");
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.Question", b =>
@@ -182,9 +205,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<bool>("NoDueDate")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("ShowCorrectAnswers")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("ShowGrade")
@@ -487,6 +507,13 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("BusinessEntities.Models.LongAnswerQuestion", b =>
+                {
+                    b.HasBaseType("BusinessEntities.Models.Question");
+
+                    b.HasDiscriminator().HasValue(3);
+                });
+
             modelBuilder.Entity("BusinessEntities.Models.MultipleChoiceQuestion", b =>
                 {
                     b.HasBaseType("BusinessEntities.Models.Question");
@@ -518,6 +545,13 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.HasDiscriminator().HasValue(0);
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.LongAnswerAttempt", b =>
+                {
+                    b.HasBaseType("BusinessEntities.Models.QuestionAttempt");
+
+                    b.HasDiscriminator().HasValue(3);
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.MCQAttmept", b =>
@@ -553,6 +587,15 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("BusinessEntities.Models.MultipleChoiceQuestion", null)
                         .WithMany("Choices")
                         .HasForeignKey("MCQId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.LongAnswer", b =>
+                {
+                    b.HasOne("BusinessEntities.Models.LongAnswerAttempt", null)
+                        .WithOne("LongAnswer")
+                        .HasForeignKey("BusinessEntities.Models.LongAnswer", "LongAnswerAttemptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -726,6 +769,11 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("BusinessEntities.Models.MultipleChoiceQuestion", b =>
                 {
                     b.Navigation("Choices");
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.LongAnswerAttempt", b =>
+                {
+                    b.Navigation("LongAnswer");
                 });
 #pragma warning restore 612, 618
         }

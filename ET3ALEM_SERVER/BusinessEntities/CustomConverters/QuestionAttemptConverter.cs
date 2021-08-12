@@ -35,6 +35,7 @@ namespace BusinessEntities.CustomConverters
                 QuestionType.MCQ => new MCQAttmept(),
                 QuestionType.TrueFalse => new TrueFalseAttempt(),
                 QuestionType.ShortAnswer => new ShortAnswerAttempt(),
+                QuestionType.LongAnswer => new LongAnswerAttempt(),
                 _ => throw new ArgumentNullException(nameof(jObject)),
             };
         }

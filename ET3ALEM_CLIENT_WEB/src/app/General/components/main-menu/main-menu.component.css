@@ -4,13 +4,12 @@
 
 .nav-item {
     font-size: 1.2em;
-    margin: auto 40px;
+    margin: auto 50px;
 }
 
 .nav-item:hover {
     color: black;
     font-weight: 500;
-    /* font-size: larger; */
 }
 
 .nav-item.active {

@@ -59,9 +59,9 @@ namespace DataServiceLayer
                 {
                     int randomIndex = random.Next(0, i + 1);
 
-                    QuizQuestion temp = assignedQuizQuestions[i];
-                    assignedQuizQuestions[i] = assignedQuizQuestions[randomIndex];
-                    assignedQuizQuestions[randomIndex] = temp;
+                    int temp = assignedQuizQuestions[i].Sequence;
+                    assignedQuizQuestions[i].Sequence = assignedQuizQuestions[randomIndex].Sequence;
+                    assignedQuizQuestions[randomIndex].Sequence = temp;
                 }
             }
             foreach (var quizQuestion in assignedQuizQuestions)
@@ -104,6 +104,13 @@ namespace DataServiceLayer
                     };
                 case QuestionType.ShortAnswer:
                     return new ShortAnswerAttempt()
+                    {
+                        QuizQuestion = quizQuestion,
+                        QuizQuestionId = quizQuestion.Id,
+                        Id = 0
+                    };
+                case QuestionType.LongAnswer:
+                    return new LongAnswerAttempt()
                     {
                         QuizQuestion = quizQuestion,
                         QuizQuestionId = quizQuestion.Id,

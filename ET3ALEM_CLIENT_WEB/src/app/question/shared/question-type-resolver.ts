@@ -16,6 +16,11 @@ import { ConcreteEditQuestionShortAnswerComponent } from "../edit-create-questio
 import { ConcreteAnswerQuestionShortAnswerComponent } from "../answer-question/ConcreteAnswerQuestions/concrete-answer-question-short-answer/concrete-answer-question-short-answer.component";
 import { ConcreteQuestionResultShortAnswerComponent } from "../question result/concrete-question-result/concrete-question-result-short-answer/concrete-question-result-short-answer.component";
 import { ShortAnswerAttempt } from "../Models/short-answer-attempt";
+import { LongAnswerQuestion } from "../Models/long-answer-question";
+import { LongAnswerAttempt } from "../Models/long-answer-attempt";
+import { ConcreteQuestionResultLongAnswerComponent } from "../question result/concrete-question-result/concrete-question-result-long-answer/concrete-question-result-long-answer.component";
+import { ConcreteAnswerQuestionLongAnswerComponent } from "../answer-question/ConcreteAnswerQuestions/concrete-answer-question-long-answer/concrete-answer-question-long-answer.component";
+import { ConcreteEditQuestionLongAnswerComponent } from "../edit-create-question/ConcreteQuestions/concrete-edit-question-long-answer/concrete-edit-question-long-answer.component";
 
 /**
  * A shared class with the question type dictionaries for the creation of specific questions 
@@ -26,20 +31,23 @@ export class QuestionTypeResolver {
     public static editQuestionComponentsMap = {
         MCQ: ConcreteEditQuestionMCQComponent,
         TrueFalse: ConcreteEditQuestionTrueFalseComponent,
-        ShortAnswer: ConcreteEditQuestionShortAnswerComponent
+        ShortAnswer: ConcreteEditQuestionShortAnswerComponent,
+        LongAnswer: ConcreteEditQuestionLongAnswerComponent
     }
 
 
     public static answerQuestionComponentMap = {
         MCQ: ConcreteAnswerQuestionMCQComponent,
         TrueFalse: ConcreteAnswerQuestionTFComponent,
-        ShortAnswer: ConcreteAnswerQuestionShortAnswerComponent
+        ShortAnswer: ConcreteAnswerQuestionShortAnswerComponent,
+        LongAnswer: ConcreteAnswerQuestionLongAnswerComponent
     }
 
     public static viewQuestionResultComponentMap = {
         MCQ: ConcreteQuestionResultMCQComponent,
         TrueFalse: ConcreteQuestionResultTFComponent,
-        ShortAnswer: ConcreteQuestionResultShortAnswerComponent
+        ShortAnswer: ConcreteQuestionResultShortAnswerComponent,
+        LongAnswer: ConcreteQuestionResultLongAnswerComponent
     }
 
     public static questionTypeNames = [
@@ -57,13 +65,14 @@ export class QuestionTypeResolver {
                 return new TrueFalseQuestion();
             case QuestionType.ShortAnswer:
                 return new ShortAnswerQuestion();
+            case QuestionType.LongAnswer:
+                return new LongAnswerQuestion();
             default:
                 break;
         }
     }
 
     public static getSpecificQuestion(question: any) {
-        console.log('received', question);
         if (!question) return null;
         let type: QuestionType = question.QuestionType;
         switch (type) {
@@ -73,6 +82,8 @@ export class QuestionTypeResolver {
                 return new TrueFalseQuestion(question.Id, question.Body, question.Answer, question.Comment);
             case QuestionType.ShortAnswer:
                 return new ShortAnswerQuestion(question.Id, question.Body, question.Comment, question.PossibleAnswers);
+            case QuestionType.LongAnswer:
+                return new LongAnswerQuestion(question.Id, question.Body, question.Comment)
             default:
                 return question;
         }
@@ -95,6 +106,8 @@ export class QuestionTypeResolver {
                     return new TrueFalseAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<TrueFalseAttempt>questionAttempt).Answer);
                 case QuestionType.ShortAnswer:
                     return new ShortAnswerAttempt(questionAttempt.Id, questionAttempt.QuizQuestion,questionAttempt.Grade, (<ShortAnswerAttempt>questionAttempt).Answer);
+                case QuestionType.LongAnswer:
+                    return new LongAnswerAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<LongAnswerAttempt>questionAttempt).Answer);
                 default:
                     return questionAttempt;
             }

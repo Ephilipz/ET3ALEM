@@ -288,7 +288,7 @@ namespace Server_Application.Controllers
             }
             catch (Exception e)
             {
-                throw e;
+                return null;
             }
         }
     }

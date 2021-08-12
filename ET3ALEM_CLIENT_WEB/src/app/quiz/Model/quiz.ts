@@ -20,7 +20,6 @@ export class Quiz {
     UnlimitedAttempts: boolean;
     ShowGrade: boolean;
     AutoGrade:boolean;
-    ShowCorrectAnswers: boolean;
     TotalGrade: number;
     ShuffleQuestions: boolean;
     IncludeAllQuestions: boolean;
@@ -44,7 +43,6 @@ export class Quiz {
         UnlimitedAttempts: boolean = false,
         ShowGrade: boolean = true,
         AutoGrade: boolean = true,
-        ShowCorrectAnswers: boolean = true,
         ShuffleQuestions: boolean = false,
         IncludeAllQuestions: boolean = true,
         IncludedQuestionsCount: number = null) {
@@ -65,7 +63,6 @@ export class Quiz {
         this.UnlimitedAttempts = UnlimitedAttempts;
         this.ShowGrade = ShowGrade,
         this.AutoGrade = AutoGrade;
-        this.ShowCorrectAnswers = ShowCorrectAnswers;
         this.ShuffleQuestions = ShuffleQuestions;
         this.IncludeAllQuestions = IncludeAllQuestions;
         this.IncludedQuestionsCount = IncludedQuestionsCount;
@@ -83,7 +80,6 @@ export class Quiz {
         UnlimitedAttempts: boolean = false,
         ShowGrade: boolean = true,
         AutoGrade: boolean = true,
-        ShowCorrectAnswers: boolean = true,
         ShuffleQuestions: boolean = false,
         IncludeAllQuestions: boolean = true,
         IncludedQuestionsCount: number = null) {
@@ -99,7 +95,6 @@ export class Quiz {
         this.UnlimitedAttempts = UnlimitedAttempts;
         this.ShowGrade = ShowGrade,
         this.AutoGrade = AutoGrade;
-        this.ShowCorrectAnswers = ShowCorrectAnswers;
         this.ShuffleQuestions = ShuffleQuestions;
         this.IncludeAllQuestions = IncludeAllQuestions;
         this.IncludedQuestionsCount = IncludedQuestionsCount ? IncludedQuestionsCount : QuizQuestions.length;

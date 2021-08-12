@@ -4,14 +4,15 @@
             <h1>{{choice.Body}}</h1>
         </div>
         <div class="col-3">
-            <div *ngIf="choice.IsAnswer" class="sideBubble isAnswer">
-                <h2 *ngIf="isSelected(choice)">Your answer was correct</h2>
-                <h2 *ngIf="!isSelected(choice)">Correct Answer</h2>
+            <div *ngIf="choice.IsAnswer && isSelected(choice)" class="sideBubble isAnswer">
+                <h2 *ngIf="">Your answer was correct</h2>
+            </div>
+            <div *ngIf="choice.IsAnswer && !isSelected(choice)" class="sideBubble isWrongAnswer">
+                <h2>Correct Answer</h2>
             </div>
             <div *ngIf="!choice.IsAnswer && isSelected(choice)" class="sideBubble isWrongAnswer">
                 <h2>Your answer was incorrect</h2>
             </div>
         </div>
     </div>
-
 </div>

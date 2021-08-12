@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server_Application.Data;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210722131730_LongAnswer")]
+    partial class LongAnswer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -505,13 +507,6 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("BusinessEntities.Models.LongAnswerQuestion", b =>
-                {
-                    b.HasBaseType("BusinessEntities.Models.Question");
-
-                    b.HasDiscriminator().HasValue(3);
-                });
-
             modelBuilder.Entity("BusinessEntities.Models.MultipleChoiceQuestion", b =>
                 {
                     b.HasBaseType("BusinessEntities.Models.Question");
@@ -591,11 +586,13 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("BusinessEntities.Models.LongAnswer", b =>
                 {
-                    b.HasOne("BusinessEntities.Models.LongAnswerAttempt", null)
+                    b.HasOne("BusinessEntities.Models.LongAnswerAttempt", "LongAnswerAttempt")
                         .WithOne("LongAnswer")
                         .HasForeignKey("BusinessEntities.Models.LongAnswer", "LongAnswerAttemptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("LongAnswerAttempt");
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.Question", b =>

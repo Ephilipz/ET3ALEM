@@ -9,8 +9,8 @@ using Server_Application.Data;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210625125010_initial-create")]
-    partial class initialcreate
+    [Migration("20210721185321_Remove show correct answers in quiz")]
+    partial class Removeshowcorrectanswersinquiz
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,6 +40,26 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("MCQId");
 
                     b.ToTable("Choice");
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.ContactUsMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactUsMessage");
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.Question", b =>
@@ -165,9 +185,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<bool>("NoDueDate")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("ShowCorrectAnswers")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("ShowGrade")

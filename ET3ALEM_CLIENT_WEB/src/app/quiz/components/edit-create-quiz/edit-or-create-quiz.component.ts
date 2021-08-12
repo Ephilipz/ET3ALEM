@@ -58,7 +58,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   showGrade = new FormControl(true);
   autoGrade = new FormControl(true);
   randomOrderQuestions = new FormControl(false);
-  showCorrectAnswers = new FormControl(true);
   includeAllQuestions = new FormControl(true);
   includedQuestionsCount = new FormControl(1, [Validators.min(1)]);
 
@@ -225,7 +224,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       quizQuestions.push(new QuizQuestion(question, grade, 0, i));
     }));
 
-    this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(), this.noDueDate.value, quizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.showCorrectAnswers.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
+    this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(), this.noDueDate.value, quizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
 
     this.quizService.createQuiz(this.currentQuiz).subscribe(
       (quiz: Quiz) => {
@@ -265,7 +264,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       }
     }));
 
-    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.showCorrectAnswers.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
+    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
 
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
       () => {

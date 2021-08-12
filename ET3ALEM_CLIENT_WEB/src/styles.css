@@ -85,6 +85,7 @@ h2.secondaryTitle{
     display: flex;
     margin-left: 30px;
     min-height: 50px;
+    width: 300px;
 }
 
 .sideBubble::before{

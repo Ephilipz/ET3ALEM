@@ -1,19 +1,11 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <h3>Your Answer</h3>
-            <p class="ml-3 mt-1">{{userAnswer}}</p>
-        </div>
+    <div class="flexRow">
+        <div [innerHTML]="questionAttempt.Answer.Answer" class="col"></div>
         <div *ngIf="isCorrectAnswer && questionAttempt.IsGraded" class="sideBubble isAnswer">
             <h2>Correct</h2>
         </div>
         <div *ngIf="!isCorrectAnswer && questionAttempt.IsGraded" class="sideBubble isWrongAnswer">
             <h2>Incorrect</h2>
         </div>
-    </div>
-
-    <div>
-        <h3>Correct Answers</h3>
-        <p class="ml-3 mt-1">{{correctAnswers}}</p>
     </div>
 </div>

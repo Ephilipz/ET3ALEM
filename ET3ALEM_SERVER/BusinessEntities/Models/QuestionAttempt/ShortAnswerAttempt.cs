@@ -8,11 +8,18 @@ namespace BusinessEntities.Models
 {
     public class ShortAnswerAttempt : QuestionAttempt
     {
-        public string Answer { get; set; }
+        public string? Answer { get; set; }
         public override void GradeQuestion()
         {
-            IsGraded = true;
             ShortAnswerQuestion question = QuizQuestion.Question as ShortAnswerQuestion;
+
+            if (string.IsNullOrWhiteSpace(question.PossibleAnswers))
+            {
+                IsGraded = false;
+                return;
+            }
+
+            IsGraded = true;
             foreach (string possibleAnswer in question.PossibleAnswers.Split(','))
             {
                 //check if the answers match the possible answer

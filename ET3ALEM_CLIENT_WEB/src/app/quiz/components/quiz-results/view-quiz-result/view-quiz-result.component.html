@@ -21,8 +21,9 @@
             <div class="row question m-0 QuestionTitle "
                 [ngClass]="{'wrongAnswer': questionAttempt.Grade != questionAttempt.QuizQuestion.Grade}">
                 <h2 style="width: fit-content;">Question {{i+1}}</h2>
-                <h2 style="margin-left: auto;">{{questionAttempt.Grade.toString() + '/' +
+                <h2 style="margin-left: auto;" *ngIf="questionAttempt.IsGraded">{{questionAttempt.Grade.toString() + '/' +
                     questionAttempt.QuizQuestion.Grade.toString()}} Points</h2>
+                <h2 style="margin-left: auto;" *ngIf="!questionAttempt.IsGraded">*Not Graded Yet*</h2>
             </div>
             <question-result-header #QuestionResult class="questionResultComponent row"
                 [questionAttempt]="questionAttempt">
@@ -32,7 +33,7 @@
     </div>
 
 
-    <div *ngIf="!quizAttempt.Quiz.ShowGrade || !quizAttempt.IsGraded" class="py-5 px-0"
+    <div *ngIf="!quizAttempt.Quiz.ShowGrade" class="py-5 px-0"
         style="display: flex; align-items: center;">
         <h2 class="secondaryTitle mx-auto">Quiz Results Are Hidden</h2>
         <img src="../../../../../assets/images/undraw_secure_files_re_6vdh.svg" class="m-0" height="80%">

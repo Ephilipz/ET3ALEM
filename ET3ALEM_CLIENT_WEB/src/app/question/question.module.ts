@@ -19,6 +19,9 @@ import { ConcreteQuestionResultTFComponent } from './question result/concrete-qu
 import { ConcreteEditQuestionShortAnswerComponent } from './edit-create-question/ConcreteQuestions/concrete-edit-question-short-answer/concrete-edit-question-short-answer.component';
 import { ConcreteAnswerQuestionShortAnswerComponent } from './answer-question/ConcreteAnswerQuestions/concrete-answer-question-short-answer/concrete-answer-question-short-answer.component';
 import { ConcreteQuestionResultShortAnswerComponent } from './question result/concrete-question-result/concrete-question-result-short-answer/concrete-question-result-short-answer.component';
+import { ConcreteEditQuestionLongAnswerComponent } from './edit-create-question/ConcreteQuestions/concrete-edit-question-long-answer/concrete-edit-question-long-answer.component';
+import { ConcreteQuestionResultLongAnswerComponent } from './question result/concrete-question-result/concrete-question-result-long-answer/concrete-question-result-long-answer.component';
+import { ConcreteAnswerQuestionLongAnswerComponent } from './answer-question/ConcreteAnswerQuestions/concrete-answer-question-long-answer/concrete-answer-question-long-answer.component';
 
 @NgModule({
   declarations: [EditOrCreateQuestionHeaderComponent, ConcreteEditQuestionMCQComponent, ConcreteEditQuestionTrueFalseComponent, DynamicComponentHostDirective, AnswerQuestionHeaderComponent, ConcreteAnswerQuestionMCQComponent, ConcreteAnswerQuestionTFComponent, QuestionResultHeaderComponent,
@@ -26,7 +29,10 @@ import { ConcreteQuestionResultShortAnswerComponent } from './question result/co
     ConcreteQuestionResultTFComponent,
     ConcreteEditQuestionShortAnswerComponent,
     ConcreteAnswerQuestionShortAnswerComponent,
-    ConcreteQuestionResultShortAnswerComponent],
+    ConcreteQuestionResultShortAnswerComponent,
+    ConcreteEditQuestionLongAnswerComponent,
+    ConcreteQuestionResultLongAnswerComponent,
+    ConcreteAnswerQuestionLongAnswerComponent],
   imports: [
     CommonModule,
     AngularMaterialModule,

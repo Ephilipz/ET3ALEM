@@ -44,7 +44,7 @@ export class ConcreteAnswerQuestionMCQComponent extends AC_ConcreteAnswerQuestio
   ngOnInit(): void {
     this.quizQuestion = this.questionAttempt.QuizQuestion;
     this.question = <MultipleChoiceQuestion>this.quizQuestion.Question;
-    if(this.question.McqAnswerType == McqAnswerType.MultipleChoice)
+    if (this.question.McqAnswerType == McqAnswerType.MultipleChoice)
       this.headerText = 'select all that apply'
   }
 
@@ -74,7 +74,10 @@ export class ConcreteAnswerQuestionMCQComponent extends AC_ConcreteAnswerQuestio
     return this.selectedChoices.indexOf(choice.Id) != -1 || this.selectedChoice == choice.Id;
   }
 
-  getSelected(){
+  getSelected() {
+    if (this.selectedChoice == null && this.selectedChoices.length == 0) {
+      return [];
+    }
     const choiceBodies = this.question.McqAnswerType == McqAnswerType.MultipleChoice ? this.selectedChoices : [this.selectedChoice];
     return choiceBodies.map(num => new Choice(num));
   }

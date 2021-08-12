@@ -9,6 +9,7 @@ namespace BusinessEntities.Enumerators
         TrueFalse,
         MCQ,
         ShortAnswer,
-        LongAnswer
+        LongAnswer,
+        Order
     }
 }

@@ -12,9 +12,12 @@ namespace DataServiceLayer
     public class QuestionCollectionDsl : IQuestionCollectionDsl
     {
         private readonly IQuestionCollectionDal _IQuestionCollectionDal;
-        public QuestionCollectionDsl(IQuestionCollectionDal IQuestionCollectionDal)
+        private readonly IQuestionDsl _IQuestionDsl;
+
+        public QuestionCollectionDsl(IQuestionCollectionDal IQuestionCollectionDal, IQuestionDsl IQuestionDsl)
         {
             _IQuestionCollectionDal = IQuestionCollectionDal;
+            _IQuestionDsl = IQuestionDsl;
         }
 
 
@@ -44,9 +47,14 @@ namespace DataServiceLayer
             await _IQuestionCollectionDal.PutQuestionCollection(collection);
         }
 
-        public Task<QuestionCollection> DeleteQuestionCollection(int id)
+        public async Task<QuestionCollection> DeleteQuestionCollection(int id)
         {
-            return _IQuestionCollectionDal.DeleteQuestionCollection(id);
+            QuestionCollection collection = await _IQuestionCollectionDal.DeleteQuestionCollection(id);
+            foreach(Question question in collection.Questions)
+            {
+                await _IQuestionDsl.DeleteQuestion(question.Id);
+            }
+            return collection;
         }
 
         public Task<bool> NameExists(string name)

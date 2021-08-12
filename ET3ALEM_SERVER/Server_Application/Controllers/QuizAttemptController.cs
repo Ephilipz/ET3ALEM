@@ -54,10 +54,10 @@ namespace Server_Application.Controllers
             return await _IQuizAttemptDsl.GetQuizAttemptWithQuiz(id);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), AllowAnonymous]
         public async Task<ActionResult<QuizAttempt>> PutQuizAttempt(int id, QuizAttempt quizAttempt)
         {
-            await _IQuizAttemptDsl.PutQuizAttempt(id, AccountHelper.getUserId(HttpContext, User), quizAttempt);
+            await _IQuizAttemptDsl.PutQuizAttempt(id, quizAttempt.UserId, quizAttempt);
             return NoContent();
         }
 

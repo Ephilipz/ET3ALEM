@@ -21,7 +21,8 @@ namespace Server_Application.Data
                 .HasDiscriminator<QuestionType>("QuestionType")
                 .HasValue<MultipleChoiceQuestion>(QuestionType.MCQ)
                 .HasValue<TrueFalseQuestion>(QuestionType.TrueFalse)
-                .HasValue<ShortAnswerQuestion>(QuestionType.ShortAnswer);
+                .HasValue<ShortAnswerQuestion>(QuestionType.ShortAnswer)
+                .HasValue<LongAnswerQuestion>(QuestionType.LongAnswer);
             modelBuilder.Entity<MultipleChoiceQuestion>().HasMany(mcq => mcq.Choices).WithOne().HasForeignKey("MCQId");
             modelBuilder.Entity<QuizQuestion>().ToTable("QuizQuestion");
 
@@ -37,7 +38,8 @@ namespace Server_Application.Data
                .HasDiscriminator<QuestionType>("QuestionType")
                .HasValue<MCQAttmept>(QuestionType.MCQ)
                .HasValue<TrueFalseAttempt>(QuestionType.TrueFalse)
-               .HasValue<ShortAnswerAttempt>(QuestionType.ShortAnswer);
+               .HasValue<ShortAnswerAttempt>(QuestionType.ShortAnswer)
+               .HasValue<LongAnswerAttempt>(QuestionType.LongAnswer);
 
             modelBuilder.Entity<MCQAttmept>()
                .HasMany(mcqAttmep => mcqAttmep.Choices)
@@ -45,6 +47,8 @@ namespace Server_Application.Data
                .UsingEntity(j => j.ToTable("ChoiceMcqAttempt"));
 
             modelBuilder.Entity<ContactUsMessage>().ToTable("ContactUsMessage");
+
+            modelBuilder.Entity<LongAnswer>().ToTable("LongAnswer");
 
             base.OnModelCreating(modelBuilder);
         }
@@ -56,5 +60,6 @@ namespace Server_Application.Data
         public DbSet<QuizAttempt> QuizAttempts { get; set; }
         public DbSet<QuestionAttempt> QuestionAttempts { get; set; }
         public DbSet<ContactUsMessage> ContactUsMessages { get; set; }
+        public DbSet<LongAnswer> LongAnswers { get; set; }
     }
 }

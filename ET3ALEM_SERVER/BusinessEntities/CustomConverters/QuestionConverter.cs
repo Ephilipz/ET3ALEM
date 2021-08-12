@@ -38,6 +38,7 @@ namespace BusinessEntities.CustomConverters
                 QuestionType.MCQ => new MultipleChoiceQuestion(),
                 QuestionType.TrueFalse => new TrueFalseQuestion(),
                 QuestionType.ShortAnswer => new ShortAnswerQuestion(),
+                QuestionType.LongAnswer => new LongAnswerQuestion(),
                 _ => throw new ArgumentNullException(nameof(jObject)),
             };
         }

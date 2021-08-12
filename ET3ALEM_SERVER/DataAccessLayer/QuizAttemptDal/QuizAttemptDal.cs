@@ -28,7 +28,7 @@ namespace DataAccessLayer
                 .Include(qA => qA.Quiz)
                 .Include(qA => qA.QuestionsAttempts)
                 .ThenInclude(qAS => ((MCQAttmept)qAS).Choices)
-                .Include(qA => qA.QuestionsAttempts)
+                .Include(qA => qA.QuestionsAttempts.OrderBy(qAs => qAs.Sequence))
                 .ThenInclude(qAS => qAS.QuizQuestion)
                 .ThenInclude(quizQuestion => quizQuestion.Question)
                 .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).AsSplitQuery().AsNoTracking().FirstAsync();
@@ -49,7 +49,7 @@ namespace DataAccessLayer
 
         public async Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt)
         {
-            foreach(QuestionAttempt qA in quizAttempt.QuestionsAttempts)
+            foreach (QuestionAttempt qA in quizAttempt.QuestionsAttempts)
             {
                 _context.Entry(qA.QuizQuestion).State = EntityState.Unchanged;
             }
@@ -92,9 +92,9 @@ namespace DataAccessLayer
             return await _context.QuizAttempts.Where(quizAttempt => !quizAttempt.IsGraded && quizAttempt.Quiz.UserId == userId).Include(qA => qA.User).AsSplitQuery().AsNoTracking().ToListAsync();
         }
 
-        public async Task DeleteRelatedQuizAttempts(int id)
+        public async Task DeleteRelatedQuizAttempts(int quizId)
         {
-            IEnumerable<QuizAttempt> attempts = _context.QuizAttempts.Where(qA => qA.QuizId == id).Include(qA => qA.QuestionsAttempts);
+            IEnumerable<QuizAttempt> attempts = _context.QuizAttempts.Where(qA => qA.QuizId == quizId).Include(qA => qA.QuestionsAttempts);
             foreach (QuizAttempt attempt in attempts)
             {
                 _context.Remove(attempt);

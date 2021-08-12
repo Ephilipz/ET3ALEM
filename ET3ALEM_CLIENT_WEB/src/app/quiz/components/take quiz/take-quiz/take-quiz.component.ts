@@ -49,7 +49,7 @@ export class TakeQuizComponent implements OnInit {
     if (!this.id) {
       this.route.params.subscribe(params => {
         let code = params['code'];
-        this.quizService.getFullQuizFromCode(code).subscribe(
+        this.quizService.getBasicQuizFromCode(code).subscribe(
           (quiz) => {
             this.quiz = plainToClass(Quiz, quiz);
             this.quizAttempt = new QuizAttempt(0, 0, this.quiz.Id, moment.utc());

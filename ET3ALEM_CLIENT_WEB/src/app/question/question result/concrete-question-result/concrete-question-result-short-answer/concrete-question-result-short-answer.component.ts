@@ -21,9 +21,10 @@ export class ConcreteQuestionResultShortAnswerComponent extends AC_ConcreteQuest
   }
 
   ngOnInit(): void {
-    this.correctAnswers = (<ShortAnswerQuestion>this.questionAttempt.QuizQuestion.Question).PossibleAnswers.split(',').join(', ');
-    this.userAnswer = this.questionAttempt.Answer;
-    this.isCorrectAnswer = this.questionAttempt.Grade == this.questionAttempt.QuizQuestion.Grade;
+    const possibleAnswers = (<ShortAnswerQuestion>this.questionAttempt.QuizQuestion.Question).PossibleAnswers;
+    this.correctAnswers = possibleAnswers ? possibleAnswers.split(',').join(', ') : 'EMPTY';
+    this.userAnswer = this.questionAttempt.Answer ? this.questionAttempt.Answer : 'EMPTY';
+    this.isCorrectAnswer = this.questionAttempt.Grade >= this.questionAttempt.QuizQuestion.Grade;
   }
 
 }
