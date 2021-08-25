@@ -10,3 +10,12 @@ table{
 .mat-cell {
     font-size: 1.2em;
 }
+
+.emptyQuizzes{
+    font-size: 3em;
+    color: gray;
+    text-align: center;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    font-weight: 300;
+}

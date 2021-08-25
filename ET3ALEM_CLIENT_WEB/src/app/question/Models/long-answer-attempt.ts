@@ -4,9 +4,9 @@ import { LongAnswer } from "./long-answer";
 import { QuestionAttempt } from "./question-attempt";
 
 export class LongAnswerAttempt extends QuestionAttempt {
-    Answer: LongAnswer;
+    LongAnswer: LongAnswer;
     public constructor(Id: number, QuizQuestion: QuizQuestion, Grade: number, Answer: LongAnswer) {
         super(Id, QuizQuestion, Grade);
-        this.Answer = Helper.deepCopy(Answer);
+        this.LongAnswer = Helper.deepCopy(Answer);
     }
 }

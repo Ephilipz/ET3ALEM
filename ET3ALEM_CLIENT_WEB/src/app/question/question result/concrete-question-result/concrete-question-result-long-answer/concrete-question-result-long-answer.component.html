@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="flexRow">
-        <div [innerHTML]="questionAttempt.Answer.Answer" class="col"></div>
+        <div [innerHTML]="questionAttempt.LongAnswer.Answer" class="col"></div>
         <div *ngIf="isCorrectAnswer && questionAttempt.IsGraded" class="sideBubble isAnswer">
             <h2>Correct</h2>
         </div>

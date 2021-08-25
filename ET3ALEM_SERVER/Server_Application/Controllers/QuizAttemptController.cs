@@ -22,15 +22,11 @@ namespace Server_Application.Controllers
             _IQuizAttemptDsl = IQuizAttemptDsl;
         }
         // POST: api/QuizAttempt
-        [HttpPost]
-        public async Task<ActionResult<QuizAttempt>> PostQuizAttempt(QuizAttempt quizAttempt)
+        [HttpPost("{userId}"), AllowAnonymous]
+        public async Task<ActionResult<QuizAttempt>> PostQuizAttempt(string userId, QuizAttempt quizAttempt)
         {
-            string userId = AccountHelper.getUserId(HttpContext, User);
-            if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
-                return BadRequest(quizAttempt);
-            quizAttempt.UserId = userId;
-            await _IQuizAttemptDsl.InsertQuizAttempt(quizAttempt);
-            return CreatedAtAction("GetQuizAttempt", new { id = quizAttempt.Id }, quizAttempt);
+            await _IQuizAttemptDsl.PostQuizAttempt(userId, quizAttempt);
+            return NoContent();
         }
 
         [HttpGet]
@@ -54,11 +50,15 @@ namespace Server_Application.Controllers
             return await _IQuizAttemptDsl.GetQuizAttemptWithQuiz(id);
         }
 
-        [HttpPut("{id}"), AllowAnonymous]
-        public async Task<ActionResult<QuizAttempt>> PutQuizAttempt(int id, QuizAttempt quizAttempt)
+        [HttpPut]
+        public async Task<ActionResult<QuizAttempt>> PutQuizAttempt( QuizAttempt quizAttempt)
         {
-            await _IQuizAttemptDsl.PutQuizAttempt(id, quizAttempt.UserId, quizAttempt);
-            return NoContent();
+            string userId = AccountHelper.getUserId(HttpContext, User);
+            if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
+                return BadRequest(quizAttempt);
+            quizAttempt.UserId = userId;
+            await _IQuizAttemptDsl.InsertQuizAttempt(quizAttempt);
+            return CreatedAtAction("GetQuizAttempt", new { id = quizAttempt.Id }, quizAttempt);
         }
 
         [HttpPut("UpdateQuizAttemptGrade")]

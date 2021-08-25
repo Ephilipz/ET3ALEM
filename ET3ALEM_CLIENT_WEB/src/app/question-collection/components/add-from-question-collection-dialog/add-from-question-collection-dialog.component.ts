@@ -38,7 +38,6 @@ export class AddFromQuestionCollectionDialogComponent implements OnInit {
     this.questionCollectionService.getCollection(this.questionCollectionId).subscribe(
       (collection) => {
         this.questionCollection = plainToClass(QuestionCollection, collection);
-        console.log(this.questionCollection.Questions[0].duplicateQuestion());
         this.questionCollection.Questions = this.questionCollection.Questions.map(question => question.duplicateQuestion());
         this.isLoadedQuestions = true;
       }
@@ -50,7 +49,6 @@ export class AddFromQuestionCollectionDialogComponent implements OnInit {
   }
 
   closeDialog() {
-    console.log(this.questionList);
     this.dialogRef.close(this.questionList);
   }
 

@@ -28,13 +28,15 @@ namespace DataAccessLayer
                 .Include(qA => qA.Quiz)
                 .Include(qA => qA.QuestionsAttempts)
                 .ThenInclude(qAS => ((MCQAttmept)qAS).Choices)
+                .Include(qA => qA.QuestionsAttempts)
+                .ThenInclude(qAS => ((LongAnswerAttempt)qAS).LongAnswer)
                 .Include(qA => qA.QuestionsAttempts.OrderBy(qAs => qAs.Sequence))
                 .ThenInclude(qAS => qAS.QuizQuestion)
                 .ThenInclude(quizQuestion => quizQuestion.Question)
                 .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).AsSplitQuery().AsNoTracking().FirstAsync();
         }
 
-        public async Task<QuizAttempt> PutQuizAttempt(int id, QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> PostQuizAttempt(QuizAttempt quizAttempt)
         {
             quizAttempt.QuestionsAttempts.ForEach(qA => qA.QuizQuestion = null);
             quizAttempt.Quiz = null;

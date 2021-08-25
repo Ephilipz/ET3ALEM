@@ -8,6 +8,7 @@ namespace BusinessEntities.Models
 {
     public class LongAnswerAttempt : QuestionAttempt
     {
+        #nullable enable
         public LongAnswer? LongAnswer { get; set; }
         public LongAnswerAttempt()
         {

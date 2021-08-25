@@ -55,8 +55,6 @@ export class CustomImageUploadAdapter {
         xhr.addEventListener('load', () => {
             const response = xhr.response;
 
-            console.log('response', response);
-
             if (!response || response.error) {
                 return reject(response && response.error ? response.error.message : genericErrorText);
             }
@@ -94,6 +92,5 @@ export class CustomImageUploadAdapter {
         // Send the request.
         this.xhr.send(data);
 
-        console.log('response', this.xhr.response);
     }
 }

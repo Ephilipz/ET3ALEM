@@ -41,12 +41,10 @@ export class ExtraFormOptions {
         }
 
         if (currentErrors['max']) {
-            console.log(currentErrors);
             return `${displayName} must not exceed ${currentErrors['max']['max']}`;
         }
 
         if (currentErrors['min']) {
-            console.log(currentErrors);
             return `${displayName} must be at least ${currentErrors['min']['min']}`;
         }
 

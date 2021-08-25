@@ -9,8 +9,8 @@ using Server_Application.Data;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210722223613_LongAnswer1")]
-    partial class LongAnswer1
+    [Migration("20210815230145_initiall")]
+    partial class initiall
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -1,3 +1,4 @@
+import { Helper } from "src/app/Shared/Classes/helpers/Helper";
 import { Question } from "./question";
 import { QuestionType } from "./question-type.enum";
 
@@ -10,6 +11,10 @@ export class ShortAnswerQuestion extends Question{
         this.PossibleAnswers = PossibleAnswers;
         this.QuestionType = QuestionType.ShortAnswer;
         this.CaseSensitive = CaseSensitive;
+    }
+
+    public duplicateQuestionAnswer(newQuestion: ShortAnswerQuestion){
+        newQuestion.PossibleAnswers = Helper.deepCopy(this.PossibleAnswers);
     }
 
 }

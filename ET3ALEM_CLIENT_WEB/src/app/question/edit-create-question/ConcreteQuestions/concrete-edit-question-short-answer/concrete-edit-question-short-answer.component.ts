@@ -51,10 +51,15 @@ export class ConcreteEditQuestionShortAnswerComponent extends AC_ConcreteEditQue
       this.toastrService.warning('No correct answer was added to the short answer question')
   }
 
+  public getQuestion(){
+    this.inputQuestion.PossibleAnswers = this.possibleAnswers.filter(res => res.value && res.value.trim().length > 0).map(res => res.value.trim()).join(',');
+    return this.inputQuestion;
+  }
+
   public saveQuestion() {
     super.saveQuestion();
     //get non null and non empty values from possible answers list and add them to the question
-    this.inputQuestion.PossibleAnswers = this.possibleAnswers.filter(res => res.value && res.value.trim().length > 0).map(res => res.value.trim()).join(',');
+    // this.inputQuestion.PossibleAnswers = this.possibleAnswers.filter(res => res.value && res.value.trim().length > 0).map(res => res.value.trim()).join(',');
     return this.getQuestion();
   }
 

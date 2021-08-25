@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessEntities.Enumerators;
+using Helpers;
 
 namespace DataServiceLayer
 {
@@ -31,12 +32,18 @@ namespace DataServiceLayer
             return attempt;
         }
 
-        public async Task<QuizAttempt> PutQuizAttempt(int id, string userId, QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> PostQuizAttempt(string userId, QuizAttempt quizAttempt)
         {
+            //check that userId matches
+            QuizAttempt matchingQuizAttempt = await _IQuizAttemptDal.GetQuizAttempt(quizAttempt.Id);
+            if(matchingQuizAttempt.UserId != userId)
+            {
+                return null;
+            }
             quizAttempt.UserId = userId;
             if (quizAttempt.SubmitTime != null && quizAttempt.Quiz.AutoGrade)
                 quizAttempt.GradeQuiz();
-            return await _IQuizAttemptDal.PutQuizAttempt(id, quizAttempt);
+            return await _IQuizAttemptDal.PostQuizAttempt(quizAttempt);
         }
 
         public async Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
@@ -50,26 +57,35 @@ namespace DataServiceLayer
 
         public async Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt)
         {
-            var quiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
-            List<QuizQuestion> assignedQuizQuestions = (!quiz.IncludeAllQuestions && quiz.IncludedQuestionsCount != null) ? quiz.QuizQuestions.Take((int)quiz.IncludedQuestionsCount).ToList() : quiz.QuizQuestions;
-            if (quiz.ShuffleQuestions)
-            {
-                Random random = new Random();
-                for (int i = assignedQuizQuestions.Count() - 1; i > 0; i--)
-                {
-                    int randomIndex = random.Next(0, i + 1);
-
-                    int temp = assignedQuizQuestions[i].Sequence;
-                    assignedQuizQuestions[i].Sequence = assignedQuizQuestions[randomIndex].Sequence;
-                    assignedQuizQuestions[randomIndex].Sequence = temp;
-                }
-            }
+            Quiz quiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
+            List<QuizQuestion> assignedQuizQuestions = GetAssignedQuestionsForQuiz(quiz);
             foreach (var quizQuestion in assignedQuizQuestions)
             {
                 quizAttempt.QuestionsAttempts.Add(GetQuestionAttemptFromQuizQuestion(quizQuestion));
             }
             return await _IQuizAttemptDal.InsertQuizAttempt(quizAttempt);
         }
+
+        private List<QuizQuestion> GetAssignedQuestionsForQuiz(Quiz quiz)
+        {
+            List<QuizQuestion> quizQuestions = quiz.QuizQuestions;
+            if (!quiz.ShuffleQuestions)
+                return quiz.QuizQuestions;
+            Random rnd = new Random();
+            int[] indexes = Enumerable.Range(0, quiz.QuizQuestions.Count())
+                .ToArray();
+            rnd.Shuffle(indexes);
+            for (int i = 0; i < indexes.Count(); i++)
+            {
+                quizQuestions[i].Sequence = indexes[i];
+            }
+
+            return quizQuestions
+                .OrderBy(qQ => qQ.Sequence)
+                .Take(quiz.IncludedQuestionsCount ?? quiz.QuizQuestions.Count())
+                .ToList();
+        }
+
         public Task<List<QuizAttempt>> GetUserQuizAttemptsForQuiz(int quizId, string userId)
         {
             return _IQuizAttemptDal.GetUserQuizAttemptsForQuiz(quizId, userId);

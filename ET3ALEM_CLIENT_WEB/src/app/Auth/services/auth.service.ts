@@ -62,7 +62,6 @@ export class AuthService {
   }
 
   refresh() {
-    console.log('refreshing');
     let oldTokens: Tokens = new Tokens(this.getJWT(), this.getRefreshToken());
     return this.http.post<Tokens>(environment.baseUrl + '/api/Account/Refresh', oldTokens).pipe(
       tap((tokens: Tokens) => {

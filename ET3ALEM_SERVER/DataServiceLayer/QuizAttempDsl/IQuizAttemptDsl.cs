@@ -10,7 +10,7 @@ namespace DataServiceLayer
     {
         Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt);
         Task<QuizAttempt> GetQuizAttempt(int id);
-        Task<QuizAttempt> PutQuizAttempt(int id,string userId, QuizAttempt quizAttempt);
+        Task<QuizAttempt> PostQuizAttempt(string userId, QuizAttempt quizAttempt);
         Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt);
         Task<List<QuizAttempt>> GetUserQuizAttemptsForQuiz(int quizId, string userId);
         Task<List<QuizAttempt>> GetAllQuizAttemptsForQuiz(int quizId);

@@ -107,7 +107,7 @@ export class QuestionTypeResolver {
                 case QuestionType.ShortAnswer:
                     return new ShortAnswerAttempt(questionAttempt.Id, questionAttempt.QuizQuestion,questionAttempt.Grade, (<ShortAnswerAttempt>questionAttempt).Answer);
                 case QuestionType.LongAnswer:
-                    return new LongAnswerAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<LongAnswerAttempt>questionAttempt).Answer);
+                    return new LongAnswerAttempt(questionAttempt.Id, questionAttempt.QuizQuestion, questionAttempt.Grade, (<LongAnswerAttempt>questionAttempt).LongAnswer);
                 default:
                     return questionAttempt;
             }

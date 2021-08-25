@@ -39,8 +39,6 @@ export class RichTextEditorComponent implements OnInit {
         let formData;
         let xhr: XMLHttpRequest;
 
-        console.log(blobInfo.blob());
-
         xhr = new XMLHttpRequest();
 
         xhr.open('POST', environment.postUploadImgurImage, true);
@@ -94,7 +92,6 @@ export class RichTextEditorComponent implements OnInit {
   }
 
   async removeUnusedImages() {
-    console.log('removing unused images');
     let imagesToBeDeleted: Array<string> = [];
 
     //check if images are being used. Add unused images to the delete array

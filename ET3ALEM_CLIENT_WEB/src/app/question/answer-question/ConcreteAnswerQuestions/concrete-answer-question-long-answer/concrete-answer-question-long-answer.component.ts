@@ -20,10 +20,10 @@ export class ConcreteAnswerQuestionLongAnswerComponent implements OnInit, AC_Con
   }
 
   getAnswers() {
-    if (this.questionAttempt.Answer)
-      this.questionAttempt.Answer.Answer = this.longAnswerFC.value;
+    if (this.questionAttempt.LongAnswer)
+      this.questionAttempt.LongAnswer.Answer = this.longAnswerFC.value;
     else
-      this.questionAttempt.Answer = new LongAnswer(0, this.longAnswerFC.value, this.questionAttempt.Id);
+      this.questionAttempt.LongAnswer = new LongAnswer(0, this.longAnswerFC.value, this.questionAttempt.Id);
     return this.questionAttempt;
   }
 

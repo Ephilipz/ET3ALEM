@@ -13,7 +13,7 @@ namespace BusinessEntities.Models
         public bool CaseSensitive { get; set; }
         public ShortAnswerQuestion()
         {
-            this.QuestionType = QuestionType.ShortAnswer;
+            QuestionType = QuestionType.ShortAnswer;
         }
     }
 }
