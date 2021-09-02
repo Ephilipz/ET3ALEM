@@ -1,8 +1,6 @@
-﻿using BusinessEntities.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BusinessEntities.Models;
 
 namespace DataAccessLayer
 {
@@ -12,6 +10,5 @@ namespace DataAccessLayer
         Task<Question> InsertQuestion(Question question);
         Task<Question> DeleteQuestion(int questionId);
         Task PutQuestion(Question question);
-
     }
 }

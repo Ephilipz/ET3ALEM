@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#nullable enable
+using System;
 
 namespace BusinessEntities.Models
 {
     public class ShortAnswerAttempt : QuestionAttempt
     {
         public string? Answer { get; set; }
+
         public override void GradeQuestion()
         {
-            ShortAnswerQuestion question = QuizQuestion.Question as ShortAnswerQuestion;
+            var question = QuizQuestion.Question as ShortAnswerQuestion;
 
-            if (string.IsNullOrWhiteSpace(question.PossibleAnswers))
+            if (string.IsNullOrWhiteSpace(question?.PossibleAnswers))
             {
                 IsGraded = false;
                 return;
@@ -22,8 +20,12 @@ namespace BusinessEntities.Models
             IsGraded = true;
             foreach (string possibleAnswer in question.PossibleAnswers.Split(','))
             {
+                var compareType = question.CaseSensitive
+                    ? StringComparison.InvariantCulture
+                    : StringComparison.InvariantCultureIgnoreCase;
                 //check if the answers match the possible answer
-                bool isMatching = Answer.Trim().Equals(possibleAnswer.Trim(), question.CaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase);
+                var isMatching = Answer != null && Answer.Trim()
+                    .Equals(possibleAnswer.Trim(), compareType);
 
                 //if it's matching, give full grade and return
                 if (isMatching)

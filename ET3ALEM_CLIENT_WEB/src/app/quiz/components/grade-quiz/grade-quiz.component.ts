@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { plainToClass } from 'class-transformer';
-import { ToastrService } from 'ngx-toastr';
-import { QuizAttempt } from '../../Model/quiz-attempt';
-import { QuizAttemptService } from '../../services/quiz-attempt.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {plainToClass} from 'class-transformer';
+import {ToastrService} from 'ngx-toastr';
+import {QuizAttempt} from '../../Model/quiz-attempt';
+import {QuizAttemptService} from '../../services/quiz-attempt.service';
 
 @Component({
   selector: 'app-grade-quiz',
@@ -12,7 +12,11 @@ import { QuizAttemptService } from '../../services/quiz-attempt.service';
 })
 export class GradeQuizComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private quizAttemptService: QuizAttemptService, private toastr: ToastrService, private router: Router) { }
+  constructor(private route: ActivatedRoute,
+              private quizAttemptService: QuizAttemptService,
+              private toastr: ToastrService,
+              private router: Router) {
+  }
 
   quizAttempt: QuizAttempt = null;
   isLoaded = false;
@@ -26,7 +30,7 @@ export class GradeQuizComponent implements OnInit {
           this.quizAttempt.UpdateQuestionTypes();
           this.isLoaded = true;
         },
-        (err) => {
+        () => {
           this.toastr.error('unable to load quiz');
         }
       )
@@ -37,9 +41,9 @@ export class GradeQuizComponent implements OnInit {
     this.quizAttemptService.updateQuizAttemptGrade(this.quizAttempt).subscribe(
       (res) => {
         this.toastr.success('Quiz grade updated successfully');
-        this.router.navigate(['../../grades/' + this.quizAttempt.QuizId], { relativeTo: this.route })
+        this.router.navigate(['../../grades/' + this.quizAttempt.QuizId], {relativeTo: this.route})
       },
-      (err) => this.toastr.error('Unable to update quiz grade')
+      () => this.toastr.error('Unable to update quiz grade')
     )
   }
 

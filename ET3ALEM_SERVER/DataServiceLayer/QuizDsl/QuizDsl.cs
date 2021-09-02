@@ -1,19 +1,17 @@
-﻿using BusinessEntities.Models;
-using DataAccessLayer;
-using DataServiceLayer;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using BusinessEntities.Models;
+using DataAccessLayer;
 
 namespace DataServiceLayer
 {
     public class QuizDsl : IQuizDsl
     {
-        private readonly IQuizDal _IQuizDal;
         private readonly IQuestionDsl _IQuestionDsl;
         private readonly IQuizAttemptDal _IQuizAttemptDal;
+        private readonly IQuizDal _IQuizDal;
+
         public QuizDsl(IQuizDal IQuizDal, IQuestionDsl IQuestionDsl, IQuizAttemptDal IQuizAttemptDal)
         {
             _IQuizDal = IQuizDal;
@@ -44,46 +42,33 @@ namespace DataServiceLayer
         public Task<Quiz> InsertQuiz(Quiz quiz)
         {
             foreach (var quizQuestion in quiz.QuizQuestions)
-            {
                 if (quizQuestion.QuestionId <= 0)
                     quizQuestion.QuestionId = _IQuestionDsl.InsertQuestion(quizQuestion.Question).Id;
-            }
             return _IQuizDal.InsertQuiz(quiz);
         }
+
         public async Task<Quiz> DeleteQuiz(int id)
         {
             //remove quiz
-            Quiz quiz = await _IQuizDal.DeleteQuiz(id);
+            var quiz = await _IQuizDal.DeleteQuiz(id);
 
             if (quiz != null)
-            {
                 //remove questions
-                foreach (int questionId in quiz.QuizQuestions.Select(quizQuestion => quizQuestion.QuestionId))
-                {
+                foreach (var questionId in quiz.QuizQuestions.Select(quizQuestion => quizQuestion.QuestionId))
                     await _IQuestionDsl.DeleteQuestion(questionId);
-                }
-            }
 
             return quiz;
         }
 
         public async Task PutQuiz(int id, Quiz quiz)
         {
-            foreach (QuizQuestion Qquestion in quiz.QuizQuestions)
-            {
+            foreach (var Qquestion in quiz.QuizQuestions)
                 if (Qquestion.Question.Id == 0)
-                {
                     Qquestion.QuestionId = _IQuestionDsl.InsertQuestion(Qquestion.Question).Id;
-                }
-                else if(Qquestion.Question.Id < 0)
-                {
+                else if (Qquestion.Question.Id < 0)
                     await _IQuestionDsl.DeleteQuestion(Qquestion.Question.Id);
-                }
                 else
-                {
                     await _IQuestionDsl.PutQuestion(Qquestion.Question);
-                }
-            }
             await _IQuizDal.PutQuiz(id, quiz);
         }
 

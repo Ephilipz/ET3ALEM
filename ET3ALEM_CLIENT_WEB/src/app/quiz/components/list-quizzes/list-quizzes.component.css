@@ -52,3 +52,7 @@ mat-form-field {
 .header-align-right.mat-header-cell{
     margin-right: 30px;
 }
+
+td.header-align-right button {
+    margin-left: 10px;
+}

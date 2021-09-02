@@ -7,13 +7,26 @@ import { AuthGuardService } from './auth/services/auth-guard.service';
 
 
 const routes: Routes = [
-  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule), canActivate: [AuthGuardService] },
-  { path: 'quiz', loadChildren: () => import('./quiz/quiz.module').then(m => m.QuizModule), canActivate: [AuthGuardService] },
+  { path: 'auth', 
+  loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule), 
+  canActivate: [AuthGuardService] },
+
+  { path: 'quiz', 
+  loadChildren: () => import('./quiz/quiz.module').then(m => m.QuizModule), 
+  canActivate: [AuthGuardService] },
+
   {
     path: 'questionCollection',
     loadChildren: () => import('./question-collection/question-collection.module').then(m => m.QuestionCollectionModule),
     canActivate: [AuthGuardService]
   },
+
+  {
+    path: 'profile',
+    loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
+    canActivate: [AuthGuardService]
+  },
+
   { path: 'contact', component: ContactComponent },
   { path: '', component: HomeComponent },
   { path: '**', redirectTo: '404' },

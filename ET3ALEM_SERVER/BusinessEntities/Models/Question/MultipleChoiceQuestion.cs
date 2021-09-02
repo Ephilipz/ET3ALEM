@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using BusinessEntities.Enumerators;
 using Validation.CustomValidationAttributes;
 
@@ -13,8 +11,9 @@ namespace BusinessEntities.Models
             QuestionType = QuestionType.MCQ;
             Choices = new List<Choice>();
         }
+
         public McqAnswerType McqAnswerType { get; set; } = McqAnswerType.SingleChoice;
-        [MinimumListLength(minNumberofElements: 2)]
-        public virtual List<Choice> Choices { get; set; }
+
+        [MinimumListLength(2)] public virtual List<Choice> Choices { get; set; }
     }
 }

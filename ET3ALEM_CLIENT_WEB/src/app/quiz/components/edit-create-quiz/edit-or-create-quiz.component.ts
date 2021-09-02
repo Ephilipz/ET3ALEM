@@ -102,7 +102,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.showGrade.setValue(this.currentQuiz.ShowGrade);
     this.includeAllQuestions.setValue(this.currentQuiz.IncludeAllQuestions);
     this.includedQuestionsCount.setValue(this.currentQuiz.IncludedQuestionsCount);
-    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length - 1)]);
+    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length)]);
     this.includedQuestionsCount.updateValueAndValidity();
 
     if (this.currentQuiz.UnlimitedTime) {
@@ -132,7 +132,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
   addQuestion() {
     this.questions.push(new MultipleChoiceQuestion(Helper.randomInteger(0, 100) * -1));
-    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length - 1)]);
+    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length)]);
     this.includedQuestionsCount.updateValueAndValidity();
   }
 
@@ -160,7 +160,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     let index = this.questions.findIndex(q => q.Id == question.Id);
     if (index > -1)
       this.questions.splice(index, 1);
-    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length - 1)]);
+    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length)]);
     this.includedQuestionsCount.updateValueAndValidity();
   }
 
@@ -170,7 +170,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       return;
     const newQuestion = oldQuestion.duplicateQuestion();
     this.questions.push(newQuestion);
-    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length - 1)]);
+    this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length)]);
     this.includedQuestionsCount.updateValueAndValidity();
   }
 
@@ -197,7 +197,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   getIncludeQuestionsCountText() {
     const questionCount = this.includedQuestionsCount.value;
     if (questionCount)
-      return Math.min(this.includedQuestionsCount.value, this.questions.length - 1);
+      return Math.min(this.includedQuestionsCount.value, this.questions.length);
   }
 
   validate(): boolean {
@@ -224,7 +224,15 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       quizQuestions.push(new QuizQuestion(question, grade, 0, i));
     }));
 
-    this.currentQuiz = new Quiz(0, '', this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(), this.noDueDate.value, quizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
+    this.currentQuiz = new Quiz(0, '', 
+    this.quizTitle.value, this.quizInstructions.value, 
+    (this.durationHours.value * 3600 + this.durationMinutes.value * 60), 
+    this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), 
+    Helper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(), 
+    this.noDueDate.value, quizQuestions, this.allowedAttempts.value, 
+    this.unlimitedAttempts.value, this.showGrade.value, 
+    this.autoGrade.value, this.randomOrderQuestions.value, 
+    this.includeAllQuestions.value, this.includedQuestionsCount.value);
 
     this.quizService.createQuiz(this.currentQuiz).subscribe(
       (quiz: Quiz) => {

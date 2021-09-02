@@ -32,7 +32,7 @@ export class RichTextEditorComponent implements OnInit {
     toolbar:
       'undo redo | formatselect forecolor | bold italic | \
       alignleft aligncenter alignright alignjustify | \
-      bullist numlist outdent indent | link image preview',
+      bullist numlist outdent indent | link preview',
 
     images_upload_handler:
       (blobInfo, success, failure, progress) => {

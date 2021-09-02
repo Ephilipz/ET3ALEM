@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace BusinessEntities.Models
 {
@@ -13,10 +10,12 @@ namespace BusinessEntities.Models
         {
             QuizQuestions = new List<QuizQuestion>();
         }
+
         public int Id { get; set; }
         public string Code { get; set; }
-        [Required]
-        public string Name { get; set; }
+
+        [Required] public string Name { get; set; }
+
         public string Instructions { get; set; }
         public virtual List<QuizQuestion> QuizQuestions { get; set; }
         public virtual List<QuizAttempt> QuizAttempts { get; set; }
@@ -27,8 +26,9 @@ namespace BusinessEntities.Models
         public bool NoDueDate { get; set; }
         public int DurationSeconds { get; set; }
         public bool UnlimitedTime { get; set; }
-        [Required]
-        public string UserId { get; set; }
+
+        [Required] public string UserId { get; set; }
+
         public int AllowedAttempts { get; set; }
         public bool UnlimitedAttempts { get; set; }
         public bool ShowGrade { get; set; }

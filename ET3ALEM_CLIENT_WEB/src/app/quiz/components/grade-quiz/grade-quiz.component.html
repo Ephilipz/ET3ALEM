@@ -1,38 +1,40 @@
 <mat-spinner *ngIf="!isLoaded" class="mx-auto my-5"></mat-spinner>
 
 <div class="container-fluid pb-1" *ngIf="isLoaded">
-    <h1 class="topBoldTitle mt-4"> Grade Quiz </h1>
-    <h2 class="secondaryTitle mt-5">{{quizAttempt.Quiz.Name}}</h2>
+  <h1 class="topBoldTitle mt-4"> Grade Quiz </h1>
+  <h2 class="secondaryTitle mt-5">{{quizAttempt.Quiz.Name}}</h2>
 
-    <div class="resultsHeaderRow d-flex justify-content-between">
-        <h2>
-            <mat-icon>schedule</mat-icon> <span>{{quizAttempt.StartTime +'Z' | date:'dd/MM/YYYY, h:mm a'}}</span>
-        </h2>
-        <h2>
-            <mat-icon>grading</mat-icon> <span>{{getCurrentGrade()}} / {{quizAttempt.Quiz.TotalGrade}}</span>
-        </h2>
+  <div class="resultsHeaderRow d-flex justify-content-between">
+    <h2>
+      <mat-icon>schedule</mat-icon>
+      <span>{{quizAttempt.StartTime + 'Z' | date:'dd/MM/YYYY, h:mm a'}}</span>
+    </h2>
+    <h2>
+      <mat-icon>grading</mat-icon>
+      <span>{{getCurrentGrade()}} / {{quizAttempt.Quiz.TotalGrade}}</span>
+    </h2>
+  </div>
+
+  <div *ngFor="let questionAttempt of quizAttempt.QuestionsAttempts; let i = index" class="questionContainer">
+    <div class="row QuestionTitle"
+         [ngClass]="{'wrongAnswer': questionAttempt.Grade < questionAttempt.QuizQuestion.Grade}">
+      <h2>Question {{i + 1}}</h2>
+      <div class="gradeDiv">
+        <mat-form-field appearance="standard" class="matFormFieldGrade">
+          <input matInput type="number" [(ngModel)]="questionAttempt.Grade" class="inputGrade">
+        </mat-form-field>
+        <h2>{{'/' + questionAttempt.QuizQuestion.Grade.toString()}} Points </h2>
+      </div>
+
     </div>
+    <question-result-header #QuestionResult class="questionResultComponent row" [questionAttempt]="questionAttempt">
+    </question-result-header>
+    <hr>
+  </div>
 
-    <div *ngFor="let questionAttempt of quizAttempt.QuestionsAttempts; let i = index" class="questionContainer">
-        <div class="row QuestionTitle"
-            [ngClass]="{'wrongAnswer': questionAttempt.Grade != questionAttempt.QuizQuestion.Grade}">
-            <h2 style="width: fit-content;margin-top: auto;">Question {{i+1}}</h2>
-            <div class="gradeDiv">
-                <mat-form-field appearance="standard" class="matFormFieldGrade">
-                    <input matInput type="number" [(ngModel)]="questionAttempt.Grade" class="inputGrade">
-                </mat-form-field>
-                <h2>{{'/' + questionAttempt.QuizQuestion.Grade.toString()}} Points </h2>
-            </div>
-
-        </div>
-        <question-result-header #QuestionResult class="questionResultComponent row" [questionAttempt]="questionAttempt">
-        </question-result-header>
-        <hr style="background-color: #474747; margin: 40px 0;padding: 0;">
-    </div>
-
-    <div class="container-fluid bottomRow1" style="text-align: center;">
-        <button mat-flat-button class="large red" [routerLink]="'../../grades/'+ quizAttempt.QuizId">Cancel</button>
-        <button mat-flat-button class="large green" (click)="updateQuizGrade()">Update Grade</button>
-    </div>
+  <div class="container-fluid bottomRow1">
+    <button mat-flat-button class="large red" [routerLink]="'../../grades/'+ quizAttempt.QuizId">Cancel</button>
+    <button mat-flat-button class="large green" (click)="updateQuizGrade()">Update Grade</button>
+  </div>
 
 </div>

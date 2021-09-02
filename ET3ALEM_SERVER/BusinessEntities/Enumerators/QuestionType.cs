@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BusinessEntities.Enumerators
+﻿namespace BusinessEntities.Enumerators
 {
-    public enum QuestionType : int
+    public enum QuestionType
     {
         TrueFalse,
         MCQ,

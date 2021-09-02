@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Newtonsoft.Json;
 
 namespace BusinessEntities.Models
 {

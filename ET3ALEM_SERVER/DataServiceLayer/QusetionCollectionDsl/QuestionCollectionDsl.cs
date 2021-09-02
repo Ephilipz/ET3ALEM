@@ -1,11 +1,9 @@
-﻿using BusinessEntities.Models;
-using DataAccessLayer;
-using DataServiceLayer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using BusinessEntities.Models;
+using DataAccessLayer;
 
 namespace DataServiceLayer
 {
@@ -43,17 +41,15 @@ namespace DataServiceLayer
             var collection = await _IQuestionCollectionDal.GetQuestionCollection(id, updatedCollection.UserId);
             collection.Name = updatedCollection.Name;
             collection.Questions = updatedCollection.Questions;
-            collection.Questions.OfType<MultipleChoiceQuestion>().ToList().ForEach(mcq => mcq.Choices.ForEach(choice=>choice.Id = 0));
+            collection.Questions.OfType<MultipleChoiceQuestion>().ToList()
+                .ForEach(mcq => mcq.Choices.ForEach(choice => choice.Id = 0));
             await _IQuestionCollectionDal.PutQuestionCollection(collection);
         }
 
         public async Task<QuestionCollection> DeleteQuestionCollection(int id)
         {
-            QuestionCollection collection = await _IQuestionCollectionDal.DeleteQuestionCollection(id);
-            foreach(Question question in collection.Questions)
-            {
-                await _IQuestionDsl.DeleteQuestion(question.Id);
-            }
+            var collection = await _IQuestionCollectionDal.DeleteQuestionCollection(id);
+            foreach (var question in collection.Questions) await _IQuestionDsl.DeleteQuestion(question.Id);
             return collection;
         }
 

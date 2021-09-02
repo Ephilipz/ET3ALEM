@@ -21,11 +21,11 @@ table {
   justify-content: flex-end;
 }
 
-.title {
+/* .title {
   font-size: 4em;
   font-weight: 900;
   text-align: center;
-}
+} */
 
 mat-form-field {
   width: 15vw;

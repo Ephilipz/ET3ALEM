@@ -19,7 +19,7 @@ export class Quiz {
     AllowedAttempts: number;
     UnlimitedAttempts: boolean;
     ShowGrade: boolean;
-    AutoGrade:boolean;
+    AutoGrade: boolean;
     TotalGrade: number;
     ShuffleQuestions: boolean;
     IncludeAllQuestions: boolean;
@@ -62,9 +62,9 @@ export class Quiz {
         this.AllowedAttempts = AllowedAttempts;
         this.UnlimitedAttempts = UnlimitedAttempts;
         this.ShowGrade = ShowGrade,
-        this.AutoGrade = AutoGrade;
+            this.AutoGrade = AutoGrade;
         this.ShuffleQuestions = ShuffleQuestions;
-        this.IncludeAllQuestions = IncludeAllQuestions;
+        this.IncludeAllQuestions = IncludeAllQuestions || IncludedQuestionsCount == this.QuizQuestions?.length;
         this.IncludedQuestionsCount = IncludedQuestionsCount;
     }
 
@@ -94,9 +94,8 @@ export class Quiz {
         this.AllowedAttempts = AllowedAttempts;
         this.UnlimitedAttempts = UnlimitedAttempts;
         this.ShowGrade = ShowGrade,
-        this.AutoGrade = AutoGrade;
+            this.AutoGrade = AutoGrade;
         this.ShuffleQuestions = ShuffleQuestions;
-        this.IncludeAllQuestions = IncludeAllQuestions;
-        this.IncludedQuestionsCount = IncludedQuestionsCount ? IncludedQuestionsCount : QuizQuestions.length;
+        this.IncludeAllQuestions = IncludeAllQuestions || IncludedQuestionsCount == this.QuizQuestions?.length;;
     }
 }

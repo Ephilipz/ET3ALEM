@@ -133,7 +133,7 @@
         </mat-expansion-panel>
 
         <!-- Question Settings -->
-        <mat-expansion-panel>
+        <mat-expansion-panel *ngIf="questions.length > 1">
             <mat-expansion-panel-header>
                 <mat-panel-title class="boldPanelTitle">
                     Question Settings
@@ -162,7 +162,7 @@
                                     <mat-error style="font-size: smaller;">{{getControlErrors(includedQuestionsCount, 'count')}}</mat-error>
                             </mat-form-field>
                             <span>only {{getIncludeQuestionsCountText()}} out of {{questions.length}} questions will be
-                                randomly picked for each attempt</span>
+                                included for each quiz</span>
                         </div>
 
                     </div>

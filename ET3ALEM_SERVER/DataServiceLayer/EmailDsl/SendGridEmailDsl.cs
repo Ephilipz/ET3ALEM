@@ -1,11 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataServiceLayer
 {
@@ -15,6 +11,7 @@ namespace DataServiceLayer
         private readonly string ApiKey;
         private readonly string EmailFrom;
         private readonly string NameFrom;
+
         public SendGridEmailDsl(IConfiguration IConfiguration)
         {
             _IConfiguration = IConfiguration;
@@ -23,7 +20,8 @@ namespace DataServiceLayer
             NameFrom = _IConfiguration.GetSection("EmailConfiguration").GetValue<string>("User");
         }
 
-        public Task SendEmail(string subject, string plainTextContent, string htmlContent, string emailTo, string nameTo = null, string emailFrom = null, string nameFrom = null)
+        public Task SendEmail(string subject, string plainTextContent, string htmlContent, string emailTo,
+            string nameTo = null, string emailFrom = null, string nameFrom = null)
         {
             var Client = new SendGridClient(ApiKey);
             var from = new EmailAddress(emailFrom, nameFrom);
@@ -32,7 +30,8 @@ namespace DataServiceLayer
             return Client.SendEmailAsync(msg);
         }
 
-        public Task SendEmail(string subject, string plainTextContent, string htmlContent, string emailTo, string nameTo = null)
+        public Task SendEmail(string subject, string plainTextContent, string htmlContent, string emailTo,
+            string nameTo = null)
         {
             return SendEmail(subject, plainTextContent, htmlContent, emailTo, nameTo, EmailFrom, NameFrom);
         }

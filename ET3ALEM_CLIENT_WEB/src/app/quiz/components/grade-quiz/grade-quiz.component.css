@@ -68,3 +68,18 @@
     flex-direction: row;
     justify-content: space-around;
 }
+
+h2 {
+    width: fit-content;
+    margin-top: auto;
+}
+
+div.bottomRow1 {
+  text-align: center;
+}
+
+hr {
+  background-color: #474747;
+  margin: 40px 0;
+  padding: 0;
+}

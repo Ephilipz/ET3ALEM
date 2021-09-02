@@ -26,7 +26,6 @@ export class AddFromQuestionCollectionDialogComponent implements OnInit {
       (questionCollections) => {
         this.questionCollections = questionCollections;
         this.isLoadedInitial = true;
-        //this.loadQuestions();
       },
       (err) => this.toastr.error('Unable to load Question Collections')
     )

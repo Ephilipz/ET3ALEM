@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using BusinessEntities.Enumerators;
 using BusinessEntities.Models;
-using BusinessEntities.Enumerators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server_Application.Data
 {
@@ -15,6 +11,17 @@ namespace Server_Application.Data
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
         }
+
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<QuizQuestion> QuizQuestions { get; set; }
+        public DbSet<Quiz> Quizzes { get; set; }
+        public DbSet<Choice> Choices { get; set; }
+        public DbSet<QuestionCollection> QuestionCollections { get; set; }
+        public DbSet<QuizAttempt> QuizAttempts { get; set; }
+        public DbSet<QuestionAttempt> QuestionAttempts { get; set; }
+        public DbSet<ContactUsMessage> ContactUsMessages { get; set; }
+        public DbSet<LongAnswer> LongAnswers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Question>().ToTable("Question")
@@ -35,16 +42,16 @@ namespace Server_Application.Data
             modelBuilder.Entity<QuizAttempt>().ToTable("QuizAttempt");
 
             modelBuilder.Entity<QuestionAttempt>().ToTable("QuestionAttempt")
-               .HasDiscriminator<QuestionType>("QuestionType")
-               .HasValue<MCQAttmept>(QuestionType.MCQ)
-               .HasValue<TrueFalseAttempt>(QuestionType.TrueFalse)
-               .HasValue<ShortAnswerAttempt>(QuestionType.ShortAnswer)
-               .HasValue<LongAnswerAttempt>(QuestionType.LongAnswer);
+                .HasDiscriminator<QuestionType>("QuestionType")
+                .HasValue<MCQAttmept>(QuestionType.MCQ)
+                .HasValue<TrueFalseAttempt>(QuestionType.TrueFalse)
+                .HasValue<ShortAnswerAttempt>(QuestionType.ShortAnswer)
+                .HasValue<LongAnswerAttempt>(QuestionType.LongAnswer);
 
             modelBuilder.Entity<MCQAttmept>()
-               .HasMany(mcqAttmep => mcqAttmep.Choices)
-               .WithMany(choice => choice.MCQAttmepts)
-               .UsingEntity(j => j.ToTable("ChoiceMcqAttempt"));
+                .HasMany(mcqAttmep => mcqAttmep.Choices)
+                .WithMany(choice => choice.MCQAttmepts)
+                .UsingEntity(j => j.ToTable("ChoiceMcqAttempt"));
 
             modelBuilder.Entity<ContactUsMessage>().ToTable("ContactUsMessage");
 
@@ -52,14 +59,5 @@ namespace Server_Application.Data
 
             base.OnModelCreating(modelBuilder);
         }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<QuizQuestion> QuizQuestions { get; set; }
-        public DbSet<Quiz> Quizzes { get; set; }
-        public DbSet<Choice> Choices { get; set; }
-        public DbSet<QuestionCollection> QuestionCollections { get; set; }
-        public DbSet<QuizAttempt> QuizAttempts { get; set; }
-        public DbSet<QuestionAttempt> QuestionAttempts { get; set; }
-        public DbSet<ContactUsMessage> ContactUsMessages { get; set; }
-        public DbSet<LongAnswer> LongAnswers { get; set; }
     }
 }

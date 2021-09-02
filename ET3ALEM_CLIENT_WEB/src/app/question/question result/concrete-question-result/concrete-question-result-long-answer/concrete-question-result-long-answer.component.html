@@ -1,10 +1,10 @@
 <div class="container-fluid">
     <div class="flexRow">
         <div [innerHTML]="questionAttempt.LongAnswer.Answer" class="col"></div>
-        <div *ngIf="isCorrectAnswer && questionAttempt.IsGraded" class="sideBubble isAnswer">
+        <div *ngIf="isCorrectAnswer && questionAttempt.IsGraded" class="col sideBubble isAnswer">
             <h2>Correct</h2>
         </div>
-        <div *ngIf="!isCorrectAnswer && questionAttempt.IsGraded" class="sideBubble isWrongAnswer">
+        <div *ngIf="!isCorrectAnswer && questionAttempt.IsGraded" class="col sideBubble isWrongAnswer">
             <h2>Incorrect</h2>
         </div>
     </div>

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BusinessEntities.Models
+﻿namespace BusinessEntities.Models
 {
     public class LongAnswerAttempt : QuestionAttempt
     {
-        #nullable enable
+#nullable enable
         public LongAnswer? LongAnswer { get; set; }
+
         public LongAnswerAttempt()
         {
         }
+
         public LongAnswerAttempt(LongAnswer longAnswer)
         {
             LongAnswer = longAnswer;

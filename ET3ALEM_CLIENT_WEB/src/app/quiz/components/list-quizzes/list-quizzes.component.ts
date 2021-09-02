@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import * as moment from 'moment';
+import { Location, LocationStrategy } from '@angular/common';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-list-quizzes',
@@ -14,12 +16,16 @@ import * as moment from 'moment';
 export class ListQuizzesComponent implements OnInit, AfterViewInit {
 
   quizListDS = new MatTableDataSource();
-  displayedColumns: string[] = ['Name', 'Code', 'CreatedDate', 'Status', 'actions'];
+  displayedColumns: string[] = ['Name', 'Code', 'CreatedDate', 'Status', 'Link', 'actions'];
   isLoaded = false;
 
   @ViewChild(MatSort) matSort: MatSort;
 
-  constructor(private quizService: QuizService, private toastr: ToastrService) { }
+  constructor(private quizService: QuizService, 
+    private toastr: ToastrService, 
+    private locationStrategy: LocationStrategy, 
+    private clipboard: Clipboard, 
+    private Location: Location) { }
 
   ngOnInit(): void {
     this.loadQuizzes();
@@ -70,6 +76,13 @@ export class ListQuizzesComponent implements OnInit, AfterViewInit {
     if (isNotStarted)
       return 'Not Started'
     return 'Active';
+  }
+
+  getQuizLink(quiz: Quiz){
+    const baseURL = window.location.origin;
+    const fullURL = baseURL + '/quiz/take/' + quiz.Code;
+    this.clipboard.copy(fullURL);
+    this.toastr.info('Quiz link was copied');
   }
 
 }

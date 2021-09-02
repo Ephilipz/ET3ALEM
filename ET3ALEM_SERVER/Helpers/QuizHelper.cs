@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using HashidsNet;
+﻿using HashidsNet;
 
 namespace Helpers
 {
     public class QuizHelper
     {
         private static readonly string salt = "r8455qRJMx";
+
         public static string GetCode(int id)
         {
             var hashids = new Hashids(salt, 5, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");

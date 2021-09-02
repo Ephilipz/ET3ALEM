@@ -20,6 +20,7 @@ import { ViewQuizResultComponent } from './components/quiz-results/view-quiz-res
 import { GradeQuizComponent } from './components/grade-quiz/grade-quiz.component';
 import { QuizAttemptHistoryComponent } from './components/quiz-attempt-history/quiz-attempt-history.component';
 import { QuizGradesComponent } from './components/quiz-grades/quiz-grades.component';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { QuizGradesComponent } from './components/quiz-grades/quiz-grades.compon
     ToastrModule.forRoot(),
     SharedComponentsModule,
     DragDropModule,
+    ClipboardModule,
     QuestionModule]
 })
 export class QuizModule { }

@@ -25,6 +25,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {MatDialogModule} from '@angular/material/dialog';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 
 
@@ -54,7 +55,7 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatSortModule,
         MatProgressSpinnerModule,
         MatButtonToggleModule,
-        MatDialogModule
+        MatDialogModule,
     ],
     exports: [
         MatButtonModule,
@@ -79,8 +80,7 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatSortModule,
         MatProgressSpinnerModule,
         MatButtonToggleModule,
-        MatDialogModule
-    ],
+        MatDialogModule    ],
     providers: [
         MatDatepickerModule,
     ]

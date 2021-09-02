@@ -1,12 +1,10 @@
-﻿using BusinessEntities.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BusinessEntities.Models;
 using DataServiceLayer;
 using Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Server_Application.Controllers
 {
@@ -15,76 +13,76 @@ namespace Server_Application.Controllers
     [ApiController]
     public class QuizAttemptController : ControllerBase
     {
+        private readonly IQuizAttemptDsl _iQuizAttemptDsl;
 
-        private IQuizAttemptDsl _IQuizAttemptDsl;
-        public QuizAttemptController(IQuizAttemptDsl IQuizAttemptDsl)
+        public QuizAttemptController(IQuizAttemptDsl quizAttemptDsl)
         {
-            _IQuizAttemptDsl = IQuizAttemptDsl;
+            _iQuizAttemptDsl = quizAttemptDsl;
         }
+
         // POST: api/QuizAttempt
-        [HttpPost("{userId}"), AllowAnonymous]
+        [HttpPost("{userId}")]
+        [AllowAnonymous]
         public async Task<ActionResult<QuizAttempt>> PostQuizAttempt(string userId, QuizAttempt quizAttempt)
         {
-            await _IQuizAttemptDsl.PostQuizAttempt(userId, quizAttempt);
+            await _iQuizAttemptDsl.PostQuizAttempt(userId, quizAttempt);
             return NoContent();
         }
 
         [HttpGet]
         public async Task<ActionResult<List<QuizAttempt>>> GetQuizAttempts()
         {
-            string userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = AccountHelper.getUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 return BadRequest();
-            return await _IQuizAttemptDsl.GetQuizAttempts(userId);
+            return await _iQuizAttemptDsl.GetQuizAttempts(userId);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<QuizAttempt>> GetQuizAttempt(int id)
         {
-            return await _IQuizAttemptDsl.GetQuizAttempt(id);
+            return await _iQuizAttemptDsl.GetQuizAttempt(id);
         }
 
         [HttpGet("GetQuizAttemptWithQuiz/{id}")]
         public async Task<ActionResult<QuizAttempt>> GetQuizAttemptWithQuiz(int id)
         {
-            return await _IQuizAttemptDsl.GetQuizAttemptWithQuiz(id);
+            return await _iQuizAttemptDsl.GetQuizAttemptWithQuiz(id);
         }
 
         [HttpPut]
-        public async Task<ActionResult<QuizAttempt>> PutQuizAttempt( QuizAttempt quizAttempt)
+        public async Task<ActionResult<QuizAttempt>> PutQuizAttempt(QuizAttempt quizAttempt)
         {
-            string userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = AccountHelper.getUserId(HttpContext, User);
             if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
                 return BadRequest(quizAttempt);
             quizAttempt.UserId = userId;
-            await _IQuizAttemptDsl.InsertQuizAttempt(quizAttempt);
-            return CreatedAtAction("GetQuizAttempt", new { id = quizAttempt.Id }, quizAttempt);
+            await _iQuizAttemptDsl.InsertQuizAttempt(quizAttempt);
+            return CreatedAtAction("GetQuizAttempt", new {id = quizAttempt.Id}, quizAttempt);
         }
 
         [HttpPut("UpdateQuizAttemptGrade")]
         public async Task<ActionResult<QuizAttempt>> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
         {
-            string userId = AccountHelper.getUserId(HttpContext, User);
-            if(string.IsNullOrEmpty(userId) || userId != quizAttempt.Quiz.UserId)
-            {
-                return BadRequest();
-            }
-            await _IQuizAttemptDsl.UpdateQuizAttemptGrade(quizAttempt);
+            var userId = AccountHelper.getUserId(HttpContext, User);
+            if (string.IsNullOrEmpty(userId) || userId != quizAttempt.Quiz.UserId) return BadRequest();
+            await _iQuizAttemptDsl.UpdateQuizAttemptGrade(quizAttempt);
             return NoContent();
         }
 
         [HttpGet("GetUserQuizAttemptsForQuiz/{quizId}")]
         public async Task<ActionResult<List<QuizAttempt>>> GetUserQuizAttemptsForQuiz(int quizId)
         {
-            string userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = AccountHelper.getUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 return BadRequest(quizId);
-            return await _IQuizAttemptDsl.GetUserQuizAttemptsForQuiz(quizId, userId);
-        } 
+            return await _iQuizAttemptDsl.GetUserQuizAttemptsForQuiz(quizId, userId);
+        }
+
         [HttpGet("GetAllQuizAttemptsForQuiz/{quizId}")]
         public async Task<ActionResult<List<QuizAttempt>>> GetAllQuizAttemptsForQuiz(int quizId)
         {
-            return await _IQuizAttemptDsl.GetAllQuizAttemptsForQuiz(quizId);
+            return await _iQuizAttemptDsl.GetAllQuizAttemptsForQuiz(quizId);
         }
     }
 }

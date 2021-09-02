@@ -1,16 +1,14 @@
-﻿using BusinessEntities.Models;
-using DataAccessLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BusinessEntities.Models;
+using DataAccessLayer;
 
 namespace DataServiceLayer
 {
     public class ContactUsDsl : IContactUsDsl
     {
         private readonly IContactUsDal _IContactUsDal;
+
         public ContactUsDsl(IContactUsDal IContactUsDal)
         {
             _IContactUsDal = IContactUsDal;

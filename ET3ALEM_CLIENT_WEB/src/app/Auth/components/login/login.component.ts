@@ -31,10 +31,11 @@ export class LoginComponent extends ExtraFormOptions implements OnInit {
     this.isLoading = true;
     this.authService.login(email, password).subscribe(
       res => {
-        if(res){
+        this.isLoading = false;
+        if (res) {
           this.router.navigate(['/quiz']);
         }
-      }
+      },
     )
   }
 

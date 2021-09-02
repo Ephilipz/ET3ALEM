@@ -1,18 +1,17 @@
-﻿using BusinessEntities.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BusinessEntities.Models;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
 using Server_Application.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
     public class QuizDal : IQuizDal
     {
         private readonly ApplicationContext _context;
+
         public QuizDal(ApplicationContext context)
         {
             _context = context;
@@ -33,17 +32,17 @@ namespace DataAccessLayer
 
         public async Task<Quiz> GetQuiz(int quizId)
         {
-            Quiz quiz = await _context.Quizzes.Where(q => q.Id == quizId)
+            var quiz = await _context.Quizzes.Where(q => q.Id == quizId)
                 .Include(quiz => quiz.QuizQuestions)
                 .ThenInclude(quizQuestion => quizQuestion.Question)
-                .ThenInclude(question => ((MultipleChoiceQuestion)question).Choices).AsNoTracking().FirstAsync();
+                .ThenInclude(question => ((MultipleChoiceQuestion) question).Choices).AsNoTracking().FirstAsync();
 
             return quiz;
         }
 
         public async Task<string> GetQuizTitleFromCode(string code)
         {
-            Quiz quiz = await _context.Quizzes.FirstAsync(q => q.Code.ToUpper() == code.ToUpper());
+            var quiz = await _context.Quizzes.FirstAsync(q => q.Code.ToUpper() == code.ToUpper());
             if (quiz != null)
                 return quiz.Name;
             return null;
@@ -56,7 +55,8 @@ namespace DataAccessLayer
 
         public async Task<IEnumerable<Quiz>> GetQuizzes(string userId)
         {
-            return await _context.Quizzes.Where(quiz => string.Equals(userId, quiz.UserId)).OrderByDescending(quiz => quiz.CreatedDate).AsNoTracking().ToListAsync();
+            return await _context.Quizzes.Where(quiz => string.Equals(userId, quiz.UserId))
+                .OrderByDescending(quiz => quiz.CreatedDate).AsNoTracking().ToListAsync();
         }
 
         public async Task<Quiz> InsertQuiz(Quiz quiz)
@@ -72,8 +72,7 @@ namespace DataAccessLayer
 
         public async Task PutQuiz(int id, Quiz quiz)
         {
-            foreach (QuizQuestion quizQuestion in quiz.QuizQuestions)
-            {
+            foreach (var quizQuestion in quiz.QuizQuestions)
                 if (quizQuestion.Id == 0)
                 {
                     await _context.QuizQuestions.AddAsync(quizQuestion);
@@ -84,8 +83,10 @@ namespace DataAccessLayer
                     _context.QuizQuestions.Remove(quizQuestion);
                 }
                 else
+                {
                     _context.Entry(quizQuestion).State = EntityState.Modified;
-            }
+                }
+
             quiz.TotalGrade = quiz.QuizQuestions.Sum(question => question.Grade);
             _context.Entry(quiz).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -93,15 +94,16 @@ namespace DataAccessLayer
 
         public Task<Quiz> GetBasicQuizByCode(string code)
         {
-            return _context.Quizzes.Where(q => q.Code.ToLower() == code.ToLower()).Include(q => q.QuizQuestions).AsNoTracking().FirstAsync();
+            return _context.Quizzes.Where(q => q.Code.ToLower() == code.ToLower()).Include(q => q.QuizQuestions)
+                .AsNoTracking().FirstAsync();
         }
 
         public Task<Quiz> GetFullQuizByCode(string code)
         {
-            int? id = _context.Quizzes.First(q => q.Code.ToLower() == code)?.Id;
+            var id = _context.Quizzes.First(q => q.Code.ToLower() == code)?.Id;
             if (id == null)
                 return null;
-            return GetQuiz((int)id);
+            return GetQuiz((int) id);
         }
     }
 }

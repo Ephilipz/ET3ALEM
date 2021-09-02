@@ -29,4 +29,5 @@ export class Helper {
     static getProperty(obj, path) {
         return path.split('.').reduce((o, p) => o && o[p], obj);
     }
+
 }
