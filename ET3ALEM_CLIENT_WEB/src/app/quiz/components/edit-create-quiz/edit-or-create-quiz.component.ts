@@ -13,7 +13,7 @@ import { Question } from 'src/app/question/Models/question.js';
 import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
 import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
 import { QuizQuestion } from '../../Model/quizQuestion.js';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper.js';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper.js';
 import { plainToClass } from 'class-transformer';
 import { isUnionTypeNode } from 'typescript';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -93,8 +93,8 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.durationHours.setValue(Math.floor(this.currentQuiz.DurationSeconds / 3600));
     this.durationMinutes.setValue(this.currentQuiz.DurationSeconds % 3600 / 60);
     this.unlimitedTime.setValue(this.currentQuiz.UnlimitedTime);
-    this.dueStart.setValue(Helper.getLocalDateFromUTC(this.currentQuiz.StartDate));
-    this.dueEnd.setValue(Helper.getLocalDateFromUTC(this.currentQuiz.EndDate));
+    this.dueStart.setValue(GeneralHelper.getLocalDateFromUTC(this.currentQuiz.StartDate));
+    this.dueEnd.setValue(GeneralHelper.getLocalDateFromUTC(this.currentQuiz.EndDate));
     this.noDueDate.setValue(this.currentQuiz.NoDueDate);
     this.randomOrderQuestions.setValue(this.currentQuiz.ShuffleQuestions);
     this.allowedAttempts.setValue(this.currentQuiz.AllowedAttempts);
@@ -131,7 +131,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   }
 
   addQuestion() {
-    this.questions.push(new MultipleChoiceQuestion(Helper.randomInteger(0, 100) * -1));
+    this.questions.push(new MultipleChoiceQuestion(GeneralHelper.randomInteger(0, 100) * -1));
     this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length)]);
     this.includedQuestionsCount.updateValueAndValidity();
   }
@@ -183,7 +183,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.questions[event.previousIndex] = questionComponentsArray[event.previousIndex].getQuestion();
     this.questions[event.currentIndex] = questionComponentsArray[event.currentIndex].getQuestion();
     moveItemInArray(this.questions, event.previousIndex, event.currentIndex);
-    const temp = Helper.deepCopy(this.questions);
+    const temp = GeneralHelper.deepCopy(this.questions);
     this.questions = null;
     this.questions = temp;
   }
@@ -224,14 +224,14 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       quizQuestions.push(new QuizQuestion(question, grade, 0, i));
     }));
 
-    this.currentQuiz = new Quiz(0, '', 
-    this.quizTitle.value, this.quizInstructions.value, 
-    (this.durationHours.value * 3600 + this.durationMinutes.value * 60), 
-    this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), 
-    Helper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(), 
-    this.noDueDate.value, quizQuestions, this.allowedAttempts.value, 
-    this.unlimitedAttempts.value, this.showGrade.value, 
-    this.autoGrade.value, this.randomOrderQuestions.value, 
+    this.currentQuiz = new Quiz(0, '',
+    this.quizTitle.value, this.quizInstructions.value,
+    (this.durationHours.value * 3600 + this.durationMinutes.value * 60),
+    this.unlimitedTime.value, GeneralHelper.getUTCFromLocal(this.dueStart.value),
+    GeneralHelper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(),
+    this.noDueDate.value, quizQuestions, this.allowedAttempts.value,
+    this.unlimitedAttempts.value, this.showGrade.value,
+    this.autoGrade.value, this.randomOrderQuestions.value,
     this.includeAllQuestions.value, this.includedQuestionsCount.value);
 
     this.quizService.createQuiz(this.currentQuiz).subscribe(
@@ -253,7 +253,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
     await Promise.all(this.createQuestionComponents.map(async (component, i) => {
       let question = await component.saveQuestion(this.questions[i].Id > 0 ? mode.edit : mode.create);
-      this.questions[i] = Helper.deepCopy(question);
+      this.questions[i] = GeneralHelper.deepCopy(question);
       let grade = component.getGrade();
 
       //check if question already existed in quiz questions
@@ -272,7 +272,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       }
     }));
 
-    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, Helper.getUTCFromLocal(this.dueStart.value), Helper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
+    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, GeneralHelper.getUTCFromLocal(this.dueStart.value), GeneralHelper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
 
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
       () => {

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -75,7 +75,7 @@ export class RichTextEditorComponent implements OnInit {
 
         formData = new FormData();
 
-        if (Helper.BtoMB(blobInfo.blob().size) > 2) {
+        if (GeneralHelper.BtoMB(blobInfo.blob().size) > 2) {
           failure('file cannot be larger than 2 mb');
           return;
         }

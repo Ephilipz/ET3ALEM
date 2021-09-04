@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { plainToClass } from 'class-transformer';
 import { ToastrService } from 'ngx-toastr';
 import { ShortAnswerQuestion } from 'src/app/question/Models/short-answer-question';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
 import { AC_ConcreteEditQuestion } from '../ac-concrete-question';
 
 @Component({
@@ -16,7 +16,7 @@ export class ConcreteEditQuestionShortAnswerComponent extends AC_ConcreteEditQue
   possibleAnswers: Array<{ Id: number, value: string }> = [];
 
   //used to keep track of the generated ids so no ids are the same
-  private idsStart: number = Helper.randomInteger(0, 100);
+  private idsStart: number = GeneralHelper.randomInteger(0, 100);
 
   constructor(private toastrService: ToastrService) {
     super();

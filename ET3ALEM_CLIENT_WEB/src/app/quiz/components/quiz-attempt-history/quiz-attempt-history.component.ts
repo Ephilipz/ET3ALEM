@@ -2,9 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
 import { QuizAttempt } from '../../Model/quiz-attempt';
 import { QuizAttemptService } from '../../services/quiz-attempt.service';
+import {QuizGradingHelper} from "../../../Shared/Classes/helpers/quiz-grading-helper";
 
 @Component({
   selector: 'app-quiz-attempt-history',
@@ -25,7 +26,7 @@ export class QuizAttemptHistoryComponent implements OnInit {
     this.quizAttemptService.getQuizAttemptsForUser().subscribe(
       (res: any) => {
         this.quizAttemptListDS.data = res;
-        this.quizAttemptListDS.sortingDataAccessor = Helper.getProperty;
+        this.quizAttemptListDS.sortingDataAccessor = GeneralHelper.getProperty;
         this.quizAttemptListDS.sort = this.matSort;
         this.isLoaded = true;
       },
@@ -36,8 +37,8 @@ export class QuizAttemptHistoryComponent implements OnInit {
     );
   }
 
-  getGrade(attempt: QuizAttempt) {
-    return attempt.IsGraded ? (attempt.Grade / attempt.Quiz.TotalGrade * 100).toFixed(2) + '%' : 'Not Graded Yet';
+  getGrade(attempt:QuizAttempt){
+    return QuizGradingHelper.getGradeAsPercentage(attempt);
   }
 
 }

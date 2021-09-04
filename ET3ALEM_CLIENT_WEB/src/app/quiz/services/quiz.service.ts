@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Quiz } from '../Model/quiz';
-import { environment } from 'src/environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Quiz} from '../Model/quiz';
+import {environment} from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,8 @@ export class QuizService {
 
   private baseRoute = environment.baseUrl + '/api/Quiz';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   createQuiz(quiz: Quiz) {
     return this.http.post(this.baseRoute, quiz);
@@ -43,6 +44,10 @@ export class QuizService {
         'id': id.toString()
       }
     });
+  }
+
+  getUngradedQuizzes() {
+    return this.http.get<Array<Quiz>>(this.baseRoute + '/GetUngradedQuizzes');
   }
 
   getFullQuizFromCode(code: string) {

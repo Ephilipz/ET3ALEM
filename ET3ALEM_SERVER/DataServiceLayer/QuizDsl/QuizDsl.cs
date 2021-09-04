@@ -8,78 +8,85 @@ namespace DataServiceLayer
 {
     public class QuizDsl : IQuizDsl
     {
-        private readonly IQuestionDsl _IQuestionDsl;
-        private readonly IQuizAttemptDal _IQuizAttemptDal;
-        private readonly IQuizDal _IQuizDal;
+        private readonly IQuestionDsl _iQuestionDsl;
+        private readonly IQuizDal _iQuizDal;
 
-        public QuizDsl(IQuizDal IQuizDal, IQuestionDsl IQuestionDsl, IQuizAttemptDal IQuizAttemptDal)
+        public QuizDsl(IQuizDal quizDal, IQuestionDsl questionDsl, IQuizAttemptDal quizAttemptDal)
         {
-            _IQuizDal = IQuizDal;
-            _IQuestionDsl = IQuestionDsl;
-            _IQuizAttemptDal = IQuizAttemptDal;
+            _iQuizDal = quizDal;
+            _iQuestionDsl = questionDsl;
         }
 
         public Task<Quiz> GetQuiz(int quizId)
         {
-            return _IQuizDal.GetQuiz(quizId);
+            return _iQuizDal.GetQuiz(quizId);
         }
 
         public Task<string> GetQuizTitleFromCode(string code)
         {
-            return _IQuizDal.GetQuizTitleFromCode(code);
+            return _iQuizDal.GetQuizTitleFromCode(code);
         }
 
         public Task<Quiz> GetSimpleQuiz(int quizId)
         {
-            return _IQuizDal.GetSimpleQuiz(quizId);
+            return _iQuizDal.GetSimpleQuiz(quizId);
         }
 
-        public Task<IEnumerable<Quiz>> GetQuizzes(string userId)
+        public async Task<List<Quiz>> GetQuizzes(string userId)
         {
-            return _IQuizDal.GetQuizzes(userId);
+            return await _iQuizDal.GetQuizzes(userId);
         }
 
-        public Task<Quiz> InsertQuiz(Quiz quiz)
+        public async Task<Quiz> InsertQuiz(Quiz quiz)
         {
             foreach (var quizQuestion in quiz.QuizQuestions)
                 if (quizQuestion.QuestionId <= 0)
-                    quizQuestion.QuestionId = _IQuestionDsl.InsertQuestion(quizQuestion.Question).Id;
-            return _IQuizDal.InsertQuiz(quiz);
+                {
+                    Question insertedQuestion = await _iQuestionDsl.InsertQuestion(quizQuestion.Question);
+                    quizQuestion.QuestionId = insertedQuestion.Id;
+                }
+
+            return await _iQuizDal.InsertQuiz(quiz);
         }
 
         public async Task<Quiz> DeleteQuiz(int id)
         {
             //remove quiz
-            var quiz = await _IQuizDal.DeleteQuiz(id);
+            var quiz = await _iQuizDal.DeleteQuiz(id);
 
             if (quiz != null)
                 //remove questions
                 foreach (var questionId in quiz.QuizQuestions.Select(quizQuestion => quizQuestion.QuestionId))
-                    await _IQuestionDsl.DeleteQuestion(questionId);
+                    await _iQuestionDsl.DeleteQuestion(questionId);
 
             return quiz;
         }
 
-        public async Task PutQuiz(int id, Quiz quiz)
+        public async Task PutQuiz(Quiz quiz)
         {
             foreach (var Qquestion in quiz.QuizQuestions)
                 if (Qquestion.Question.Id == 0)
-                    Qquestion.QuestionId = _IQuestionDsl.InsertQuestion(Qquestion.Question).Id;
+                    Qquestion.QuestionId = _iQuestionDsl.InsertQuestion(Qquestion.Question).Id;
                 else if (Qquestion.Question.Id < 0)
-                    await _IQuestionDsl.DeleteQuestion(Qquestion.Question.Id);
+                    await _iQuestionDsl.DeleteQuestion(Qquestion.Question.Id);
                 else
-                    await _IQuestionDsl.PutQuestion(Qquestion.Question);
-            await _IQuizDal.PutQuiz(id, quiz);
+                    await _iQuestionDsl.PutQuestion(Qquestion.Question);
+            await _iQuizDal.PutQuiz(quiz);
         }
 
-        public Task<Quiz> GetBasicQuizByCode(string code)
+        public async Task<List<Quiz>> GetUngradedQuizzesForUser(string userId)
         {
-            return _IQuizDal.GetBasicQuizByCode(code);
+            return await _iQuizDal.GetUngradedQuizzesForUser(userId);
         }
 
-        public Task<Quiz> GetFullQuizByCode(string code)
+        public async Task<Quiz> GetBasicQuizByCode(string code)
         {
-            return _IQuizDal.GetFullQuizByCode(code);
+            return await _iQuizDal.GetBasicQuizByCode(code);
+        }
+
+        public async Task<Quiz> GetFullQuizByCode(string code)
+        {
+            return await _iQuizDal.GetFullQuizByCode(code);
         }
     }
 }

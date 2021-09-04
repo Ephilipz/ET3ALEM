@@ -21,6 +21,7 @@ import { GradeQuizComponent } from './components/grade-quiz/grade-quiz.component
 import { QuizAttemptHistoryComponent } from './components/quiz-attempt-history/quiz-attempt-history.component';
 import { QuizGradesComponent } from './components/quiz-grades/quiz-grades.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { UngradedQuizzesComponent } from './components/ungraded-quizzes/ungraded-quizzes.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     ViewQuizResultComponent,
     GradeQuizComponent,
     QuizAttemptHistoryComponent,
-    QuizGradesComponent
+    QuizGradesComponent,
+    UngradedQuizzesComponent
   ],
   imports: [
     CommonModule,

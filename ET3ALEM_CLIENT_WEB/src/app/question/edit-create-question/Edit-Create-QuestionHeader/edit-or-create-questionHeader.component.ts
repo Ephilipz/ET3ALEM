@@ -11,7 +11,7 @@ import { mode } from 'src/app/quiz/components/edit-create-quiz/edit-or-create-qu
 import { QuestionTypeResolver } from '../../shared/question-type-resolver';
 import { AC_ConcreteEditQuestion } from '../ConcreteQuestions/ac-concrete-question';
 import { DynamicComponentHostDirective } from '../../../Shared/directives/dynamic-component-host.directive';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
 
 @Component({
   selector: 'app-create-question',
@@ -49,7 +49,7 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
   showCommentBox: boolean = false;
 
   ngOnInit(): void {
-    this.question = Helper.deepCopy(this.inputQuestion);
+    this.question = GeneralHelper.deepCopy(this.inputQuestion);
     this.questionContentFC.setValue(this.question.Body);
     this.grade.setValue(this.inputGrade);
     this.commentFC.setValue(this.question.Comment);

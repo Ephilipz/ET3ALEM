@@ -53,10 +53,13 @@ namespace DataAccessLayer
             return await _context.FindAsync<Quiz>(quizId);
         }
 
-        public async Task<IEnumerable<Quiz>> GetQuizzes(string userId)
+        public async Task<List<Quiz>> GetQuizzes(string userId)
         {
-            return await _context.Quizzes.Where(quiz => string.Equals(userId, quiz.UserId))
-                .OrderByDescending(quiz => quiz.CreatedDate).AsNoTracking().ToListAsync();
+            return await _context.Quizzes
+                .Where(quiz => string.Equals(userId, quiz.UserId))
+                .OrderByDescending(quiz => quiz.CreatedDate)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Quiz> InsertQuiz(Quiz quiz)
@@ -70,7 +73,7 @@ namespace DataAccessLayer
             return quiz;
         }
 
-        public async Task PutQuiz(int id, Quiz quiz)
+        public async Task PutQuiz(Quiz quiz)
         {
             foreach (var quizQuestion in quiz.QuizQuestions)
                 if (quizQuestion.Id == 0)
@@ -94,7 +97,9 @@ namespace DataAccessLayer
 
         public Task<Quiz> GetBasicQuizByCode(string code)
         {
-            return _context.Quizzes.Where(q => q.Code.ToLower() == code.ToLower()).Include(q => q.QuizQuestions)
+            return _context.Quizzes
+                .Where(q => q.Code.ToLower() == code.ToLower())
+                .Include(q => q.QuizQuestions)
                 .AsNoTracking().FirstAsync();
         }
 
@@ -104,6 +109,14 @@ namespace DataAccessLayer
             if (id == null)
                 return null;
             return GetQuiz((int) id);
+        }
+
+        public async Task<List<Quiz>> GetUngradedQuizzesForUser(string userId)
+        {
+            return await _context.Quizzes
+                .Where(quiz => quiz.UserId == userId && quiz.QuizAttempts.Exists(qA => !qA.IsGraded))
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

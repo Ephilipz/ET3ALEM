@@ -1,11 +1,11 @@
-import { Helper } from "src/app/Shared/Classes/helpers/Helper";
+import { GeneralHelper } from "src/app/Shared/Classes/helpers/GeneralHelper";
 import { Question } from "./question";
 import { QuestionType } from "./question-type.enum";
 
 export class ShortAnswerQuestion extends Question{
     PossibleAnswers: string;
     CaseSensitive: boolean;
-    
+
     constructor(Id: number = 0, Body: string = '', Comment: string = null, PossibleAnswers: string = null, CaseSensitive: boolean = false){
         super(Id,Body, Comment);
         this.PossibleAnswers = PossibleAnswers;
@@ -14,7 +14,7 @@ export class ShortAnswerQuestion extends Question{
     }
 
     public duplicateQuestionAnswer(newQuestion: ShortAnswerQuestion){
-        newQuestion.PossibleAnswers = Helper.deepCopy(this.PossibleAnswers);
+        newQuestion.PossibleAnswers = GeneralHelper.deepCopy(this.PossibleAnswers);
     }
 
 }

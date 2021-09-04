@@ -2,7 +2,7 @@ import { Question } from './question';
 import { QuestionType } from './question-type.enum';
 import { Choice } from './choice';
 import { Type } from 'class-transformer';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
 
 export class MultipleChoiceQuestion extends Question {
     @Type(() => Choice)
@@ -18,7 +18,7 @@ export class MultipleChoiceQuestion extends Question {
     }
 
     protected duplicateQuestionAnswer(newQuestion: MultipleChoiceQuestion) {
-        newQuestion.Choices.forEach(choice => choice.Id = Helper.randomInteger(0, 100) * -1);
+        newQuestion.Choices.forEach(choice => choice.Id = GeneralHelper.randomInteger(0, 100) * -1);
     }
 }
 

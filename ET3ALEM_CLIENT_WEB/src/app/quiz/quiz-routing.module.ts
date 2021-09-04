@@ -10,6 +10,7 @@ import { ViewQuizResultComponent } from './components/quiz-results/view-quiz-res
 import { GradeQuizComponent } from './components/grade-quiz/grade-quiz.component';
 import { QuizGradesComponent } from './components/quiz-grades/quiz-grades.component';
 import { QuizAttemptHistoryComponent } from './components/quiz-attempt-history/quiz-attempt-history.component';
+import {UngradedQuizzesComponent} from "./components/ungraded-quizzes/ungraded-quizzes.component";
 
 
 const routes: Routes = [
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'viewAttempt/:id', component: ViewQuizResultComponent },
   { path: 'gradeAttempt/:id', component: GradeQuizComponent },
   { path: 'history', component: QuizAttemptHistoryComponent },
+  { path: 'grade', component: UngradedQuizzesComponent },
 ];
 
 @NgModule({

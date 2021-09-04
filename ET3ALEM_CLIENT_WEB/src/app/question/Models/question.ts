@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
 import { QuestionType } from './question-type.enum';
 
 export abstract class Question {
@@ -16,8 +16,8 @@ export abstract class Question {
     }
 
     duplicateQuestion(): Question {
-        const newQuestion: Question = Helper.deepCopy(this);
-        newQuestion.Id = Helper.randomInteger(0, 100) * -1;
+        const newQuestion: Question = GeneralHelper.deepCopy(this);
+        newQuestion.Id = GeneralHelper.randomInteger(0, 100) * -1;
         this.duplicateQuestionAnswer(newQuestion);
         return newQuestion;
     }

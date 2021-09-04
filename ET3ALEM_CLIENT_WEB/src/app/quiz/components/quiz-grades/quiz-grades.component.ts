@@ -1,13 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
-import { plainToClass } from 'class-transformer';
-import { ToastrService } from 'ngx-toastr';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper';
-import { Quiz } from '../../Model/quiz';
-import { QuizAttempt } from '../../Model/quiz-attempt';
-import { QuizAttemptService } from '../../services/quiz-attempt.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {ActivatedRoute} from '@angular/router';
+import {plainToClass} from 'class-transformer';
+import {ToastrService} from 'ngx-toastr';
+import {GeneralHelper} from 'src/app/Shared/Classes/helpers/GeneralHelper';
+import {Quiz} from '../../Model/quiz';
+import {QuizAttempt} from '../../Model/quiz-attempt';
+import {QuizAttemptService} from '../../services/quiz-attempt.service';
+import {QuizGradingHelper} from "../../../Shared/Classes/helpers/quiz-grading-helper";
 
 @Component({
   selector: 'app-quiz-grades',
@@ -18,41 +19,62 @@ export class QuizGradesComponent implements OnInit {
 
   displayedColumns: string[] = ['User.FullName', 'Grade', 'StartTime', 'GradeButton'];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
-  
+
   quiz: Quiz = null;
   quizAttemptListDS = new MatTableDataSource<QuizAttempt>();
   isLoaded: boolean = false;
 
-  constructor(private route: ActivatedRoute, private quizAttemptService: QuizAttemptService, private toastr: ToastrService) { }
+  constructor(private route: ActivatedRoute, private quizAttemptService: QuizAttemptService, private toastr: ToastrService) {
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const id = params['id'];
-      this.quizAttemptService.getAllQuizAttemptsForQuiz(id).subscribe(
-        (quizAttempts) => {
-          this.quizAttemptListDS.data = plainToClass(QuizAttempt, quizAttempts);
-          this.quizAttemptListDS.sortingDataAccessor = (obj, property) => Helper.getProperty(obj, property);
-          this.quizAttemptListDS.sort = this.sort;
-          this.quiz = quizAttempts.length > 0 ? this.quizAttemptListDS.data[0].Quiz : null;
-          this.isLoaded = true;
-        },
-        (err) => {
-          this.toastr.error('unable to load quiz grades');
-          this.isLoaded = true;
-        }
-      )
+      if (id) {
+        this.getQuizAttemptsUsingId(id);
+      }
     });
   }
 
-  getAverage() {
+  private getQuizAttemptsUsingId(id) {
+    this.quizAttemptService.getAllQuizAttemptsForQuiz(id).subscribe(
+      (quizAttempts) => {
+        this.setQuizAttemptGridDataSource(quizAttempts);
+        this.quiz = quizAttempts.length > 0 ? this.quizAttemptListDS.data[0].Quiz : null;
+        this.isLoaded = true;
+      },
+      () => {
+        this.toastr.error('unable to load quiz grades');
+        this.isLoaded = true;
+      }
+    )
+  }
+
+  private setQuizAttemptGridDataSource(quizAttempts: Array<QuizAttempt>) {
+    this.quizAttemptListDS.data = plainToClass(QuizAttempt, quizAttempts);
+    this.quizAttemptListDS.sortingDataAccessor = (obj, property) => GeneralHelper.getProperty(obj, property);
+    this.quizAttemptListDS.sort = this.sort;
+  }
+
+  getAverage(): string {
     if (this.isLoaded) {
-      let totalGrades = 0;
-      this.quizAttemptListDS.data.forEach(qa => totalGrades += qa.Grade);
-      return (totalGrades / this.quizAttemptListDS.data.length / this.quiz.TotalGrade * 100).toFixed(2) + '%';
+      let {length, totalGrades} = this.getGradesSum();
+      const averageGrade = totalGrades / length;
+      const averageGradeAsPercentage = averageGrade / this.quiz.TotalGrade * 100;
+      return averageGradeAsPercentage.toFixed(2) + '%';
     }
   }
 
-  getHighestScore() {
+  private getGradesSum(): { length: number; totalGrades: number } {
+    const gradedQuizAttempts = this.quizAttemptListDS.data.filter(attempt => attempt.IsGraded);
+    const grades = gradedQuizAttempts.map(attempt => attempt.Grade);
+    let totalGrades = 0;
+    grades.forEach(grade => totalGrades += grade);
+    const length = grades.length;
+    return {length, totalGrades};
+  }
+
+  getHighestScore(): string {
     if (this.isLoaded) {
       let maxGrade = 0;
       this.quizAttemptListDS.data.forEach(qa => maxGrade = Math.max(qa.Grade, maxGrade))
@@ -61,8 +83,14 @@ export class QuizGradesComponent implements OnInit {
   }
 
   getStudentsCount(): number {
-    if (this.isLoaded)
-      return [...new Set(this.quizAttemptListDS.data.map(qa => qa.UserId))].length;
+    if (this.isLoaded) {
+      const userIds = this.quizAttemptListDS.data.map(qa => qa.UserId);
+      const uniqueUserIds = [...new Set(userIds)];
+      return uniqueUserIds.length;
+    }
   }
 
+  getGrade(attempt: QuizAttempt): string {
+    return QuizGradingHelper.getGradeAsPercentage(attempt);
+  }
 }

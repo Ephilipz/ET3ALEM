@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Question } from 'src/app/question/Models/question.js';
 import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
 import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
-import { Helper } from 'src/app/Shared/Classes/helpers/Helper.js';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper.js';
 import { plainToClass } from 'class-transformer';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { QuestionCollectionService } from '../../question-collection.service';
@@ -78,7 +78,7 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
   }
 
   addQuestion() {
-    this.questions.push(new MultipleChoiceQuestion(Helper.randomInteger(0, 100) * -1));
+    this.questions.push(new MultipleChoiceQuestion(GeneralHelper.randomInteger(0, 100) * -1));
   }
 
   deleteQuestion(question: Question) {
@@ -112,7 +112,7 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
     this.questions[event.previousIndex] = questionComponentsArray[event.previousIndex].getQuestion();
     this.questions[event.currentIndex] = questionComponentsArray[event.currentIndex].getQuestion();
     moveItemInArray(this.questions, event.previousIndex, event.currentIndex);
-    const temp = Helper.deepCopy(this.questions);
+    const temp = GeneralHelper.deepCopy(this.questions);
     this.questions = null;
     this.questions = temp;
   }
@@ -163,7 +163,7 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
       }
     );
   }
-  
+
   async validate(pageMode: mode) {
     if (pageMode === mode.edit && this.collectionName.value === this.currentCollection.Name) {
       return true;

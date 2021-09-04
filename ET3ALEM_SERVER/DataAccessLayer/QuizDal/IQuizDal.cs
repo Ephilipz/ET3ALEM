@@ -11,9 +11,10 @@ namespace DataAccessLayer
         Task<Quiz> GetBasicQuizByCode(string code);
         Task<Quiz> GetFullQuizByCode(string code);
         Task<Quiz> GetSimpleQuiz(int quizId);
-        Task<IEnumerable<Quiz>> GetQuizzes(string userId);
+        Task<List<Quiz>> GetQuizzes(string userId);
         Task<Quiz> InsertQuiz(Quiz quiz);
         Task<Quiz> DeleteQuiz(int id);
-        Task PutQuiz(int id, Quiz quiz);
+        Task PutQuiz(Quiz quiz);
+        Task<List<Quiz>> GetUngradedQuizzesForUser(string userId);
     }
 }

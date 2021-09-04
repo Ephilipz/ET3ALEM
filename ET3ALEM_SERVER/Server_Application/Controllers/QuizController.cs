@@ -21,7 +21,6 @@ namespace Server_Application.Controllers
             _iQuizDsl = quizDsl;
         }
 
-        // GET: api/Quiz/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Quiz>> GetQuiz(int id)
         {
@@ -47,7 +46,6 @@ namespace Server_Application.Controllers
             return Ok(returnedTitle);
         }
 
-        //GET: api/Quiz
         [HttpGet("GetBasicQuizByCode/{code}")]
         public async Task<ActionResult<Quiz>> GetBasicQuizByCode(string code)
         {
@@ -61,14 +59,21 @@ namespace Server_Application.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Quiz>> GetQuizzes()
+        public async Task<List<Quiz>> GetQuizzes()
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
-            var quizList = await _iQuizDsl.GetQuizzes(userId);
+            string userId = AccountHelper.getUserId(HttpContext, User);
+            List<Quiz> quizList = await _iQuizDsl.GetQuizzes(userId);
             return quizList;
         }
 
-        // POST: api/Quiz
+        [HttpGet("GetUngradedQuizzes")]
+        public async Task<List<Quiz>> GetUngradedQuizzesForUser()
+        {
+            string userId = AccountHelper.getUserId(HttpContext, User);
+            List<Quiz> ungradedQuizzes = await _iQuizDsl.GetUngradedQuizzesForUser(userId);
+            return ungradedQuizzes;
+        }
+
         [HttpPost]
         public async Task<ActionResult<Quiz>> PostQuiz(Quiz quiz)
         {
@@ -93,7 +98,7 @@ namespace Server_Application.Controllers
             if (id != quiz.Id)
                 return BadRequest();
 
-            await _iQuizDsl.PutQuiz(id, quiz);
+            await _iQuizDsl.PutQuiz(quiz);
 
             return NoContent();
         }
