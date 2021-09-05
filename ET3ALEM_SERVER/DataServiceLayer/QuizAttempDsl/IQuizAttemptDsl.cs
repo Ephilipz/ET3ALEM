@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
+using BusinessEntities.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DataServiceLayer
 {
@@ -14,5 +16,6 @@ namespace DataServiceLayer
         Task<List<QuizAttempt>> GetAllQuizAttemptsForQuiz(int quizId);
         Task<QuizAttempt> GetQuizAttemptWithQuiz(int id);
         Task<List<QuizAttempt>> GetQuizAttempts(string userId);
+        Task<ActionResult<QuizAttemptVM>> GetQuizAttemptWithQuizLight(int id);
     }
 }

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessEntities.Enumerators;
 using BusinessEntities.Models;
+using BusinessEntities.ViewModels;
 using DataAccessLayer;
 using Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DataServiceLayer
 {
@@ -128,6 +130,88 @@ namespace DataServiceLayer
                 default:
                     throw new InvalidCastException("No valid question type was provided");
             }
+        }
+
+        public async Task<ActionResult<QuizAttemptVM>> GetQuizAttemptWithQuizLight(int id)
+        {
+            var attempt = await _IQuizAttemptDal.GetQuizAttemptWithQuiz(id);
+            attempt.QuestionsAttempts = attempt.QuestionsAttempts.OrderBy(qA => qA.QuizQuestion.Sequence).ToList();
+            return GetQuizAttemptVM(attempt);
+        }
+        private QuizAttemptVM GetQuizAttemptVM(QuizAttempt attempt)
+        {
+            return new QuizAttemptVM
+            {
+                Id = attempt.Id,
+                UserId = attempt.UserId,
+                StartTime = attempt.StartTime,
+                Quiz = new QuizVM
+                {
+                    Id = attempt.Quiz.Id,
+                    Code = attempt.Quiz.Code,
+                    Name = attempt.Quiz.Name,
+                    Instructions = attempt.Quiz.Instructions,
+                    StartDate = attempt.Quiz.StartDate,
+                    EndDate = attempt.Quiz.EndDate,
+                    NoDueDate = attempt.Quiz.NoDueDate,
+                    DurationSeconds = attempt.Quiz.DurationSeconds,
+                    UnlimitedTime = attempt.Quiz.UnlimitedTime,
+                    AllowedAttempts = attempt.Quiz.AllowedAttempts,
+                    UnlimitedAttempts = attempt.Quiz.UnlimitedAttempts,
+                    ShowGrade = attempt.Quiz.ShowGrade,
+                    AutoGrade = attempt.Quiz.AutoGrade,
+                    ShuffleQuestions = attempt.Quiz.ShuffleQuestions,
+                    IncludeAllQuestions = attempt.Quiz.IncludeAllQuestions,
+                    IncludedQuestionsCount = attempt.Quiz.IncludedQuestionsCount,
+                },
+                QuestionsAttempts = attempt.QuestionsAttempts.ConvertAll(questionAttempt => new QuestionAttemptVM
+                {
+                    Id = questionAttempt.Id,
+                    LongAnswer = string.Empty,
+                    QuizQuestion = new QuizQuestionVM
+                    {
+                        Id = questionAttempt.QuizQuestion.Id,
+                        Grade = questionAttempt.QuizQuestion.Grade,
+                        Sequence = questionAttempt.QuizQuestion.Sequence,
+                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
+                    }
+                }).ToList()
+
+            };
+        }
+
+        private QuestionVM GetQuestionVM(Question question)
+        {
+            return question switch
+            {
+                TrueFalseQuestion tfQuestion => new TrueFalseQuestionVM
+                {
+                    QuestionType = question.QuestionType,
+                    Body = question.Body,
+                    Id = question.Id
+                },
+                MultipleChoiceQuestion mcq => new MultipleChoiceQuestionVM
+                {
+                    QuestionType = question.QuestionType,
+                    Body = question.Body,
+                    Id = question.Id,
+                    McqAnswerType = mcq.McqAnswerType,
+                    Choices = mcq.Choices.ConvertAll(choice => new ChoiceVM { Id = choice.Id, Body = choice.Body })
+                },
+                ShortAnswerQuestion shortAnswerQuestion => new ShortAnswerQuestionVM
+                {
+                    QuestionType = question.QuestionType,
+                    Body = question.Body,
+                    Id = question.Id
+                },
+                LongAnswerQuestion longAnswerQuestion => new LongAnswerQuestionVM
+                {
+                    QuestionType = question.QuestionType,
+                    Body = question.Body,
+                    Id = question.Id
+                },
+                _ => throw new ArgumentException("invalid question type"),
+            };
         }
     }
 }

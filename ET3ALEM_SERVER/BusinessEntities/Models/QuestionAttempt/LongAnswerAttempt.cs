@@ -20,7 +20,7 @@
         }
 
 
-        //Cannot auto grade long answer quesiton attempts so returns false for isGraded
+        //Cannot auto grade long answer question attempts so returns false for isGraded
         public override void GradeQuestion()
         {
             IsGraded = false;

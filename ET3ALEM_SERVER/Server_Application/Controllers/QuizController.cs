@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Server_Application.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class QuizController : ControllerBase

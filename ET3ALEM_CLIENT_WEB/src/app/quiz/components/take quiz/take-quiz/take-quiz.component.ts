@@ -69,7 +69,7 @@ export class TakeQuizComponent implements OnInit {
 
     //resume quiz attempt
     else {
-      this.quizAttemptService.getQuizAttemptWithQuiz(this.id).subscribe(
+      this.quizAttemptService.getQuizAttemptWithQuizLight(this.id).subscribe(
         (quizAttempt) => {
           this.quizAttempt = plainToClass(QuizAttempt, quizAttempt);
           this.quiz = plainToClass(Quiz, quizAttempt.Quiz);

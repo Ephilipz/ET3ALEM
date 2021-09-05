@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
+using BusinessEntities.ViewModels;
 using DataServiceLayer;
 using Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -8,16 +9,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Server_Application.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class QuizAttemptController : ControllerBase
     {
-        private readonly IQuizAttemptDsl _iQuizAttemptDsl;
+        private readonly IQuizAttemptDsl _IQuizAttemptDsl;
 
         public QuizAttemptController(IQuizAttemptDsl quizAttemptDsl)
         {
-            _iQuizAttemptDsl = quizAttemptDsl;
+            _IQuizAttemptDsl = quizAttemptDsl;
         }
 
         // POST: api/QuizAttempt
@@ -25,7 +26,7 @@ namespace Server_Application.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<QuizAttempt>> PostQuizAttempt(string userId, QuizAttempt quizAttempt)
         {
-            await _iQuizAttemptDsl.PostQuizAttempt(userId, quizAttempt);
+            await _IQuizAttemptDsl.PostQuizAttempt(userId, quizAttempt);
             return NoContent();
         }
 
@@ -35,19 +36,24 @@ namespace Server_Application.Controllers
             var userId = AccountHelper.getUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 return BadRequest();
-            return await _iQuizAttemptDsl.GetQuizAttempts(userId);
+            return await _IQuizAttemptDsl.GetQuizAttempts(userId);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<QuizAttempt>> GetQuizAttempt(int id)
         {
-            return await _iQuizAttemptDsl.GetQuizAttempt(id);
+            return await _IQuizAttemptDsl.GetQuizAttempt(id);
         }
 
         [HttpGet("GetQuizAttemptWithQuiz/{id}")]
         public async Task<ActionResult<QuizAttempt>> GetQuizAttemptWithQuiz(int id)
         {
-            return await _iQuizAttemptDsl.GetQuizAttemptWithQuiz(id);
+            return await _IQuizAttemptDsl.GetQuizAttemptWithQuiz(id);
+        }
+        [HttpGet("GetQuizAttemptWithQuizLight/{id}")]
+        public async Task<ActionResult<QuizAttemptVM>> GetQuizAttemptWithQuizLight(int id)
+        {
+            return await _IQuizAttemptDsl.GetQuizAttemptWithQuizLight(id);
         }
 
         [HttpPut]
@@ -57,7 +63,7 @@ namespace Server_Application.Controllers
             if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
                 return BadRequest(quizAttempt);
             quizAttempt.UserId = userId;
-            await _iQuizAttemptDsl.InsertQuizAttempt(quizAttempt);
+            await _IQuizAttemptDsl.InsertQuizAttempt(quizAttempt);
             return CreatedAtAction("GetQuizAttempt", new {id = quizAttempt.Id}, quizAttempt);
         }
 
@@ -66,7 +72,7 @@ namespace Server_Application.Controllers
         {
             var userId = AccountHelper.getUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId) || userId != quizAttempt.Quiz.UserId) return BadRequest();
-            await _iQuizAttemptDsl.UpdateQuizAttemptGrade(quizAttempt);
+            await _IQuizAttemptDsl.UpdateQuizAttemptGrade(quizAttempt);
             return NoContent();
         }
 
@@ -76,13 +82,13 @@ namespace Server_Application.Controllers
             var userId = AccountHelper.getUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 return BadRequest(quizId);
-            return await _iQuizAttemptDsl.GetUserQuizAttemptsForQuiz(quizId, userId);
+            return await _IQuizAttemptDsl.GetUserQuizAttemptsForQuiz(quizId, userId);
         }
 
         [HttpGet("GetAllQuizAttemptsForQuiz/{quizId}")]
         public async Task<ActionResult<List<QuizAttempt>>> GetAllQuizAttemptsForQuiz(int quizId)
         {
-            return await _iQuizAttemptDsl.GetAllQuizAttemptsForQuiz(quizId);
+            return await _IQuizAttemptDsl.GetAllQuizAttemptsForQuiz(quizId);
         }
     }
 }

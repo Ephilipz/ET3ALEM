@@ -11,6 +11,7 @@ import { QuizAttempt } from '../Model/quiz-attempt';
 
 export class QuizAttemptService {
 
+
   private baseRoute = environment.baseUrl + '/api/QuizAttempt';
 
   constructor(private httpClient: HttpClient,
@@ -34,6 +35,9 @@ export class QuizAttemptService {
 
   public getQuizAttemptWithQuiz(quizAttempt: number) {
     return this.httpClient.get<QuizAttempt>(this.baseRoute + `/GetQuizAttemptWithQuiz/${quizAttempt}`);
+  }
+  getQuizAttemptWithQuizLight(quizAttempt: number) {
+    return this.httpClient.get<QuizAttempt>(this.baseRoute + `/GetQuizAttemptWithQuizLight/${quizAttempt}`);
   }
 
   public updateQuizAttempt(quizAttempt: QuizAttempt) {
