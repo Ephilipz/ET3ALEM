@@ -138,6 +138,7 @@ namespace DataServiceLayer
             attempt.QuestionsAttempts = attempt.QuestionsAttempts.OrderBy(qA => qA.QuizQuestion.Sequence).ToList();
             return GetQuizAttemptVM(attempt);
         }
+
         private QuizAttemptVM GetQuizAttemptVM(QuizAttempt attempt)
         {
             return new QuizAttemptVM
@@ -164,19 +165,60 @@ namespace DataServiceLayer
                     IncludeAllQuestions = attempt.Quiz.IncludeAllQuestions,
                     IncludedQuestionsCount = attempt.Quiz.IncludedQuestionsCount,
                 },
-                QuestionsAttempts = attempt.QuestionsAttempts.ConvertAll(questionAttempt => new QuestionAttemptVM
+                QuestionsAttempts = attempt.QuestionsAttempts.ConvertAll(questionAttempt => GetQuestionAttemptVM(questionAttempt))
+            };
+        }
+
+        private QuestionAttemptVM GetQuestionAttemptVM(QuestionAttempt questoinAttempt)
+        {
+            return questoinAttempt switch
+            {
+                LongAnswerAttempt longAnswerQuestion => new LongQuestionAttemptVM
                 {
-                    Id = questionAttempt.Id,
-                    LongAnswer = string.Empty,
+                    Id = questoinAttempt.Id,
+                    LongAnswer = longAnswerQuestion.LongAnswer,
                     QuizQuestion = new QuizQuestionVM
                     {
-                        Id = questionAttempt.QuizQuestion.Id,
-                        Grade = questionAttempt.QuizQuestion.Grade,
-                        Sequence = questionAttempt.QuizQuestion.Sequence,
-                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
+                        Id = questoinAttempt.QuizQuestion.Id,
+                        Grade = questoinAttempt.QuizQuestion.Grade,
+                        Sequence = questoinAttempt.QuizQuestion.Sequence,
+                        Question = GetQuestionVM(questoinAttempt.QuizQuestion.Question)
                     }
-                }).ToList()
-
+                },
+                ShortAnswerAttempt => new QuestionAttemptVM
+                {
+                    Id = questoinAttempt.Id,
+                    QuizQuestion = new QuizQuestionVM
+                    {
+                        Id = questoinAttempt.QuizQuestion.Id,
+                        Grade = questoinAttempt.QuizQuestion.Grade,
+                        Sequence = questoinAttempt.QuizQuestion.Sequence,
+                        Question = GetQuestionVM(questoinAttempt.QuizQuestion.Question)
+                    }
+                },
+                MCQAttmept => new QuestionAttemptVM
+                {
+                    Id = questoinAttempt.Id,
+                    QuizQuestion = new QuizQuestionVM
+                    {
+                        Id = questoinAttempt.QuizQuestion.Id,
+                        Grade = questoinAttempt.QuizQuestion.Grade,
+                        Sequence = questoinAttempt.QuizQuestion.Sequence,
+                        Question = GetQuestionVM(questoinAttempt.QuizQuestion.Question)
+                    }
+                },
+                TrueFalseAttempt => new QuestionAttemptVM
+                {
+                    Id = questoinAttempt.Id,
+                    QuizQuestion = new QuizQuestionVM
+                    {
+                        Id = questoinAttempt.QuizQuestion.Id,
+                        Grade = questoinAttempt.QuizQuestion.Grade,
+                        Sequence = questoinAttempt.QuizQuestion.Sequence,
+                        Question = GetQuestionVM(questoinAttempt.QuizQuestion.Question)
+                    }
+                },
+                _ => throw new ArgumentException("invalid attempt type"),
             };
         }
 
