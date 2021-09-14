@@ -6,29 +6,30 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="Migrations\**"/>
-        <Content Remove="Migrations\**"/>
-        <EmbeddedResource Remove="Migrations\**"/>
-        <None Remove="Migrations\**"/>
+        <Compile Remove="Migrations\**" />
+        <Content Remove="Migrations\**" />
+        <EmbeddedResource Remove="Migrations\**" />
+        <None Remove="Migrations\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1"/>
-        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0"/>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BusinessEntities\BusinessEntities.csproj"/>
-        <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj"/>
-        <ProjectReference Include="..\DataServiceLayer\DataServiceLayer.csproj"/>
+        <ProjectReference Include="..\BusinessEntities\BusinessEntities.csproj" />
+        <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
+        <ProjectReference Include="..\DataServiceLayer\DataServiceLayer.csproj" />
+        <ProjectReference Include="..\ExceptionHandling\ExceptionHandling.csproj" />
     </ItemGroup>
 
     <ItemGroup>

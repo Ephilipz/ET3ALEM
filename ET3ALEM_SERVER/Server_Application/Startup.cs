@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BusinessEntities.Models;
 using DataAccessLayer;
 using DataServiceLayer;
+using ExceptionHandling;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -117,6 +118,7 @@ namespace Server_Application
             app.UseCors(AllowCORS);
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseGlobalErrorHandlerMiddleware();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
