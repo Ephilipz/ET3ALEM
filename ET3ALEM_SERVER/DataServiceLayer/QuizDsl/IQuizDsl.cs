@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
+using BusinessEntities.ViewModels;
 
 namespace DataServiceLayer
 {
@@ -15,7 +16,7 @@ namespace DataServiceLayer
         Task<Quiz> InsertQuiz(Quiz quiz);
         Task<Quiz> DeleteQuiz(int id);
         Task PutQuiz(Quiz quiz);
-        Task<List<Quiz>> GetUngradedQuizzesForUser(string userId);
+        Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser(string userId);
 
     }
 }

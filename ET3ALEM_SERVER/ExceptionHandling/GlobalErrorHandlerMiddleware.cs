@@ -25,24 +25,25 @@ namespace ExceptionHandling
             }
             catch (Exception error)
             {
-                var response = context.Response;
+                HttpResponse response = context.Response;
                 response.ContentType = "application/json";
-                var message = "General Error";
-                switch (error)
-                {
-                    case CustomExceptionBase:
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        break;
-                    case KeyNotFoundException:
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
-                        break;
-                    default:
-                        response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        break;
-                }
-
-                var result = JsonSerializer.Serialize(new { message });
+                string message = error is CustomExceptionBase ? error.Message : "General Error";
+                response.StatusCode = GetStatusCodeFromError(error);
+                string result = JsonSerializer.Serialize(new {message});
                 await response.WriteAsync(result);
+            }
+        }
+
+        private static int GetStatusCodeFromError(Exception error)
+        {
+            switch (error)
+            {
+                case CustomExceptionBase:
+                    return (int) HttpStatusCode.BadRequest;
+                case KeyNotFoundException:
+                    return (int) HttpStatusCode.NotFound;
+                default:
+                    return (int) HttpStatusCode.InternalServerError;
             }
         }
     }

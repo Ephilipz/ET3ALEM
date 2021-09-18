@@ -20,7 +20,6 @@ namespace Server_Application.Controllers
             _iQuestionCollectionDsl = questionCollectionDsl;
         }
 
-        // GET api/<QuestionCollectionController>
         [HttpGet]
         public async Task<ActionResult<List<QuestionCollection>>> GetQuestionCollections()
         {
@@ -30,7 +29,6 @@ namespace Server_Application.Controllers
             return await _iQuestionCollectionDsl.GetQuestionCollections(userId);
         }
 
-        // GET api/<QuestionCollectionController>/:id
         [HttpGet("{id}")]
         public async Task<ActionResult<QuestionCollection>> GetQuestionCollection(int id)
         {
@@ -40,7 +38,6 @@ namespace Server_Application.Controllers
             return await _iQuestionCollectionDsl.GetQuestionCollection(id, userId);
         }
 
-        // POST api/<QuestionCollectionController>
         [HttpPost]
         public async Task<ActionResult<QuestionCollection>> Post(QuestionCollection questionCollection)
         {
@@ -66,7 +63,6 @@ namespace Server_Application.Controllers
             return NoContent();
         }
 
-        // GET api/<QuestionCollectionController>/IsNameUnique/:name
         [HttpGet("NameExists/{name}")]
         public async Task<ActionResult<bool>> NameExists(string name)
         {

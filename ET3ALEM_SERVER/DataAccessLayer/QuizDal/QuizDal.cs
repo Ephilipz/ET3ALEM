@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
+using BusinessEntities.ViewModels;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
 using Server_Application.Data;
@@ -111,12 +113,21 @@ namespace DataAccessLayer
             return GetQuiz((int) id);
         }
 
-        public async Task<List<Quiz>> GetUngradedQuizzesForUser(string userId)
+        public async Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser(string userId)
         {
-            return await _context.Quizzes
-                .Where(quiz => quiz.UserId == userId && quiz.QuizAttempts.Exists(qA => !qA.IsGraded))
-                .AsNoTracking()
+            List<QuizAttempt> ungradedAttempts = await _context.QuizAttempts
+                .Where(attempt => !attempt.IsGraded && attempt.Quiz.UserId == userId)
+                .Include(attempt => attempt.Quiz)
                 .ToListAsync();
+            return ungradedAttempts
+                .GroupBy(attempt => attempt.Quiz)
+                .Select(attemptGrouping => new UngradedQuizTableVM
+                {
+                    QuizId = attemptGrouping.Key.Id,
+                    QuizTitle = attemptGrouping.Key.Name,
+                    UngradedAttemptCount = attemptGrouping.Count()
+                }).ToList();
+
         }
     }
 }

@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
 using DataServiceLayer;
+using ExceptionHandling.CustomExceptions;
 using Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Server_Application.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class QuizAttemptController : ControllerBase
@@ -21,7 +22,6 @@ namespace Server_Application.Controllers
             _IQuizAttemptDsl = quizAttemptDsl;
         }
 
-        // POST: api/QuizAttempt
         [HttpPost("{userId}")]
         [AllowAnonymous]
         public async Task<ActionResult<QuizAttempt>> PostQuizAttempt(string userId, QuizAttempt quizAttempt)
@@ -61,7 +61,7 @@ namespace Server_Application.Controllers
         {
             var userId = AccountHelper.getUserId(HttpContext, User);
             if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
-                return BadRequest(quizAttempt);
+                throw new CustomExceptionBase("Invalid quiz attempt");
             quizAttempt.UserId = userId;
             await _IQuizAttemptDsl.InsertQuizAttempt(quizAttempt);
             return CreatedAtAction("GetQuizAttempt", new {id = quizAttempt.Id}, quizAttempt);
@@ -81,14 +81,20 @@ namespace Server_Application.Controllers
         {
             var userId = AccountHelper.getUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
-                return BadRequest(quizId);
+                throw new CustomExceptionBase("Invalid user id");
             return await _IQuizAttemptDsl.GetUserQuizAttemptsForQuiz(quizId, userId);
         }
 
-        [HttpGet("GetAllQuizAttemptsForQuiz/{quizId}")]
+        [HttpGet("GetAllQuizAttemptsForQuiz/{quizId:int}")]
         public async Task<ActionResult<List<QuizAttempt>>> GetAllQuizAttemptsForQuiz(int quizId)
         {
             return await _IQuizAttemptDsl.GetAllQuizAttemptsForQuiz(quizId);
+        }
+
+        [HttpGet("GetUngradedAttemptsForQuiz/{quizId:int}")]
+        public async Task<ActionResult<List<QuizAttempt>>> GetUngradedAttemptsForQuiz(int quizId)
+        {
+            return await _IQuizAttemptDsl.GetUngradedAttemptsForQuiz(quizId);
         }
     }
 }

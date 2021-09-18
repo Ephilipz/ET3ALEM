@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Quiz} from '../Model/quiz';
 import {environment} from 'src/environments/environment';
+import {UngradedQuizTableVM} from "../Model/ungraded-quiz-table-vm";
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +48,7 @@ export class QuizService {
   }
 
   getUngradedQuizzes() {
-    return this.http.get<Array<Quiz>>(this.baseRoute + '/GetUngradedQuizzes');
+    return this.http.get<Array<UngradedQuizTableVM>>(this.baseRoute + '/GetUngradedQuizzes');
   }
 
   getFullQuizFromCode(code: string) {

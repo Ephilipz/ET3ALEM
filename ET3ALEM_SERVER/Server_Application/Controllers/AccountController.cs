@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
 using DataServiceLayer;
+using ExceptionHandling.CustomExceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -44,8 +45,7 @@ namespace Server_Application.Controllers
             var result = await _userManager.CreateAsync(user, registerVM.Password);
             if (!result.Succeeded)
             {
-                ModelState.TryAddModelError(result.Errors.First().Code, result.Errors.First().Description);
-                return BadRequest(ModelState);
+                throw new CustomExceptionBase(result.Errors.First().Description);
             }
 
             await _signInManager.SignInAsync(user, false);
@@ -86,8 +86,7 @@ namespace Server_Application.Controllers
                 return Ok(newTokens);
             }
 
-            ModelState.AddModelError("", "Invalid UserName or Password");
-            return BadRequest(ModelState);
+            throw new CustomExceptionBase("Invalid UserName or Password");
         }
 
         [HttpPost("Refresh")]
@@ -99,7 +98,7 @@ namespace Server_Application.Controllers
             if (user == null) return BadRequest();
 
             var savedRefreshToken = await GetToken(user, RefreshToken);
-            if (savedRefreshToken != tokens.RefreshToken) throw new SecurityTokenException("Invalid refresh token");
+            if (savedRefreshToken != tokens.RefreshToken) throw new CustomExceptionBase("Invalid refresh token");
 
             try
             {
@@ -134,7 +133,7 @@ namespace Server_Application.Controllers
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordVM.Email);
             if (user == null)
-                return NotFound("Invalid Email");
+                throw new CustomExceptionBase("Invalid token");
             await DeleteToken(user, PasswordRecoveryToken);
             var claims = new List<Claim> {new(JwtRegisteredClaimNames.Sub, user.Email)};
             var recoveryToken = _tokenHandler.GenerateJwt(claims, 15);
@@ -165,11 +164,9 @@ namespace Server_Application.Controllers
             if (user != null)
             {
                 var recoveryToken = await GetToken(user, PasswordRecoveryToken);
-                JwtSecurityToken token;
+                JwtSecurityToken token = null;
                 if (recoveryToken != null)
                     token = new JwtSecurityToken(recoveryToken);
-                else
-                    token = null;
                 if (token?.ValidTo < DateTime.UtcNow || string.IsNullOrEmpty(recoveryToken))
                 {
                     await DeleteToken(user, PasswordRecoveryToken);
@@ -224,7 +221,7 @@ namespace Server_Application.Controllers
             {
                 PasswordRecoveryToken => "UserPasswordRecovery",
                 RefreshToken => "UserRefresh",
-                _ => throw new ArgumentException("invalid token name")
+                _ => throw new CustomExceptionBase("Invalid token name")
             };
         }
     }

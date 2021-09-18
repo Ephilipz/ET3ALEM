@@ -80,19 +80,29 @@ namespace DataServiceLayer
 
         private List<QuizQuestion> GetAssignedQuestionsForQuiz(Quiz quiz)
         {
-            var quizQuestions = quiz.QuizQuestions;
             if (!quiz.ShuffleQuestions)
                 return quiz.QuizQuestions;
-            var rnd = new Random();
-            var indexes = Enumerable.Range(0, quiz.QuizQuestions.Count())
-                .ToArray();
-            rnd.Shuffle(indexes);
-            for (var i = 0; i < indexes.Count(); i++) quizQuestions[i].Sequence = indexes[i];
+            var quizQuestions = GetShuffledQuizQuestions(quiz);
 
             return quizQuestions
                 .OrderBy(qQ => qQ.Sequence)
                 .Take(quiz.IncludedQuestionsCount ?? quiz.QuizQuestions.Count())
                 .ToList();
+        }
+
+        private List<QuizQuestion> GetShuffledQuizQuestions(Quiz quiz)
+        {
+            List<QuizQuestion> quizQuestions = quiz.QuizQuestions;
+            Random rnd = new Random();
+            int[] indexes = Enumerable.Range(0, quiz.QuizQuestions.Count())
+                .ToArray();
+            rnd.Shuffle(indexes);
+            for (int i = 0; i < indexes.Count(); i++)
+            {
+                quizQuestions[i].Sequence = indexes[i];
+            }
+
+            return quizQuestions;
         }
 
         private QuestionAttempt GetQuestionAttemptFromQuizQuestion(QuizQuestion quizQuestion)
@@ -139,6 +149,11 @@ namespace DataServiceLayer
             return GetQuizAttemptVM(attempt);
         }
 
+        public Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId)
+        {
+            throw new NotImplementedException();
+        }
+
         private QuizAttemptVM GetQuizAttemptVM(QuizAttempt attempt)
         {
             return new QuizAttemptVM
@@ -165,57 +180,58 @@ namespace DataServiceLayer
                     IncludeAllQuestions = attempt.Quiz.IncludeAllQuestions,
                     IncludedQuestionsCount = attempt.Quiz.IncludedQuestionsCount,
                 },
-                QuestionsAttempts = attempt.QuestionsAttempts.ConvertAll(questionAttempt => GetQuestionAttemptVM(questionAttempt))
+                QuestionsAttempts =
+                    attempt.QuestionsAttempts.ConvertAll(questionAttempt => GetQuestionAttemptVM(questionAttempt))
             };
         }
 
-        private QuestionAttemptVM GetQuestionAttemptVM(QuestionAttempt questoinAttempt)
+        private QuestionAttemptVM GetQuestionAttemptVM(QuestionAttempt questionAttempt)
         {
-            return questoinAttempt switch
+            return questionAttempt switch
             {
                 LongAnswerAttempt longAnswerQuestion => new LongQuestionAttemptVM
                 {
-                    Id = questoinAttempt.Id,
+                    Id = questionAttempt.Id,
                     LongAnswer = longAnswerQuestion.LongAnswer,
                     QuizQuestion = new QuizQuestionVM
                     {
-                        Id = questoinAttempt.QuizQuestion.Id,
-                        Grade = questoinAttempt.QuizQuestion.Grade,
-                        Sequence = questoinAttempt.QuizQuestion.Sequence,
-                        Question = GetQuestionVM(questoinAttempt.QuizQuestion.Question)
+                        Id = questionAttempt.QuizQuestion.Id,
+                        Grade = questionAttempt.QuizQuestion.Grade,
+                        Sequence = questionAttempt.QuizQuestion.Sequence,
+                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
                     }
                 },
                 ShortAnswerAttempt => new QuestionAttemptVM
                 {
-                    Id = questoinAttempt.Id,
+                    Id = questionAttempt.Id,
                     QuizQuestion = new QuizQuestionVM
                     {
-                        Id = questoinAttempt.QuizQuestion.Id,
-                        Grade = questoinAttempt.QuizQuestion.Grade,
-                        Sequence = questoinAttempt.QuizQuestion.Sequence,
-                        Question = GetQuestionVM(questoinAttempt.QuizQuestion.Question)
+                        Id = questionAttempt.QuizQuestion.Id,
+                        Grade = questionAttempt.QuizQuestion.Grade,
+                        Sequence = questionAttempt.QuizQuestion.Sequence,
+                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
                     }
                 },
                 MCQAttmept => new QuestionAttemptVM
                 {
-                    Id = questoinAttempt.Id,
+                    Id = questionAttempt.Id,
                     QuizQuestion = new QuizQuestionVM
                     {
-                        Id = questoinAttempt.QuizQuestion.Id,
-                        Grade = questoinAttempt.QuizQuestion.Grade,
-                        Sequence = questoinAttempt.QuizQuestion.Sequence,
-                        Question = GetQuestionVM(questoinAttempt.QuizQuestion.Question)
+                        Id = questionAttempt.QuizQuestion.Id,
+                        Grade = questionAttempt.QuizQuestion.Grade,
+                        Sequence = questionAttempt.QuizQuestion.Sequence,
+                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
                     }
                 },
                 TrueFalseAttempt => new QuestionAttemptVM
                 {
-                    Id = questoinAttempt.Id,
+                    Id = questionAttempt.Id,
                     QuizQuestion = new QuizQuestionVM
                     {
-                        Id = questoinAttempt.QuizQuestion.Id,
-                        Grade = questoinAttempt.QuizQuestion.Grade,
-                        Sequence = questoinAttempt.QuizQuestion.Sequence,
-                        Question = GetQuestionVM(questoinAttempt.QuizQuestion.Question)
+                        Id = questionAttempt.QuizQuestion.Id,
+                        Grade = questionAttempt.QuizQuestion.Grade,
+                        Sequence = questionAttempt.QuizQuestion.Sequence,
+                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
                     }
                 },
                 _ => throw new ArgumentException("invalid attempt type"),
@@ -238,7 +254,7 @@ namespace DataServiceLayer
                     Body = question.Body,
                     Id = question.Id,
                     McqAnswerType = mcq.McqAnswerType,
-                    Choices = mcq.Choices.ConvertAll(choice => new ChoiceVM { Id = choice.Id, Body = choice.Body })
+                    Choices = mcq.Choices.ConvertAll(choice => new ChoiceVM {Id = choice.Id, Body = choice.Body})
                 },
                 ShortAnswerQuestion shortAnswerQuestion => new ShortAnswerQuestionVM
                 {

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
+using BusinessEntities.ViewModels;
 using DataAccessLayer;
 
 namespace DataServiceLayer
@@ -74,7 +75,7 @@ namespace DataServiceLayer
             await _iQuizDal.PutQuiz(quiz);
         }
 
-        public async Task<List<Quiz>> GetUngradedQuizzesForUser(string userId)
+        public async Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser(string userId)
         {
             return await _iQuizDal.GetUngradedQuizzesForUser(userId);
         }

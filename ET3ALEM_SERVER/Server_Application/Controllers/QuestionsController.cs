@@ -17,7 +17,6 @@ namespace Server_Application.Controllers
             _QuestionDsl = QuestionDsl;
         }
 
-        // GET: api/Questions
         [HttpGet]
         public async Task<List<Question>> GetQuestions()
         {

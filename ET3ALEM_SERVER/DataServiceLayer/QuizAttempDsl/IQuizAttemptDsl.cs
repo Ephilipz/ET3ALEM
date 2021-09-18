@@ -17,5 +17,6 @@ namespace DataServiceLayer
         Task<QuizAttempt> GetQuizAttemptWithQuiz(int id);
         Task<List<QuizAttempt>> GetQuizAttempts(string userId);
         Task<ActionResult<QuizAttemptVM>> GetQuizAttemptWithQuizLight(int id);
+        Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId);
     }
 }

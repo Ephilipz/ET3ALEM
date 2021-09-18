@@ -1,3 +1,17 @@
-<div class="container-fluid">
-  <h1 class="topBoldTitle">Quizzes That Need Grading</h1>
+<div class="container-fluid p-5">
+  <h1 class="topBoldTitle mb-5">Quizzes That Need Grading</h1>
+  <div *ngFor="let quiz of quizList" class="mt-5 mx-auto parentDiv">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header style="padding: 30px 20px">
+        <mat-panel-title class="quizTitle" style="font-size: 2em; margin: 30px 0;">
+          {{quiz.QuizTitle}}
+        </mat-panel-title>
+        <mat-panel-description style="padding: 30px 0; font-size: 1.2em">
+          {{quiz.UngradedAttemptCount}} Attempts Need Grading
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>I'm visible because I am open</p>
+    </mat-expansion-panel>
+  </div>
+
 </div>

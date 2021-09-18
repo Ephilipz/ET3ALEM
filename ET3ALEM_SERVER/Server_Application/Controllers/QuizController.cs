@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
+using BusinessEntities.ViewModels;
 using DataServiceLayer;
 using Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Server_Application.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class QuizController : ControllerBase
@@ -67,10 +68,10 @@ namespace Server_Application.Controllers
         }
 
         [HttpGet("GetUngradedQuizzes")]
-        public async Task<List<Quiz>> GetUngradedQuizzesForUser()
+        public async Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser()
         {
             string userId = AccountHelper.getUserId(HttpContext, User);
-            List<Quiz> ungradedQuizzes = await _iQuizDsl.GetUngradedQuizzesForUser(userId);
+            List<UngradedQuizTableVM> ungradedQuizzes = await _iQuizDsl.GetUngradedQuizzesForUser(userId);
             return ungradedQuizzes;
         }
 
