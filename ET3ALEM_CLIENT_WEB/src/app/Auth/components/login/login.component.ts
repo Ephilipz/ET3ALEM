@@ -26,17 +26,17 @@ export class LoginComponent extends ExtraFormOptions implements OnInit {
   }
 
   login() {
-    let email = this.loginForm.get('email').value;
-    let password = this.loginForm.get('password').value;
+    const email: string = this.loginForm.get('email').value;
+    const password: string = this.loginForm.get('password').value;
     this.isLoading = true;
-    this.authService.login(email, password).subscribe(
-      res => {
+    this.authService.login(email, password).subscribe({
+      next: res => {
         this.isLoading = false;
         if (res) {
           this.router.navigate(['/quiz']);
         }
       },
-    )
+      complete: () => this.isLoading = false
+    });
   }
-
 }

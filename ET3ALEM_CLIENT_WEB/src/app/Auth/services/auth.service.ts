@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import * as moment from "moment"
-import { LoginUser, RegisterUser } from '../Model/User';
-import { pluck, share, shareReplay, tap, catchError, mapTo } from 'rxjs/operators';
+import { RegisterUser } from '../Model/User';
+import { tap, catchError, mapTo } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { Tokens } from '../Model/Tokens';
 import { Observable, of, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { LocalstorgeService } from 'src/app/Shared/services/localstorge.service';
 
 @Injectable({
@@ -19,7 +17,13 @@ export class AuthService {
   JWT = 'id_token';
   Refresh = 'refresh';
 
-  constructor(private http: HttpClient, private router: Router, private toastyService: ToastrService, private localstorgeService: LocalstorgeService) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private toastyService: ToastrService,
+    private localstorgeService: LocalstorgeService) {
+
+  }
 
   login(email: string, password: string): Observable<boolean> {
     return this.http.post<Tokens>(environment.baseUrl + '/api/Account/login', { email, password }).pipe(
@@ -30,10 +34,12 @@ export class AuthService {
         }),
       mapTo(true),
       catchError(err => {
-        if (err.error[Object.keys(err.error)[0]][0] != undefined)
-          this.toastyService.error(err.error[Object.keys(err.error)[0]][0])
-        else
+        if (err.error[Object.keys(err.error)[0]][0] != undefined) {
+          this.toastyService.error(err.error[Object.keys(err.error)[0]][0]);
+        }
+        else {
           this.toastyService.error(err);
+        }
         return of(false);
       }));
 
@@ -42,7 +48,7 @@ export class AuthService {
   register(registerUserObject: RegisterUser) {
     return this.http.post<Tokens>(environment.baseUrl + '/api/Account/Register', {
       ...registerUserObject,
-      'ConfirmPassword': registerUserObject.Password
+      ConfirmPassword: registerUserObject.Password
     }).pipe(
       tap(
         token => {
@@ -55,14 +61,15 @@ export class AuthService {
           this.toastyService.clear();
           this.toastyService.error(err.error[Object.keys(err.error)[0]][0], 'Error');
         }
-        else
+        else {
           this.toastyService.error('Unable to register', 'Unknown Error');
+        }
         return throwError(err);
       }));
   }
 
   refresh() {
-    let oldTokens: Tokens = new Tokens(this.getJWT(), this.getRefreshToken());
+    const oldTokens: Tokens = new Tokens(this.getJWT(), this.getRefreshToken());
     return this.http.post<Tokens>(environment.baseUrl + '/api/Account/Refresh', oldTokens).pipe(
       tap((tokens: Tokens) => {
         this.setSession(tokens);
