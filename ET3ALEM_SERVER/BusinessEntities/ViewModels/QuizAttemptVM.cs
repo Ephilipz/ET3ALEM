@@ -11,5 +11,6 @@ namespace BusinessEntities.ViewModels
         public DateTime StartTime { get; set; }
         public QuizVM Quiz { get; set; }
         public List<QuestionAttemptVM> QuestionsAttempts { get; set; }
+        public SimpleUserVM User { get; set; }
     }
 }

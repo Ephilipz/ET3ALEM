@@ -14,6 +14,7 @@ namespace DataAccessLayer
         Task<List<QuizAttempt>> GetAllQuizAttemptsForQuiz(int quizId);
         Task<QuizAttempt> GetQuizAttemptWithQuiz(int id);
         Task<List<QuizAttempt>> GetQuizAttempts(string userId);
+        Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId);
         Task DeleteRelatedQuizAttempts(int quizId);
     }
 }

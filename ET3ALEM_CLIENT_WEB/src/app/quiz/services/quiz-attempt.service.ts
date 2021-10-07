@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { LocalstorgeService } from 'src/app/Shared/services/localstorge.service';
-import { environment } from 'src/environments/environment';
-import { QuizAttempt } from '../Model/quiz-attempt';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {LocalstorgeService} from 'src/app/Shared/services/localstorge.service';
+import {environment} from 'src/environments/environment';
+import {QuizAttempt} from '../Model/quiz-attempt';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,8 @@ export class QuizAttemptService {
   private baseRoute = environment.baseUrl + '/api/QuizAttempt';
 
   constructor(private httpClient: HttpClient,
-    private localStorageService: LocalstorgeService) { }
+              private localStorageService: LocalstorgeService) {
+  }
 
   public createQuizAttempt(quizAttempt: QuizAttempt): Observable<QuizAttempt> {
     return this.httpClient.put<QuizAttempt>(this.baseRoute, quizAttempt);
@@ -33,10 +34,15 @@ export class QuizAttemptService {
     return this.httpClient.get<Array<QuizAttempt>>(this.baseRoute + '/GetAllQuizAttemptsForQuiz/' + quizId);
   }
 
+  public getUngradedQuizAttemptsForQuiz(quizId: number){
+    return this.httpClient.get<Array<QuizAttempt>>(this.baseRoute + '/GetUngradedAttemptsForQuiz/' + quizId);
+  }
+
   public getQuizAttemptWithQuiz(quizAttempt: number) {
     return this.httpClient.get<QuizAttempt>(this.baseRoute + `/GetQuizAttemptWithQuiz/${quizAttempt}`);
   }
-  getQuizAttemptWithQuizLight(quizAttempt: number) {
+
+  public getQuizAttemptWithQuizLight(quizAttempt: number) {
     return this.httpClient.get<QuizAttempt>(this.baseRoute + `/GetQuizAttemptWithQuizLight/${quizAttempt}`);
   }
 

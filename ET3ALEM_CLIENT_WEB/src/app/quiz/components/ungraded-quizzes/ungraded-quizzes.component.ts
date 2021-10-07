@@ -3,6 +3,9 @@ import {ToastrService} from "ngx-toastr";
 import {QuizService} from "../../services/quiz.service";
 import {Quiz} from "../../Model/quiz";
 import {UngradedQuizTableVM} from "../../Model/ungraded-quiz-table-vm";
+import {QuizAttempt} from "../../Model/quiz-attempt";
+import {QuizAttemptService} from "../../services/quiz-attempt.service";
+import {plainToClass} from "class-transformer";
 
 @Component({
   selector: 'app-ungraded-quizzes',
@@ -12,8 +15,12 @@ import {UngradedQuizTableVM} from "../../Model/ungraded-quiz-table-vm";
 export class UngradedQuizzesComponent implements OnInit {
 
   quizList: Array<UngradedQuizTableVM> = [];
+  ungradedAttemptsForQuizzes = new Map<number, Array<QuizAttempt>>();
+  displayedColumns = ['User','Date','Actions']
 
-  constructor(private toast: ToastrService, private quizService: QuizService) { }
+  constructor(private toast: ToastrService,
+              private quizService: QuizService,
+              private quizAttemptService: QuizAttemptService) { }
 
   ngOnInit(): void {
     this.getUngradedQuizzes();
@@ -30,4 +37,18 @@ export class UngradedQuizzesComponent implements OnInit {
     )
   }
 
+  public async getUngradedAttemptsForQuiz(quiz: UngradedQuizTableVM){
+    const quizId = quiz.QuizId;
+    if(this.ungradedAttemptsForQuizzes.has(quizId)){
+      return;
+    }
+
+    await this.getUngradedAttemptsForQuizFormAPI(quizId);
+  }
+
+  private async getUngradedAttemptsForQuizFormAPI(quizId: number) {
+    let attempts = await this.quizAttemptService.getUngradedQuizAttemptsForQuiz(quizId).toPromise();
+    attempts = attempts.map(attempt => plainToClass(QuizAttempt, attempt));
+    this.ungradedAttemptsForQuizzes.set(quizId, attempts);
+  }
 }

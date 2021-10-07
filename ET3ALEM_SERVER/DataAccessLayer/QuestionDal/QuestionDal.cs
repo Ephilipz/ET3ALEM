@@ -53,42 +53,51 @@ namespace DataAccessLayer
             switch (question.QuestionType)
             {
                 case QuestionType.MCQ:
-                    var mcq = question as MultipleChoiceQuestion;
-
-                    //track changes in choices
-                    foreach (var c in mcq.Choices)
-                        //new choice
-                        if (c.Id == 0)
-                        {
-                            _context.Choices.Add(c);
-                        }
-                        //deleted choice
-                        else if (c.Id < 0)
-                        {
-                            c.Id *= -1;
-                            _context.Choices.Remove(c);
-                        }
-                        //modified choice
-                        else
-                        {
-                            _context.Entry(c).State = EntityState.Modified;
-                        }
-
+                    TrackChangesInMCQ(question);
                     break;
                 case QuestionType.TrueFalse:
-                    //if question is updated from MCQ to TF, delete the choices
-                    var wasMCQ = _context.Questions.Any(q => question.Id == q.Id && q.QuestionType == QuestionType.MCQ);
-                    if (wasMCQ)
-                    {
-                        var choices = _context.Choices.Where(c => c.MCQId == question.Id);
-                        _context.Choices.RemoveRange(choices);
-                    }
-
+                    TrackChangesInTFQuestion(question);
                     break;
             }
 
             _context.Entry(question).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+        }
+
+        private void TrackChangesInTFQuestion(Question question)
+        {
+            var wasMCQ = _context.Questions.Any(q => question.Id == q.Id && q.QuestionType == QuestionType.MCQ);
+            if (wasMCQ)
+            {
+                IQueryable<Choice> choices = _context.Choices.Where(c => c.MCQId == question.Id);
+                _context.Choices.RemoveRange(choices);
+            }
+        }
+
+        private void TrackChangesInMCQ(Question question)
+        {
+            var mcq = question as MultipleChoiceQuestion;
+
+            foreach (Choice c in mcq.Choices)
+            {
+                bool isAdded = c.Id == 0;
+                bool isDeleted = c.Id < 0;
+                bool isEdited = c.Id > 0;
+                
+                if (isAdded)
+                {
+                    _context.Choices.Add(c);
+                }
+                else if (isDeleted)
+                {
+                    c.Id *= -1;
+                    _context.Choices.Remove(c);
+                }
+                else if(isEdited)
+                {
+                    _context.Entry(c).State = EntityState.Modified;
+                }
+            }
         }
     }
 }

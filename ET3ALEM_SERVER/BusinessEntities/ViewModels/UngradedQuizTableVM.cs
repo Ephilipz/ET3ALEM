@@ -5,5 +5,6 @@
         public int QuizId { get; set; }
         public string QuizTitle { get; set; }
         public int UngradedAttemptCount { get; set; }
+        public SimpleUserVM User { get; set; }
     }
 }

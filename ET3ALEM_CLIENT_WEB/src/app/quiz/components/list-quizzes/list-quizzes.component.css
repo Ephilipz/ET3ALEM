@@ -1,58 +1,52 @@
-.mainContainer{
-    width: 80%;
-    padding: 20px;
+.mainContainer {
+  width: 80%;
+  padding: 20px;
 }
 
 table {
-    width: 100%;
-    margin-bottom: 30px;
+  width: 100%;
+  margin-bottom: 30px;
 }
 
 .mat-header-cell {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
 
 .mat-cell {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
 
-.header-align-right{
-    text-align: right;
-    justify-content: flex-end;
-  }
-
-.title {
-    font-size: 4em;
-    font-weight: 900;
-    text-align: center;
+.header-align-right {
+  text-align: right;
+  justify-content: flex-end;
 }
 
 mat-form-field {
-    width: 15vw;
-    font-size: 1.5em;
+  width: 15vw;
+  font-size: 1.5em;
 }
 
-.numberColumn{
-   max-width: 20px;
+.numberColumn {
+  max-width: 20px;
 }
 
-.emptyQuizzes{
-    font-size: 3em;
-    color: gray;
-    text-align: center;
-    margin-top: 2em;
-    margin-bottom: 1em;
-    font-weight: 300;
+.emptyQuizzes {
+  font-size: 3em;
+  color: gray;
+  text-align: center;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  font-weight: 300;
 }
 
-.emptyListCol{
-    text-align: center;
+.emptyListCol {
+  text-align: center;
 }
 
-.header-align-right.mat-header-cell{
-    margin-right: 30px;
+.header-align-right.mat-header-cell {
+  margin-right: 30px;
 }
 
 td.header-align-right button {
-    margin-left: 10px;
+  margin-left: 10px;
 }

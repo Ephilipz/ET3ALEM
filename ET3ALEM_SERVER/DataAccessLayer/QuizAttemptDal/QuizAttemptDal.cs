@@ -87,9 +87,8 @@ namespace DataAccessLayer
                 .AsSplitQuery()
                 .AsNoTracking()
                 .ToListAsync();
-            return quizAttempts.GroupBy(attempt => attempt.IsGraded ? attempt.UserId : attempt.Id.ToString())
-                .Select(attemptGroup => attemptGroup.FirstOrDefault())
-                .ToList();
+
+            return quizAttempts;
         }
 
         public async Task<List<QuizAttempt>> GetQuizAttempts(string userId)
@@ -98,6 +97,16 @@ namespace DataAccessLayer
                 .Where(qA => qA.UserId == userId)
                 .Include(qA => qA.Quiz)
                 .OrderByDescending(qA => qA.SubmitTime)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId)
+        {
+            return await _context.QuizAttempts
+                .Where(attempt => !attempt.IsGraded && attempt.QuizId == quizId)
+                .Include(attempt => attempt.User)
+                .AsSplitQuery()
                 .AsNoTracking()
                 .ToListAsync();
         }

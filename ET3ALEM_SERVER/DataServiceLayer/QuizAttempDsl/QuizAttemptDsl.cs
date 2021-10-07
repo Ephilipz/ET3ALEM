@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BusinessEntities.Enumerators;
 using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
@@ -15,11 +16,13 @@ namespace DataServiceLayer
     {
         private readonly IQuizAttemptDal _IQuizAttemptDal;
         private readonly IQuizDsl _IQuizDsl;
+        private readonly IMapper _IMapper;
 
-        public QuizAttemptDsl(IQuizAttemptDal IQuizAttemptDal, IQuizDsl IQuizDsl)
+        public QuizAttemptDsl(IQuizAttemptDal quizAttemptDal, IQuizDsl quizDsl, IMapper iMapper)
         {
-            _IQuizAttemptDal = IQuizAttemptDal;
-            _IQuizDsl = IQuizDsl;
+            _IQuizAttemptDal = quizAttemptDal;
+            _IQuizDsl = quizDsl;
+            _IMapper = iMapper;
         }
 
         public Task<QuizAttempt> GetQuizAttempt(int id)
@@ -94,10 +97,10 @@ namespace DataServiceLayer
         {
             List<QuizQuestion> quizQuestions = quiz.QuizQuestions;
             Random rnd = new Random();
-            int[] indexes = Enumerable.Range(0, quiz.QuizQuestions.Count())
+            int[] indexes = Enumerable.Range(0, quiz.QuizQuestions.Count)
                 .ToArray();
             rnd.Shuffle(indexes);
-            for (int i = 0; i < indexes.Count(); i++)
+            for (int i = 0; i < indexes.Length; i++)
             {
                 quizQuestions[i].Sequence = indexes[i];
             }
@@ -149,127 +152,14 @@ namespace DataServiceLayer
             return GetQuizAttemptVM(attempt);
         }
 
-        public Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId)
+        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId)
         {
-            throw new NotImplementedException();
+            return await _IQuizAttemptDal.GetUngradedAttemptsForQuiz(quizId);
         }
 
         private QuizAttemptVM GetQuizAttemptVM(QuizAttempt attempt)
         {
-            return new QuizAttemptVM
-            {
-                Id = attempt.Id,
-                UserId = attempt.UserId,
-                StartTime = attempt.StartTime,
-                Quiz = new QuizVM
-                {
-                    Id = attempt.Quiz.Id,
-                    Code = attempt.Quiz.Code,
-                    Name = attempt.Quiz.Name,
-                    Instructions = attempt.Quiz.Instructions,
-                    StartDate = attempt.Quiz.StartDate,
-                    EndDate = attempt.Quiz.EndDate,
-                    NoDueDate = attempt.Quiz.NoDueDate,
-                    DurationSeconds = attempt.Quiz.DurationSeconds,
-                    UnlimitedTime = attempt.Quiz.UnlimitedTime,
-                    AllowedAttempts = attempt.Quiz.AllowedAttempts,
-                    UnlimitedAttempts = attempt.Quiz.UnlimitedAttempts,
-                    ShowGrade = attempt.Quiz.ShowGrade,
-                    AutoGrade = attempt.Quiz.AutoGrade,
-                    ShuffleQuestions = attempt.Quiz.ShuffleQuestions,
-                    IncludeAllQuestions = attempt.Quiz.IncludeAllQuestions,
-                    IncludedQuestionsCount = attempt.Quiz.IncludedQuestionsCount,
-                },
-                QuestionsAttempts =
-                    attempt.QuestionsAttempts.ConvertAll(questionAttempt => GetQuestionAttemptVM(questionAttempt))
-            };
-        }
-
-        private QuestionAttemptVM GetQuestionAttemptVM(QuestionAttempt questionAttempt)
-        {
-            return questionAttempt switch
-            {
-                LongAnswerAttempt longAnswerQuestion => new LongQuestionAttemptVM
-                {
-                    Id = questionAttempt.Id,
-                    LongAnswer = longAnswerQuestion.LongAnswer,
-                    QuizQuestion = new QuizQuestionVM
-                    {
-                        Id = questionAttempt.QuizQuestion.Id,
-                        Grade = questionAttempt.QuizQuestion.Grade,
-                        Sequence = questionAttempt.QuizQuestion.Sequence,
-                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
-                    }
-                },
-                ShortAnswerAttempt => new QuestionAttemptVM
-                {
-                    Id = questionAttempt.Id,
-                    QuizQuestion = new QuizQuestionVM
-                    {
-                        Id = questionAttempt.QuizQuestion.Id,
-                        Grade = questionAttempt.QuizQuestion.Grade,
-                        Sequence = questionAttempt.QuizQuestion.Sequence,
-                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
-                    }
-                },
-                MCQAttmept => new QuestionAttemptVM
-                {
-                    Id = questionAttempt.Id,
-                    QuizQuestion = new QuizQuestionVM
-                    {
-                        Id = questionAttempt.QuizQuestion.Id,
-                        Grade = questionAttempt.QuizQuestion.Grade,
-                        Sequence = questionAttempt.QuizQuestion.Sequence,
-                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
-                    }
-                },
-                TrueFalseAttempt => new QuestionAttemptVM
-                {
-                    Id = questionAttempt.Id,
-                    QuizQuestion = new QuizQuestionVM
-                    {
-                        Id = questionAttempt.QuizQuestion.Id,
-                        Grade = questionAttempt.QuizQuestion.Grade,
-                        Sequence = questionAttempt.QuizQuestion.Sequence,
-                        Question = GetQuestionVM(questionAttempt.QuizQuestion.Question)
-                    }
-                },
-                _ => throw new ArgumentException("invalid attempt type"),
-            };
-        }
-
-        private QuestionVM GetQuestionVM(Question question)
-        {
-            return question switch
-            {
-                TrueFalseQuestion tfQuestion => new TrueFalseQuestionVM
-                {
-                    QuestionType = question.QuestionType,
-                    Body = question.Body,
-                    Id = question.Id
-                },
-                MultipleChoiceQuestion mcq => new MultipleChoiceQuestionVM
-                {
-                    QuestionType = question.QuestionType,
-                    Body = question.Body,
-                    Id = question.Id,
-                    McqAnswerType = mcq.McqAnswerType,
-                    Choices = mcq.Choices.ConvertAll(choice => new ChoiceVM {Id = choice.Id, Body = choice.Body})
-                },
-                ShortAnswerQuestion shortAnswerQuestion => new ShortAnswerQuestionVM
-                {
-                    QuestionType = question.QuestionType,
-                    Body = question.Body,
-                    Id = question.Id
-                },
-                LongAnswerQuestion longAnswerQuestion => new LongAnswerQuestionVM
-                {
-                    QuestionType = question.QuestionType,
-                    Body = question.Body,
-                    Id = question.Id
-                },
-                _ => throw new ArgumentException("invalid question type"),
-            };
+            return _IMapper.Map<QuizAttemptVM>(attempt);
         }
     }
 }

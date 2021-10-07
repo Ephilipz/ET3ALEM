@@ -2,6 +2,8 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using BusinessEntities.AutoMapperProfiles;
 using BusinessEntities.Models;
 using DataAccessLayer;
 using DataServiceLayer;
@@ -33,44 +35,29 @@ namespace Server_Application
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //enables CORS for HTTP : note on deployment the site must be configured to use https
-            services.AddCors(options =>
-            {
-                options.AddPolicy(AllowCORS,
-                    builder =>
-                    {
-                        builder.WithOrigins("http://localhost:4200", "http://192.168.1.6:4200")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials();
-                    });
-            });
-
+            EnableCors(services);
             ConfigureDi(services);
-            services.AddDbContextPool<ApplicationContext>(
-                dbContextOptions => dbContextOptions
-                    .UseMySql(
-                        Configuration.GetConnectionString("DefaultConnection"),
-                        new MySqlServerVersion(new Version(8, 0, 20)),
-                        mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend))
-                    // Everything from this point on is optional but helps with debugging.
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors());
-            services.AddIdentity<User, IdentityRole>(options =>
-                {
-                    options.Password.RequiredLength = 3;
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.User.RequireUniqueEmail = true;
-                })
-                .AddEntityFrameworkStores<ApplicationContext>()
-                .AddTokenProvider("UserRefresh", typeof(DataProtectorTokenProvider<User>))
-                .AddDefaultTokenProviders();
+            ConfigureApplicationPool(services);
+            ConfigureUserIdentity(services);
+            ConfigureJWT(services);
+            ConfigureNewtonsoft(services);
+            services.AddAutoMapper(typeof(UserProfile).Assembly);
+        }
+
+        private static void ConfigureNewtonsoft(IServiceCollection services)
+        {
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver
+                    {NamingStrategy = new DefaultNamingStrategy()};
+            });
+        }
+
+        private void ConfigureJWT(IServiceCollection services)
+        {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
                 .AddAuthentication(options =>
@@ -102,11 +89,49 @@ namespace Server_Application
                         }
                     };
                 });
-            services.AddControllers().AddNewtonsoftJson(options =>
+        }
+
+        private static void ConfigureUserIdentity(IServiceCollection services)
+        {
+            services.AddIdentity<User, IdentityRole>(options =>
+                {
+                    options.Password.RequiredLength = 3;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.User.RequireUniqueEmail = true;
+                })
+                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddTokenProvider("UserRefresh", typeof(DataProtectorTokenProvider<User>))
+                .AddDefaultTokenProviders();
+        }
+
+        private void ConfigureApplicationPool(IServiceCollection services)
+        {
+            services.AddDbContextPool<ApplicationContext>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(
+                        Configuration.GetConnectionString("DefaultConnection"),
+                        new MySqlServerVersion(new Version(8, 0, 20)),
+                        mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend))
+                    // Everything from this point on is optional but helps with debugging.
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors());
+        }
+
+        private void EnableCors(IServiceCollection services)
+        {
+            services.AddCors(options =>
             {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.ContractResolver = new DefaultContractResolver
-                    {NamingStrategy = new DefaultNamingStrategy()};
+                options.AddPolicy(AllowCORS,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200", "http://192.168.1.6:4200")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
+                    });
             });
         }
 

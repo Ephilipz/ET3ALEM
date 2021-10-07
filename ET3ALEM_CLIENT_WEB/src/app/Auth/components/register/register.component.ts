@@ -4,7 +4,6 @@ import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions'
 import { confirmPasswordErrorStateMatcher } from 'src/app/Shared/Classes/forms/confirmPasswordErrorStateMatcher';
 import { AuthService } from '../../services/auth.service';
 import { RegisterUser } from '../../Model/User';
-import { Role } from '../../Model/UserEnums';
 import { Router } from '@angular/router';
 
 @Component({
@@ -42,7 +41,6 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
       this.registerForm.get('name').value,
       this.registerForm.get('email').value,
       this.registerForm.get('password').value,
-      Role.Student
     );
     this.AuthService.register(registerUserObject).subscribe(
       res => {

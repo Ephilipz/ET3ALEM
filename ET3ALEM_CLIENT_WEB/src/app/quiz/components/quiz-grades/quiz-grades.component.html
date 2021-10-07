@@ -1,46 +1,47 @@
 <div class="container-fluid">
-    <h1 class="topBoldTitle mt-5" *ngIf="quiz">{{quiz.Name}} Grades</h1>
-    <h1 class="topBoldTitle m-5" *ngIf="!quiz && isLoaded">No one has taken this quiz yet</h1>
-    <mat-divider class="my-5"></mat-divider>
+  <h1 class="topBoldTitle mt-5" *ngIf="quiz">{{quiz.Name}} Grades</h1>
+  <h1 class="topBoldTitle m-5" *ngIf="!quiz && isLoaded">No one has taken this quiz yet</h1>
+  <mat-divider class="my-5"></mat-divider>
 
-    <div class="flexRow my-5" *ngIf="quiz && isLoaded">
-        <h2 class="secondaryTitle">User Count : {{getStudentsCount()}}</h2>
-        <h2 class="secondaryTitle">Average : {{getAverage()}}</h2>
-        <h2 class="secondaryTitle">Highest Score : {{getHighestScore()}}</h2>
-    </div>
+  <div class="flexRow my-5 secondHeader" *ngIf="quiz && isLoaded">
+    <h2>User Count : {{getStudentsCount()}}</h2>
+    <h2>Average : {{getAverage()}}</h2>
+    <h2>Highest Score : {{getHighestScore()}}</h2>
+  </div>
 
-    <table mat-table [dataSource]="quizAttemptListDS" matSort class="mat-elevation-z3">
-        <!-- FullName Column -->
-        <ng-container matColumnDef="User.FullName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
-            <td mat-cell *matCellDef="let element"> {{element.User.FullName}} </td>
-        </ng-container>
+  <table mat-table [dataSource]="quizAttemptListDS" matSort class="mat-elevation-z3">
+    <!-- FullName Column -->
+    <ng-container matColumnDef="User.FullName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> User</th>
+      <td mat-cell *matCellDef="let element"> {{element.User.FullName}} </td>
+    </ng-container>
 
-        <ng-container matColumnDef="Grade">
-            <th mat-header-cell *matHeaderCellDef> Grade </th>
-            <td mat-cell *matCellDef="let attempt"> {{getGrade(attempt)}}</td>
-        </ng-container>
+    <ng-container matColumnDef="Grade">
+      <th mat-header-cell *matHeaderCellDef> Grade</th>
+      <td mat-cell *matCellDef="let attempt"> {{getGrade(attempt)}}</td>
+    </ng-container>
 
-        <ng-container matColumnDef="StartTime">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-            <td mat-cell *matCellDef="let attempt"> {{attempt.StartTime.toString()+'Z' | date:'d-MMM-YYYY, h:mm a'}}
-            </td>
-        </ng-container>
+    <ng-container matColumnDef="StartTime">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date</th>
+      <td mat-cell *matCellDef="let attempt"> {{attempt.StartTime.toString() + 'Z' | date:'d-MMM-YYYY, h:mm a'}}
+      </td>
+    </ng-container>
 
-        <ng-container matColumnDef="GradeButton">
-            <th mat-header-cell *matHeaderCellDef class="alignRight"></th>
-            <td mat-cell *matCellDef="let attempt" class="alignRight">
-                <button mat-flat-button class="blue" [routerLink]="'../../gradeAttempt/'+ attempt.Id"
-                    style="font-size: 0.95em; font-weight: 300;">Grade</button>
-            </td>
-        </ng-container>
+    <ng-container matColumnDef="GradeButton">
+      <th mat-header-cell *matHeaderCellDef class="alignRight"></th>
+      <td mat-cell *matCellDef="let attempt" class="alignRight">
+        <button mat-flat-button class="blue" [routerLink]="'../../gradeAttempt/'+ attempt.Id"
+                style="font-size: 0.95em; font-weight: 300;">Grade
+        </button>
+      </td>
+    </ng-container>
 
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 
-    <div class="row mt-5" style="text-align: center;">
-        <button mat-flat-button class="large red mx-auto" routerLink="../../manage">Back</button>
-    </div>
+  <div class="row mt-5" style="text-align: center;">
+    <button mat-flat-button class="large red mx-auto" routerLink="../../manage">Back</button>
+  </div>
 </div>

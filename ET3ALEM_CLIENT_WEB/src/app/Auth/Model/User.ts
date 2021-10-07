@@ -1,4 +1,3 @@
-import { Role } from './UserEnums';
 
 export class LoginUser {
     public Email: String;
@@ -11,10 +10,10 @@ export class LoginUser {
 }
 
 export class RegisterUser extends LoginUser {
-    public Name: string;
+    public FullName: string;
 
-    constructor(name: string, email: string, password: string, role: Role) {
+    constructor(name: string, email: string, password: string) {
         super(email, password);
-        this.Name = name;
+        this.FullName = name;
     }
 }

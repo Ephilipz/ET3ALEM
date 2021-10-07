@@ -26,9 +26,8 @@ namespace BusinessEntities.Models
         public bool NoDueDate { get; set; }
         public int DurationSeconds { get; set; }
         public bool UnlimitedTime { get; set; }
-
         [Required] public string UserId { get; set; }
-
+        public virtual User User { get; set; }
         public int AllowedAttempts { get; set; }
         public bool UnlimitedAttempts { get; set; }
         public bool ShowGrade { get; set; }

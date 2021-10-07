@@ -16,6 +16,6 @@ namespace DataAccessLayer
         Task<Quiz> InsertQuiz(Quiz quiz);
         Task<Quiz> DeleteQuiz(int id);
         Task PutQuiz(Quiz quiz);
-        Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser(string userId);
+        Task<List<QuizAttempt>> GetUngradedQuizzesForUser(string userId);
     }
 }

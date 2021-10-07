@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
 using DataAccessLayer;
@@ -11,11 +12,13 @@ namespace DataServiceLayer
     {
         private readonly IQuestionDsl _iQuestionDsl;
         private readonly IQuizDal _iQuizDal;
+        private readonly IMapper _IMapper;
 
-        public QuizDsl(IQuizDal quizDal, IQuestionDsl questionDsl, IQuizAttemptDal quizAttemptDal)
+        public QuizDsl(IQuizDal quizDal, IQuestionDsl questionDsl, IQuizAttemptDal quizAttemptDal, IMapper iMapper)
         {
             _iQuizDal = quizDal;
             _iQuestionDsl = questionDsl;
+            _IMapper = iMapper;
         }
 
         public Task<Quiz> GetQuiz(int quizId)
@@ -77,7 +80,17 @@ namespace DataServiceLayer
 
         public async Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser(string userId)
         {
-            return await _iQuizDal.GetUngradedQuizzesForUser(userId);
+            List<QuizAttempt> ungradedAttempts = await _iQuizDal.GetUngradedQuizzesForUser(userId);
+            return ungradedAttempts
+                .GroupBy(attempt => attempt.Quiz)
+                .Select(attemptGrouping => new UngradedQuizTableVM
+                {
+                    QuizId = attemptGrouping.Key.Id,
+                    QuizTitle = attemptGrouping.Key.Name,
+                    UngradedAttemptCount = attemptGrouping.Count(),
+                    User = _IMapper.Map<SimpleUserVM>(attemptGrouping.FirstOrDefault()?.User)
+                })
+                .ToList();
         }
 
         public async Task<Quiz> GetBasicQuizByCode(string code)

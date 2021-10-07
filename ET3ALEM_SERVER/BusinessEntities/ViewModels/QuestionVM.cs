@@ -1,6 +1,7 @@
 ﻿using BusinessEntities.Enumerators;
 using BusinessEntities.Models;
 using System.Collections.Generic;
+using AutoMapper;
 
 namespace BusinessEntities.ViewModels
 {

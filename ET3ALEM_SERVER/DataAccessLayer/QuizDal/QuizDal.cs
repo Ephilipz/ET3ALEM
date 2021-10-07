@@ -113,21 +113,15 @@ namespace DataAccessLayer
             return GetQuiz((int) id);
         }
 
-        public async Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser(string userId)
+        public async Task<List<QuizAttempt>> GetUngradedQuizzesForUser(string userId)
         {
             List<QuizAttempt> ungradedAttempts = await _context.QuizAttempts
                 .Where(attempt => !attempt.IsGraded && attempt.Quiz.UserId == userId)
                 .Include(attempt => attempt.Quiz)
+                .Include(attempt => attempt.User)
+                .OrderByDescending(attempt => attempt.Quiz.CreatedDate)
                 .ToListAsync();
-            return ungradedAttempts
-                .GroupBy(attempt => attempt.Quiz)
-                .Select(attemptGrouping => new UngradedQuizTableVM
-                {
-                    QuizId = attemptGrouping.Key.Id,
-                    QuizTitle = attemptGrouping.Key.Name,
-                    UngradedAttemptCount = attemptGrouping.Count()
-                }).ToList();
-
+            return ungradedAttempts;
         }
     }
 }

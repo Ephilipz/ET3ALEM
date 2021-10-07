@@ -1,15 +1,14 @@
-import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { plainToClass } from 'class-transformer';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {plainToClass} from 'class-transformer';
 import * as moment from 'moment';
-import { ToastrService } from 'ngx-toastr';
-import { filter, map } from 'rxjs/operators';
-import { AnswerQuestionHeaderComponent } from 'src/app/question/answer-question/answer-question-header/answer-question-header.component';
-import { QuestionAttempt } from 'src/app/question/Models/question-attempt';
-import { Quiz } from 'src/app/quiz/Model/quiz';
-import { QuizAttempt } from 'src/app/quiz/Model/quiz-attempt';
-import { QuizAttemptService } from 'src/app/quiz/services/quiz-attempt.service';
-import { QuizService } from 'src/app/quiz/services/quiz.service';
+import {ToastrService} from 'ngx-toastr';
+import {map} from 'rxjs/operators';
+import {AnswerQuestionHeaderComponent} from 'src/app/question/answer-question/answer-question-header/answer-question-header.component';
+import {Quiz} from 'src/app/quiz/Model/quiz';
+import {QuizAttempt} from 'src/app/quiz/Model/quiz-attempt';
+import {QuizAttemptService} from 'src/app/quiz/services/quiz-attempt.service';
+import {QuizService} from 'src/app/quiz/services/quiz.service';
 
 @Component({
   selector: 'take-quiz',
@@ -27,21 +26,23 @@ export class TakeQuizComponent implements OnInit {
   endDate: Date;
   id: number = -1;
 
-  constructor(private quizService: QuizService, private route: ActivatedRoute, private toastr: ToastrService, private router: Router, private quizAttemptService: QuizAttemptService) {
+  constructor(private quizService: QuizService, private route: ActivatedRoute,
+              private toastr: ToastrService, private router: Router,
+              private quizAttemptService: QuizAttemptService) {
 
   }
 
   ngOnInit(): void {
     this.route.paramMap
       .pipe(map(() => window.history.state)).subscribe(
-        (state) => {
-          if (state.hasOwnProperty('quizAttemptId'))
-            this.id = state.quizAttemptId;
-        }
-      );
+      (state) => {
+        if (state.hasOwnProperty('quizAttemptId'))
+          this.id = state.quizAttemptId;
+      }
+    );
 
     if (this.id == -1) {
-      this.router.navigate(['../'], { relativeTo: this.route });
+      this.router.navigate(['../'], {relativeTo: this.route});
       return;
     }
 
@@ -59,10 +60,10 @@ export class TakeQuizComponent implements OnInit {
                 this.endDate = moment.utc().add(this.quiz.DurationSeconds, 'seconds').toDate();
                 this.isLoaded = true;
               },
-              (err) => this.errorLoadingQuiz(err)
+              () => this.errorLoadingQuiz()
             )
           },
-          (err) => this.errorLoadingQuiz(err)
+          () => this.errorLoadingQuiz()
         )
       });
     }
@@ -76,14 +77,14 @@ export class TakeQuizComponent implements OnInit {
           this.endDate = moment.utc(this.quizAttempt.StartTime.toString() + 'Z').add(this.quiz.DurationSeconds, 'seconds').toDate();
           this.isLoaded = true;
         },
-        (err) => this.errorLoadingQuiz(err)
+        () => this.errorLoadingQuiz()
       );
     }
   }
 
-  errorLoadingQuiz(error) {
+  errorLoadingQuiz() {
     this.toastr.error('unable to load this quiz');
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.router.navigate(['../'], {relativeTo: this.route});
   }
 
   quizFinished() {
@@ -99,10 +100,10 @@ export class TakeQuizComponent implements OnInit {
     this.quizAttempt.SubmitTime = moment.utc().toDate();
     this.quizAttempt.UpdateQuestionTypes();
     this.quizAttemptService.updateQuizAttempt(this.quizAttempt).subscribe(
-      (success) => {
-        this.router.navigate(['../../../viewAttempt', this.quizAttempt.Id], { relativeTo: this.route });
+      () => {
+        this.router.navigate(['../../../viewAttempt', this.quizAttempt.Id], {relativeTo: this.route});
       },
-      (err) => {
+      () => {
         this.toastr.error('unable to submit quiz');
       }
     )
@@ -110,8 +111,7 @@ export class TakeQuizComponent implements OnInit {
 
   private getQuestionAttempts() {
     this.AnswerQuestionComponents.forEach((component, i) => {
-      const attempt = component.getQuestionAttempt();
-      this.quizAttempt.QuestionsAttempts[i] = attempt;
+      this.quizAttempt.QuestionsAttempts[i] = component.getQuestionAttempt();
     });
   }
 

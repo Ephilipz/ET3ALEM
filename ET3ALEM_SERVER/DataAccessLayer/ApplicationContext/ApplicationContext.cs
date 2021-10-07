@@ -49,7 +49,7 @@ namespace Server_Application.Data
                 .HasValue<LongAnswerAttempt>(QuestionType.LongAnswer);
 
             modelBuilder.Entity<MCQAttmept>()
-                .HasMany(mcqAttmep => mcqAttmep.Choices)
+                .HasMany(mcqAttempt => mcqAttempt.Choices)
                 .WithMany(choice => choice.MCQAttmepts)
                 .UsingEntity(j => j.ToTable("ChoiceMcqAttempt"));
 
