@@ -21,11 +21,11 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     return next.handle(req).pipe(catchError(error => {
-      //if unauthenticated, try to refresh the token
+      // if unauthenticated, try to refresh the token
       if (error instanceof HttpErrorResponse && error.status === 401) {
         return this.handle401Error(req, next);
       }
-      //if unable to refresh token, logout
+      // if unable to refresh token, logout
       else if (req.url.toLowerCase().includes('refresh')) {
         this.authService.logout();
         return;
@@ -40,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private addToken(request: HttpRequest<any>, token: string) {
     return request.clone({
       setHeaders: {
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
   }
@@ -54,14 +54,14 @@ export class AuthInterceptor implements HttpInterceptor {
         switchMap((token: Tokens) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.JWT);
-          return next.handle(this.addToken(request, token.JWT))
+          return next.handle(this.addToken(request, token.JWT));
         }));
     } else {
       return this.refreshTokenSubject.pipe(
         filter(token => token != null),
         take(1),
         switchMap(jwt => {
-          return next.handle(this.addToken(request, jwt))
+          return next.handle(this.addToken(request, jwt));
         }));
     }
   }

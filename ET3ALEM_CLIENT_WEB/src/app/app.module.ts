@@ -14,6 +14,7 @@ import { AuthInterceptor } from './Shared/services/auth.interceptor';
 import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
 import { MainMenuComponent } from './General/components/main-menu/main-menu.component';
+import { HttpErrorInterceptor } from './Shared/services/error.interceptor';
 
 
 
@@ -44,7 +45,11 @@ import { MainMenuComponent } from './General/components/main-menu/main-menu.comp
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true
-  }],
+  }, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpErrorInterceptor,
+    multi: true
+  },],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
