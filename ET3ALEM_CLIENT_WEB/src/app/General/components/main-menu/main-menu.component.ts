@@ -22,12 +22,13 @@ export class MainMenuComponent implements OnInit {
       () => {
         this.isLoggedIn = this.auth.isLoggedIn();
         this.toastr.info('Logged Out');
-        this.router.navigate(['']);
       },
       (err) => {
         this.isLoggedIn = this.auth.isLoggedIn();
         this.toastr.info('Logged Out');
         console.error('logout error', err);
+      },
+      () => {
         this.router.navigate(['']);
       });
 

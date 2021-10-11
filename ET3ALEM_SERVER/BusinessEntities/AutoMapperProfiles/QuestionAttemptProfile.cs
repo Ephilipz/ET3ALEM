@@ -9,7 +9,10 @@ namespace BusinessEntities.AutoMapperProfiles
         public QuestionAttemptProfile()
         {
             CreateMap<QuestionAttempt, QuestionAttemptVM>().IncludeAllDerived();
-            CreateMap<LongAnswerAttempt, LongQuestionAttemptVM>();
+            CreateMap<LongAnswerAttempt, LongAnswerAttemptVM>();
+            CreateMap<MCQAttmept, MCQAttemptVM>();
+            CreateMap<TrueFalseAttempt, TrueFalseAttemptVM>();
+            CreateMap<ShortAnswerAttempt, ShortAnswerAttemptVM>();
         }
     }
 }

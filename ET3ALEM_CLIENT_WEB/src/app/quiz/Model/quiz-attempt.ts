@@ -17,7 +17,7 @@ export class QuizAttempt {
     Quiz: Quiz;
     @Type(() => Date)
     StartTime: Date;
-    @Type(() => QuestionAttempt)
+    // @Type(() => QuestionAttempt)
     @Transform((value, object, type) => QuestionTypeResolver.getSpecificQuestionAttempt(value))
     QuestionsAttempts: Array<QuestionAttempt> = [];
     Grade: number;

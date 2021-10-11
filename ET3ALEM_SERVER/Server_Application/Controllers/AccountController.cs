@@ -120,7 +120,13 @@ namespace Server_Application.Controllers
             try
             {
                 var userPrincipal = HttpContext.User;
-                await DeleteToken(await _userManager.GetUserAsync(userPrincipal), RefreshToken);
+                if (userPrincipal.Claims.Any())
+                {
+                    await DeleteToken(await _userManager.GetUserAsync(userPrincipal), RefreshToken);
+                }
+            }
+            catch (Exception)
+            {
             }
             finally
             {
@@ -133,7 +139,7 @@ namespace Server_Application.Controllers
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordVM.Email);
             if (user == null)
-                throw new CustomExceptionBase("Invalid token");
+                throw new CustomExceptionBase("No user found with this email");
             await DeleteToken(user, PasswordRecoveryToken);
             var claims = new List<Claim> {new(JwtRegisteredClaimNames.Sub, user.Email)};
             var recoveryToken = _tokenHandler.GenerateJwt(claims, 15);

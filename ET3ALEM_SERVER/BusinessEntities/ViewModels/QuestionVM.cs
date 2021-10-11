@@ -18,7 +18,7 @@ namespace BusinessEntities.ViewModels
     public class MultipleChoiceQuestionVM : QuestionVM
     { 
         public McqAnswerType McqAnswerType { get; set; }
-        public List<ChoiceVM> Choices { get; set; } = new List<ChoiceVM>();
+        public List<ChoiceVM> Choices { get; set; } = new();
     }
     public class ChoiceVM
     {
