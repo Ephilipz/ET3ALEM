@@ -1,21 +1,18 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { RegisterUser } from '../Model/User';
-import { tap, catchError, mapTo } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
-import { Tokens } from '../Model/Tokens';
-import { Observable, of, throwError } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-import { LocalstorgeService } from 'src/app/Shared/services/localstorge.service';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {RegisterUser} from '../Model/User';
+import {tap, catchError, mapTo} from 'rxjs/operators';
+import {environment} from 'src/environments/environment';
+import {Router} from '@angular/router';
+import {Tokens} from '../Model/Tokens';
+import {Observable, of, throwError} from 'rxjs';
+import {ToastrService} from 'ngx-toastr';
+import {LocalstorgeService} from 'src/app/Shared/services/localstorge.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  JWT = 'id_token';
-  Refresh = 'refresh';
 
   constructor(
     private http: HttpClient,
@@ -25,24 +22,27 @@ export class AuthService {
 
   }
 
-  login(email: string, password: string): Observable<boolean> {
-    return this.http.post<Tokens>(environment.baseUrl + '/api/Account/login', { email, password }).pipe(
+  private _nextUrlPath: string;
+
+  get nextUrlPath() {
+    if (this._nextUrlPath) {
+      return this._nextUrlPath;
+    }
+    return '';
+  }
+
+  set nextUrlPath(val) {
+    this._nextUrlPath = val;
+  }
+
+  login(email: string, password: string): Observable<any> {
+    return this.http.post<Tokens>(environment.baseUrl + '/api/Account/login', {email, password}).pipe(
       tap(
         tokens => {
           this.setSession(tokens);
           this.toastyService.success('Welcome');
-        }),
-      mapTo(true),
-      catchError(err => {
-        if (err.error[Object.keys(err.error)[0]][0] != undefined) {
-          this.toastyService.error(err.error[Object.keys(err.error)[0]][0]);
-        }
-        else {
-          this.toastyService.error(err);
-        }
-        return of(false);
-      }));
-
+        })
+    );
   }
 
   register(registerUserObject: RegisterUser) {
@@ -54,18 +54,8 @@ export class AuthService {
         token => {
           this.setSession(token);
           this.toastyService.success('Welcome');
-        }),
-      mapTo(true),
-      catchError(err => {
-        if (err.error[Object.keys(err.error)[0]][0] != undefined) {
-          this.toastyService.clear();
-          this.toastyService.error(err.error[Object.keys(err.error)[0]][0], 'Error');
-        }
-        else {
-          this.toastyService.error('Unable to register', 'Unknown Error');
-        }
-        return throwError(err);
-      }));
+        })
+    );
   }
 
   refresh() {
@@ -104,32 +94,12 @@ export class AuthService {
   }
 
   sendRecoveryMail(email: string) {
-    return this.http.post(environment.baseUrl + '/api/Account/sendRecoveryMail', { email }).pipe(
-      tap(() => this.toastyService.success('email is sent, check you inbox', 'success')),
-      mapTo(true),
-      catchError(error => {
-        if (error.status == 404) {
-          this.toastyService.error('email does not exist', 'error');
-        } else {
-          this.toastyService.error('error sending email', 'error');
-        }
-        return of(false);
-      }));
+    return this.http.post(environment.baseUrl + '/api/Account/sendRecoveryMail', {email}).pipe(
+      tap(() => this.toastyService.success('email is sent, check you inbox', 'success')));
   }
 
   resetPassword(resetPasswordVM: { recoveryToken: string, password: string, confirmPassword: string }) {
-    return this.http.post(environment.baseUrl + '/api/Account/ResetPassword', resetPasswordVM).pipe(
-      tap(() => this.toastyService.success('password is reset', 'success')),
-      mapTo(true),
-      catchError(error => {
-        if (error.status == 404) {
-          this.toastyService.error('invalid reset link', 'error');
-        } else {
-          this.toastyService.error('error resetting password', 'error');
-        }
-        return of(false);
-      })
-    );
+    return this.http.post(environment.baseUrl + '/api/Account/ResetPassword', resetPasswordVM);
   }
 
 

@@ -74,6 +74,15 @@ h2.secondaryTitle {
   text-align: center;
 }
 
+h1.largeNote {
+  font-size: 3em;
+  color: gray;
+  text-align: center;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  font-weight: 300;
+}
+
 .sideBubble {
   height: 100%;
   background: green;

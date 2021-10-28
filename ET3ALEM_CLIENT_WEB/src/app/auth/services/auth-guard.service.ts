@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -18,6 +17,7 @@ export class AuthGuardService implements CanActivate {
       return false;
     }
     if (this.authService.isLoggedOut()) {
+      this.authService.nextUrlPath = state.url.match(/(?:https?:\/\/)?(?:[^?\/\s]+[?\/])(.*)/)[0];
       this.router.navigate(['auth']);
       return false;
     }

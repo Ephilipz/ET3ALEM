@@ -67,7 +67,7 @@
     </table>
 
     <div class="col emptyListCol" *ngIf="isLoaded">
-        <h1 class="emptyQuizzes" *ngIf="quizListDS.data.length == 0">You do not have any quizzes yet</h1>
+        <h1 class="largeNote" *ngIf="quizListDS.data.length == 0">You do not have any quizzes yet</h1>
         <button mat-flat-button class="blue large newQuizButton" [routerLink]="'../create'">New Quiz</button>
     </div>
 </div>

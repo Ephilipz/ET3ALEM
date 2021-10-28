@@ -27,14 +27,16 @@ namespace Server_Application.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly TokenHandler _tokenHandler;
         private readonly UserManager<User> _userManager;
+        private readonly IConfiguration _iConfiguration;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
-            IConfiguration configuration, IEmailDsl emailDsl)
+            IConfiguration configuration, IEmailDsl emailDsl, IConfiguration iConfiguration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenHandler = new TokenHandler(configuration);
             _iEmailDsl = emailDsl;
+            _iConfiguration = iConfiguration;
         }
 
         [HttpPost("Register")]
@@ -158,8 +160,8 @@ namespace Server_Application.Controllers
         private string GenerateRecoveryEmailHTMLContent(string recoveryToken)
         {
             var resetUrl =
-                $"{_tokenHandler._IConfiguration.GetValue<string>("ClientUrl")}/auth/reset?token={recoveryToken}";
-            var htmlContent = $@"<a href=""{resetUrl}"">follow this link to reset your password</a>";
+                $"{_iConfiguration.GetValue<string>("ClientUrl")}/auth/reset?token={recoveryToken}";
+            var htmlContent = $@"<a href=""{resetUrl}"">follow this link to reset your ET3ALLIM password</a>";
             return htmlContent;
         }
 

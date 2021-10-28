@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ToastrService} from "ngx-toastr";
 import {QuizService} from "../../services/quiz.service";
-import {Quiz} from "../../Model/quiz";
 import {UngradedQuizTableVM} from "../../Model/ungraded-quiz-table-vm";
 import {QuizAttempt} from "../../Model/quiz-attempt";
 import {QuizAttemptService} from "../../services/quiz-attempt.service";
@@ -12,37 +11,43 @@ import {plainToClass} from "class-transformer";
   templateUrl: './ungraded-quizzes.component.html',
   styleUrls: ['./ungraded-quizzes.component.css']
 })
+
 export class UngradedQuizzesComponent implements OnInit {
 
   quizList: Array<UngradedQuizTableVM> = [];
+  isLoaded = false;
+
   ungradedAttemptsForQuizzes = new Map<number, Array<QuizAttempt>>();
-  displayedColumns = ['User','Date','Actions']
+  displayedColumns = ['User', 'Date', 'Actions']
 
   constructor(private toast: ToastrService,
               private quizService: QuizService,
-              private quizAttemptService: QuizAttemptService) { }
+              private quizAttemptService: QuizAttemptService) {
+  }
 
   ngOnInit(): void {
     this.getUngradedQuizzes();
   }
 
-  private getUngradedQuizzes(){
+  private getUngradedQuizzes() {
     this.quizService.getUngradedQuizzes().subscribe(
       (result) => {
         this.quizList = result;
       },
-    (error) => {
+      (error) => {
         this.toast.error('Unable to load ungraded quizzes')
-    }
+      },
+      () => {
+        this.isLoaded = true;
+      }
     )
   }
 
-  public async getUngradedAttemptsForQuiz(quiz: UngradedQuizTableVM){
+  public async getUngradedAttemptsForQuiz(quiz: UngradedQuizTableVM) {
     const quizId = quiz.QuizId;
-    if(this.ungradedAttemptsForQuizzes.has(quizId)){
+    if (this.ungradedAttemptsForQuizzes.has(quizId)) {
       return;
     }
-
     await this.getUngradedAttemptsForQuizFormAPI(quizId);
   }
 

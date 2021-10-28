@@ -12,12 +12,12 @@ export class ConcreteQuestionResultLongAnswerComponent extends AC_ConcreteQuesti
   @Input() questionAttempt: LongAnswerAttempt;
   isCorrectAnswer = false;
 
-  constructor() { 
+  constructor() {
     super();
   }
 
   ngOnInit(): void {
-    this.isCorrectAnswer = this.questionAttempt.Grade >= this.questionAttempt.Grade;
+    this.isCorrectAnswer = this.questionAttempt.Grade >= this.questionAttempt.QuizQuestion.Grade;
   }
 
 }

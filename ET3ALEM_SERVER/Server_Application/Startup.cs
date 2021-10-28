@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,6 +9,7 @@ using BusinessEntities.Models;
 using DataAccessLayer;
 using DataServiceLayer;
 using ExceptionHandling;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,7 +30,6 @@ namespace Server_Application
     public class Startup
     {
         private readonly string AllowCORS = "_AllowSpecificOrigins";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -53,7 +54,7 @@ namespace Server_Application
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver
-                    {NamingStrategy = new DefaultNamingStrategy()};
+                { NamingStrategy = new DefaultNamingStrategy() };
             });
         }
 
@@ -61,35 +62,39 @@ namespace Server_Application
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
-                .AddAuthentication(options =>
+                .AddAuthentication(options => { ConfigureAuthenticationOptions(options); })
+                .AddJwtBearer(cfg => { ConfigureJWTBearerOptions(cfg); });
+        }
+
+        private static void ConfigureAuthenticationOptions(AuthenticationOptions options)
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }
+
+        private void ConfigureJWTBearerOptions(JwtBearerOptions cfg)
+        {
+            cfg.RequireHttpsMetadata = false;
+            cfg.SaveToken = true;
+            cfg.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = Configuration["Authentication:JwtIssuer"],
+                ValidAudience = Configuration["Authentication:JwtIssuer"],
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:JwtKey"])),
+                // remove delay of token when expire
+                ClockSkew = TimeSpan.Zero
+            };
+            cfg.Events = new JwtBearerEvents
+            {
+                OnAuthenticationFailed = context =>
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(cfg =>
-                {
-                    cfg.RequireHttpsMetadata = false;
-                    cfg.SaveToken = true;
-                    cfg.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidIssuer = Configuration["Authentication:JwtIssuer"],
-                        ValidAudience = Configuration["Authentication:JwtIssuer"],
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:JwtKey"])),
-                        // remove delay of token when expire
-                        ClockSkew = TimeSpan.Zero
-                    };
-                    cfg.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = context =>
-                        {
-                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                                context.Response.Headers.Add("Token-Expired", "true");
-                            return Task.CompletedTask;
-                        }
-                    };
-                });
+                    if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        context.Response.Headers.Add("Token-Expired", "true");
+                    return Task.CompletedTask;
+                }
+            };
         }
 
         private static void ConfigureUserIdentity(IServiceCollection services)
@@ -128,7 +133,8 @@ namespace Server_Application
                 options.AddPolicy(AllowCORS,
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:4200", "http://192.168.1.6:4200")
+                        builder.WithOrigins("http://localhost:4200", "http://192.168.1.6:4200", "https://et3allim.com",
+                                "https://www.et3allim.com")
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();
@@ -139,7 +145,10 @@ namespace Server_Application
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
             app.UseRouting();
             app.UseCors(AllowCORS);
             app.UseForwardedHeaders(new ForwardedHeadersOptions

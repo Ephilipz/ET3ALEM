@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {ExtraFormOptions} from 'src/app/Shared/Classes/forms/ExtraFormOptions';
+import {AuthService} from '../../services/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
+
 export class LoginComponent extends ExtraFormOptions implements OnInit {
 
   isLoading = false;
@@ -33,6 +34,10 @@ export class LoginComponent extends ExtraFormOptions implements OnInit {
       next: res => {
         this.isLoading = false;
         if (res) {
+          if (this.authService.nextUrlPath.length > 0) {
+            this.router.navigate(['/' + this.authService.nextUrlPath]);
+            return;
+          }
           this.router.navigate(['/quiz']);
         }
       },
