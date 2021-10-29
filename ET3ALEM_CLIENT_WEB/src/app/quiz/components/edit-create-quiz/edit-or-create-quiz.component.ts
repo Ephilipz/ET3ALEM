@@ -66,7 +66,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   }
 
   ngOnInit(): void {
-    let id: Number = +this.route.snapshot.paramMap.get('id');
+    let id: number = +this.route.snapshot.paramMap.get('id');
     if (id) {
       this.mode = mode.edit;
       this.quizService.getQuiz(id).subscribe(
@@ -222,15 +222,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       quizQuestions.push(new QuizQuestion(question, grade, 0, i));
     }));
 
-    this.currentQuiz = new Quiz(0, '',
-    this.quizTitle.value, this.quizInstructions.value,
-    (this.durationHours.value * 3600 + this.durationMinutes.value * 60),
-    this.unlimitedTime.value, GeneralHelper.getUTCFromLocal(this.dueStart.value),
-    GeneralHelper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(),
-    this.noDueDate.value, quizQuestions, this.allowedAttempts.value,
-    this.unlimitedAttempts.value, this.showGrade.value,
-    this.autoGrade.value, this.randomOrderQuestions.value,
-    this.includeAllQuestions.value, this.includedQuestionsCount.value);
+    this.createQuizWithQuizQuestions(quizQuestions);
 
     this.quizService.createQuiz(this.currentQuiz).subscribe(
       (quiz: Quiz) => {
@@ -243,32 +235,24 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     )
   }
 
+  private createQuizWithQuizQuestions(quizQuestions: Array<QuizQuestion>) {
+    this.currentQuiz = new Quiz(0, '',
+      this.quizTitle.value, this.quizInstructions.value,
+      (this.durationHours.value * 3600 + this.durationMinutes.value * 60),
+      this.unlimitedTime.value, GeneralHelper.getUTCFromLocal(this.dueStart.value),
+      GeneralHelper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(),
+      this.noDueDate.value, quizQuestions, this.allowedAttempts.value,
+      this.unlimitedAttempts.value, this.showGrade.value,
+      this.autoGrade.value, this.randomOrderQuestions.value,
+      this.includeAllQuestions.value, this.includedQuestionsCount.value);
+  }
+
   async updateQuiz() {
     if (!this.validate())
       return;
 
     await this.richTextComponent.removeUnusedImages();
-
-    await Promise.all(this.createQuestionComponents.map(async (component, i) => {
-      let question = await component.saveQuestion(this.questions[i].Id > 0 ? mode.edit : mode.create);
-      this.questions[i] = GeneralHelper.deepCopy(question);
-      let grade = component.getGrade();
-
-      //check if question already existed in quiz questions
-      let questionIndex = this.currentQuiz.QuizQuestions.map(x => x.Question.Id).indexOf(question.Id);
-      if (questionIndex > -1) {
-        let currentQuizQuestion = this.currentQuiz.QuizQuestions[questionIndex]
-        currentQuizQuestion.Question = question;
-        currentQuizQuestion.Grade = component.getGrade();
-        currentQuizQuestion.Sequence = i;
-      }
-
-      //if not, insert it
-      else {
-        question.Id = 0;
-        this.currentQuiz.QuizQuestions.push(new QuizQuestion(question, grade, 0, i));
-      }
-    }));
+    await this.getQuizQuestionsFromChildComponents();
 
     this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, GeneralHelper.getUTCFromLocal(this.dueStart.value), GeneralHelper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
 
@@ -280,9 +264,31 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       () => {
         this.toastr.error('Quiz not updated');
       }
-    )
+    );
   }
 
+  private async getQuizQuestionsFromChildComponents() {
+    await Promise.all(this.createQuestionComponents.map(async (component, i) => {
+      let question = await component.saveQuestion(this.questions[i].Id > 0 ? mode.edit : mode.create);
+      this.questions[i] = GeneralHelper.deepCopy(question);
+      let grade = component.getGrade();
+
+      //check if question already existed in quiz questions
+      let questionIndex = this.currentQuiz.QuizQuestions.map(x => x.Question.Id).indexOf(question.Id);
+      if (questionIndex > -1) {
+        let currentQuizQuestion = this.currentQuiz.QuizQuestions[questionIndex];
+        currentQuizQuestion.Question = question;
+        currentQuizQuestion.Grade = component.getGrade();
+        currentQuizQuestion.Sequence = i;
+      }
+
+      //if not, insert it
+      else {
+        question.Id = 0;
+        this.currentQuiz.QuizQuestions.push(new QuizQuestion(question, grade, 0, i));
+      }
+    }));
+  }
 }
 
 export enum mode {

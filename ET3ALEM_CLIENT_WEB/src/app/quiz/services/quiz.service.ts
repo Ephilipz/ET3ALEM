@@ -19,7 +19,7 @@ export class QuizService {
     return this.http.post(this.baseRoute, quiz);
   }
 
-  getQuiz(id: Number) {
+  getQuiz(id: number) {
     return this.http.get<Quiz>(this.baseRoute + `/${id}`);
   }
 

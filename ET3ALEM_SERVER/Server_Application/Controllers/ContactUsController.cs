@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Server_Application.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ContactUsController : ControllerBase
@@ -18,7 +17,8 @@ namespace Server_Application.Controllers
         {
             _iContactUsDsl = contactUsDsl;
         }
-
+        
+        [Authorize]
         [HttpGet("GetAll")]
         public async Task<List<ContactUsMessage>> GetAll()
         {
