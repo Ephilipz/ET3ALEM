@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions';
-import { confirmPasswordErrorStateMatcher } from 'src/app/Shared/Classes/forms/confirmPasswordErrorStateMatcher';
-import { AuthService } from '../../services/auth.service';
-import { RegisterUser } from '../../Model/User';
-import { Router } from '@angular/router';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {ExtraFormOptions} from 'src/app/Shared/Classes/forms/ExtraFormOptions';
+import {confirmPasswordErrorStateMatcher} from 'src/app/Shared/Classes/forms/confirmPasswordErrorStateMatcher';
+import {AuthService} from '../../services/auth.service';
+import {RegisterUser} from '../../Model/User';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -18,11 +18,11 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl(''),
-  }, { validators: this.checkMatch });
+  }, {validators: this.checkMatch});
 
   matcher = new confirmPasswordErrorStateMatcher();
 
-  constructor(private AuthService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {
     super();
   }
 
@@ -33,7 +33,7 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
     let _original = formGrp.get('password');
     let _confirm = formGrp.get('confirmPassword');
     if (!_original || !_confirm) return null;
-    return _original.value === _confirm.value ? null : { notSame: true };
+    return _original.value === _confirm.value ? null : {notSame: true};
   }
 
   register() {
@@ -42,13 +42,16 @@ export class RegisterComponent extends ExtraFormOptions implements OnInit {
       this.registerForm.get('email').value,
       this.registerForm.get('password').value,
     );
-    this.AuthService.register(registerUserObject).subscribe(
+    this.authService.register(registerUserObject).subscribe(
       res => {
-        this.router.navigateByUrl('/quiz');
+        if (this.authService.nextUrlPath.length > 0) {
+          this.router.navigate(['/' + this.authService.nextUrlPath]);
+          return;
+        }
+        this.router.navigate(['/quiz']);
       }
     )
   }
-
 
 
 }

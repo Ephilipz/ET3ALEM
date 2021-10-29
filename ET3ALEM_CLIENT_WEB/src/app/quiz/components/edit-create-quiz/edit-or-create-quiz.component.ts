@@ -136,7 +136,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.includedQuestionsCount.updateValueAndValidity();
   }
 
-  //opens dialog to add questions from a question collection
   addFromCollection() {
     this.dialog.open(AddFromQuestionCollectionDialogComponent).afterClosed().subscribe(
       result => {
@@ -149,7 +148,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   }
 
   deleteQuestion(question: Question) {
-    //check if question existed in original quiz questions
     let quizQuestionToDelete: QuizQuestion = this.currentQuiz?.QuizQuestions.find(qQ => qQ.QuestionId == question.Id);
     if (quizQuestionToDelete) {
       quizQuestionToDelete.Id = quizQuestionToDelete.Id * -1;

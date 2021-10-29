@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 namespace Server_Application.Controllers
 {
     [Authorize]
-    [Route("api/Profile")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProfileController : ControllerBase
     {

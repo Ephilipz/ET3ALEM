@@ -7,33 +7,33 @@ namespace DataServiceLayer
 {
     public class SendGridEmailDsl : IEmailDsl
     {
-        private readonly IConfiguration _IConfiguration;
-        private readonly string ApiKey;
-        private readonly string EmailFrom;
-        private readonly string NameFrom;
+        private readonly IConfiguration _iConfiguration;
+        private readonly string _apiKey;
+        private readonly string _emailFrom;
+        private readonly string _nameFrom;
 
-        public SendGridEmailDsl(IConfiguration IConfiguration)
+        public SendGridEmailDsl(IConfiguration configuration)
         {
-            _IConfiguration = IConfiguration;
-            ApiKey = _IConfiguration.GetSection("EmailConfiguration").GetValue<string>("ApiKey");
-            EmailFrom = _IConfiguration.GetSection("EmailConfiguration").GetValue<string>("Sender");
-            NameFrom = _IConfiguration.GetSection("EmailConfiguration").GetValue<string>("User");
+            _iConfiguration = configuration;
+            _apiKey = _iConfiguration.GetSection("EmailConfiguration").GetValue<string>("ApiKey");
+            _emailFrom = _iConfiguration.GetSection("EmailConfiguration").GetValue<string>("Sender");
+            _nameFrom = _iConfiguration.GetSection("EmailConfiguration").GetValue<string>("User");
         }
 
         public Task SendEmail(string subject, string plainTextContent, string htmlContent, string emailTo,
             string nameTo = null, string emailFrom = null, string nameFrom = null)
         {
-            var Client = new SendGridClient(ApiKey);
-            var from = new EmailAddress(emailFrom, nameFrom);
-            var to = new EmailAddress(emailTo, nameTo);
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-            return Client.SendEmailAsync(msg);
+            EmailAddress from = new EmailAddress(emailFrom, nameFrom);
+            EmailAddress to = new EmailAddress(emailTo, nameTo);
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            SendGridClient client = new SendGridClient(_apiKey);
+            return client.SendEmailAsync(msg);
         }
 
         public Task SendEmail(string subject, string plainTextContent, string htmlContent, string emailTo,
             string nameTo = null)
         {
-            return SendEmail(subject, plainTextContent, htmlContent, emailTo, nameTo, EmailFrom, NameFrom);
+            return SendEmail(subject, plainTextContent, htmlContent, emailTo, nameTo, _emailFrom, _nameFrom);
         }
     }
 }

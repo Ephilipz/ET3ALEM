@@ -11,13 +11,12 @@ using ExceptionHandling.CustomExceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Server_Application.Models.Account;
 using TokenHandler = Server_Application.Models.Account.TokenHandler;
 
 namespace Server_Application.Controllers
 {
-    [Route("api/Account")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -100,20 +99,23 @@ namespace Server_Application.Controllers
             if (user == null) return BadRequest();
 
             var savedRefreshToken = await GetToken(user, RefreshToken);
-            if (savedRefreshToken != tokens.RefreshToken) throw new CustomExceptionBase("Invalid refresh token");
+            if (savedRefreshToken != tokens.RefreshToken)
+            {
+                throw new CustomExceptionBase("Invalid refresh token");
+            }
 
-            try
-            {
-                var newJWT = _tokenHandler.GenerateJwt(principal.Claims);
-                var newRefreshToken = _tokenHandler.GenerateRefreshToken();
-                await DeleteToken(user, RefreshToken);
-                await SaveToken(user, newRefreshToken, RefreshToken);
-                return Ok(new Tokens(newJWT, newRefreshToken, user.Id));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
-            }
+            var result = await GenerateJWTandRefreshTokens(principal, user);
+            return Ok(result);
+        }
+
+        private async Task<Tokens> GenerateJWTandRefreshTokens(ClaimsPrincipal principal, User user)
+        {
+            string newJWT = _tokenHandler.GenerateJwt(principal.Claims);
+            var newRefreshToken = _tokenHandler.GenerateRefreshToken();
+            await DeleteToken(user, RefreshToken);
+            await SaveToken(user, newRefreshToken, RefreshToken);
+            Tokens result = new Tokens(newJWT, newRefreshToken, user.Id);
+            return result;
         }
 
         [HttpGet("Logout")]
@@ -143,8 +145,8 @@ namespace Server_Application.Controllers
             if (user == null)
                 throw new CustomExceptionBase("No user found with this email");
             await DeleteToken(user, PasswordRecoveryToken);
-            var claims = new List<Claim> {new(JwtRegisteredClaimNames.Sub, user.Email)};
-            var recoveryToken = _tokenHandler.GenerateJwt(claims, 15);
+            List<Claim> claims = new List<Claim> {new(JwtRegisteredClaimNames.Sub, user.Email)};
+            string recoveryToken = _tokenHandler.GenerateJwt(claims, 15);
 
             await SaveToken(user, recoveryToken, PasswordRecoveryToken);
             await SendPasswordRecoveryMail(recoveryToken, user);
@@ -169,25 +171,26 @@ namespace Server_Application.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordVM resetPasswordVM)
         {
             var user = await GetUserForRecoverToken(resetPasswordVM);
-            if (user != null)
+            if (user == null)
             {
-                var recoveryToken = await GetToken(user, PasswordRecoveryToken);
-                JwtSecurityToken token = null;
-                if (recoveryToken != null)
-                    token = new JwtSecurityToken(recoveryToken);
-                if (token?.ValidTo < DateTime.UtcNow || string.IsNullOrEmpty(recoveryToken))
-                {
-                    await DeleteToken(user, PasswordRecoveryToken);
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return NotFound();
+                throw new CustomExceptionBase("Error loading user for this token");
             }
 
-            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var passwordChangeResult =
+            string recoveryToken = await GetToken(user, PasswordRecoveryToken);
+            if (string.IsNullOrWhiteSpace(recoveryToken))
+            {
+                throw new CustomExceptionBase("Expired or Invalid link");
+            }
+
+            JwtSecurityToken token = new JwtSecurityToken(recoveryToken);
+            if (token != null && token.ValidTo < DateTime.UtcNow)
+            {
+                await DeleteToken(user, PasswordRecoveryToken);
+                throw new CustomExceptionBase("Expired or Invalid link");
+            }
+
+            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            IdentityResult passwordChangeResult =
                 await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordVM.Password);
             if (passwordChangeResult.Succeeded)
             {
@@ -195,7 +198,7 @@ namespace Server_Application.Controllers
                 return Ok();
             }
 
-            return NotFound();
+            throw new CustomExceptionBase("Error changing password");
         }
 
         private async Task<User> GetUserForRecoverToken(ResetPasswordVM resetPasswordVM)

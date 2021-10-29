@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using BusinessEntities.Models;
 using DataServiceLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Server_Application.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ContactUsController : ControllerBase
