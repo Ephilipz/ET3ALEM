@@ -23,6 +23,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Rollbar;
 using Server_Application.Data;
 
 namespace Server_Application
@@ -45,7 +46,22 @@ namespace Server_Application
             ConfigureUserIdentity(services);
             ConfigureJWT(services);
             ConfigureNewtonsoft(services);
+            
+            ConfigureRollbar();
+
             services.AddAutoMapper(typeof(UserProfile).Assembly);
+        }
+
+        private static void ConfigureRollbar()
+        {
+            RollbarInfrastructureConfig config =
+                new RollbarInfrastructureConfig(
+                    "f4dc4b60bcab441c82943406090dbd02",
+                    "Et3allim_DEV"
+                );
+            RollbarInfrastructure
+                .Instance
+                .Init(config);
         }
 
         private static void ConfigureNewtonsoft(IServiceCollection services)

@@ -1,17 +1,28 @@
-import { Component, OnInit, ViewChild, Input, ComponentFactoryResolver, ViewContainerRef, ComponentFactory, ComponentRef, Type, OnDestroy } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component';
-import { Question } from '../../Models/question';
-import { McqAnswerType, MultipleChoiceQuestion } from '../../Models/mcq';
-import { Choice } from '../../Models/choice';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { TrueFalseQuestion } from '../../Models/true-false-question';
-import { QuestionType } from '../../Models/question-type.enum';
-import { mode } from 'src/app/quiz/components/edit-create-quiz/edit-or-create-quiz.component';
-import { QuestionTypeResolver } from '../../shared/question-type-resolver';
-import { AC_ConcreteEditQuestion } from '../ConcreteQuestions/ac-concrete-question';
-import { DynamicComponentHostDirective } from '../../../Shared/directives/dynamic-component-host.directive';
-import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Input,
+  ComponentFactoryResolver,
+  ViewContainerRef,
+  ComponentFactory,
+  ComponentRef,
+  Type,
+  OnDestroy
+} from '@angular/core';
+import {FormControl, Validators} from '@angular/forms';
+import {RichTextEditorComponent} from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component';
+import {Question} from '../../Models/question';
+import {McqAnswerType, MultipleChoiceQuestion} from '../../Models/mcq';
+import {Choice} from '../../Models/choice';
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
+import {TrueFalseQuestion} from '../../Models/true-false-question';
+import {QuestionType} from '../../Models/question-type.enum';
+import {mode} from 'src/app/quiz/components/edit-create-quiz/edit-or-create-quiz.component';
+import {QuestionTypeResolver} from '../../shared/question-type-resolver';
+import {AC_ConcreteEditQuestion} from '../ConcreteQuestions/ac-concrete-question';
+import {DynamicComponentHostDirective} from '../../../Shared/directives/dynamic-component-host.directive';
+import {GeneralHelper} from 'src/app/Shared/Classes/helpers/GeneralHelper';
 
 @Component({
   selector: 'app-create-question',
@@ -20,7 +31,7 @@ import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
 })
 export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
 
-  @ViewChild(DynamicComponentHostDirective, { static: true }) dynamicComponentHost: DynamicComponentHostDirective;
+  @ViewChild(DynamicComponentHostDirective, {static: true}) dynamicComponentHost: DynamicComponentHostDirective;
   componentRef: ComponentRef<AC_ConcreteEditQuestion>;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {
@@ -92,14 +103,20 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
     return this.question;
   }
 
-  public getQuestion(){
+  public getQuestion() {
     let question = this.componentRef.instance.getQuestion();
     question.Body = this.questionContentFC.value;
     return question;
   }
 
-  public getGrade() : number{
+  public getGrade(): number {
     return this.grade.value ? Math.max(0, this.grade.value) : 1;
+  }
+
+  public validateQuestion() {
+    if(!this.questionContentFC.value || this.questionContentFC.value.length == 0)
+      throw 'Question body cannot be empty';
+    this.componentRef.instance.checkQuestionValidation();
   }
 
   ngOnDestroy(): void {

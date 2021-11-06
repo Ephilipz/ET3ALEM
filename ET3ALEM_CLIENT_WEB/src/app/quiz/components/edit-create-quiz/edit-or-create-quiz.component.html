@@ -102,7 +102,7 @@
 
             <div class="container-fluid px-2" (cdkDropListDropped)="drop($event)" cdkDropList>
                 <div class="row mb-3" *ngFor="let question of questions; let i = index" cdkDrag cdkDragLockAxis="y">
-                    <div class="dragHandle m-auto" cdkDragHandle>
+                    <div class="dragHandle m-auto" cdkDragHandle matTooltip="Drag To Reorder">
                         <mat-icon>open_with</mat-icon>
                     </div>
                     <mat-expansion-panel style="width: 90%" class="m-0" expanded>
@@ -116,10 +116,10 @@
                     </mat-expansion-panel>
 
                     <button mat-icon-button class="m-auto">
-                        <mat-icon class="copyIconButton" (click)="duplicateQuestion(i)">file_copy</mat-icon>
+                        <mat-icon class="copyIconButton" matTooltip="duplicate" (click)="duplicateQuestion(i)">file_copy</mat-icon>
                     </button>
                     <button mat-icon-button class="m-auto">
-                        <mat-icon class="deleteIconButton" (click)="deleteQuestion(question)">delete</mat-icon>
+                        <mat-icon class="deleteIconButton" matTooltip="delete" (click)="deleteQuestion(question)">delete</mat-icon>
                     </button>
                 </div>
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Rollbar;
 
 namespace ExceptionHandling
 {
@@ -25,13 +26,22 @@ namespace ExceptionHandling
             }
             catch (Exception error)
             {
+                if (error is not CustomExceptionBase)
+                {
+                    RollbarLocator.RollbarInstance.Error(error);
+                }
                 HttpResponse response = context.Response;
-                response.ContentType = "application/json";
-                string message = error is CustomExceptionBase ? error.Message : "General Error";
-                response.StatusCode = GetStatusCodeFromError(error);
-                string result = JsonSerializer.Serialize(new {message});
-                await response.WriteAsync(result);
+                await WriteErrorMessageToResponse(response, error);
             }
+        }
+
+        private static async Task WriteErrorMessageToResponse(HttpResponse response, Exception error)
+        {
+            response.ContentType = "application/json";
+            response.StatusCode = GetStatusCodeFromError(error);
+            string message = error is CustomExceptionBase ? error.Message : "General Error";
+            string result = JsonSerializer.Serialize(new {message});
+            await response.WriteAsync(result);
         }
 
         private static int GetStatusCodeFromError(Exception error)

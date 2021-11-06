@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+      <PackageReference Include="Rollbar" Version="5.0.4-beta" />
     </ItemGroup>
 
 </Project>
