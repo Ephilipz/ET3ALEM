@@ -6,6 +6,7 @@ namespace BusinessEntities.ViewModels
     public class QuestionAttemptVM
     {
         public int Id { get; set; }
+        public int QuizQuestionId { get; set; }
         public QuizQuestionVM QuizQuestion { get; set; }
     }
     public class LongAnswerAttemptVM : QuestionAttemptVM
