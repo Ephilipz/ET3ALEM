@@ -42,7 +42,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
   today: Date = moment().toDate();
 
-  questionLimit = 5;
+  questionLimit = 50;
 
   quizTitle = new FormControl('', [Validators.required]);
   quizInstructions = new FormControl();
@@ -52,7 +52,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   dueStart = new FormControl(moment().toDate());
   dueEnd = new FormControl(moment().add(3, 'days').toDate());
   noDueDate = new FormControl(false);
-  allowedAttempts = new FormControl(1, [Validators.max(10), Validators.min(0)]);
+  allowedAttempts = new FormControl(1, [Validators.max(10), Validators.min(1)]);
   unlimitedAttempts = new FormControl(false);
   showGrade = new FormControl(true);
   autoGrade = new FormControl(true);
@@ -280,9 +280,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       () => {
         this.toastr.success('Quiz Updated');
         this.router.navigate(['../../manage'], {relativeTo: this.route});
-      },
-      () => {
-        this.toastr.error('Quiz not updated');
       }
     );
   }

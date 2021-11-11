@@ -1,7 +1,7 @@
-<div class="container-fluid p-5 parentContainer" *ngIf="isLoaded">
-    <h1 class="blueHeader">{{ mode == 1 ? 'Create Quiz' : 'Edit Quiz' }}</h1>
+<div class="container-fluid py-5 parentContainer" *ngIf="isLoaded">
+    <h1 class="blueHeader mb-4">{{ mode == 1 ? 'Create Quiz' : 'Edit Quiz' }}</h1>
 
-    <div class="container-fluid px-5 py-3">
+    <div class="container-fluid px-1 py-3">
 
         <!-- Quiz Basic Data -->
         <mat-expansion-panel expanded>
@@ -11,13 +11,13 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <div class="container-fluid px-4">
-                <mat-form-field class="mx-5">
+            <div class="container-fluid">
+                <mat-form-field class="mx-1 mb-3">
                     <mat-label>Quiz Title</mat-label>
                     <input matInput [formControl]="quizTitle" required autofocus>
                     <mat-error>{{getControlErrors(quizTitle, 'quiz title')}}</mat-error>
                 </mat-form-field>
-                <div class="row px-3">
+                <div class="row px-1">
                     <h2 class="col-12" *ngIf="richTextLoaded">Quiz Instructions</h2>
                     <app-rich-text-editor #RichTextEditorComponent [control]="quizInstructions" class="col-12"
                         (onLoad)="richTextLoaded = true"></app-rich-text-editor>
@@ -38,26 +38,26 @@
             <div class="container-fluid px-4">
                 <h2 class="mt-4">Duration</h2>
                 <div class="row px-5 align-items-center">
-                    <mat-form-field class="smallMatInput mr-4 col-2">
+                    <mat-form-field class="smallMatInput col-lg-2">
                         <input matInput placeholder="hours" [formControl]="durationHours" type="number" max="5" min="0">
                         <mat-error>{{getControlErrors(durationHours, 'hours')}}</mat-error>
                     </mat-form-field>
-                    <mat-form-field class="smallMatInput col-2">
+                    <mat-form-field class="smallMatInput col-lg-2">
                         <input matInput placeholder="minutes" [formControl]="durationMinutes" type="number" min="0">
                         <mat-error>{{getControlErrors(durationMinutes, 'minutes')}}</mat-error>
                     </mat-form-field>
-                    <mat-checkbox class="col-2 largeCheckBox" [formControl]="unlimitedTime"
+                    <mat-checkbox class="col-lg-2 largeCheckBox" [formControl]="unlimitedTime"
                         (change)="toggleDisable($event.checked, ['durationHours', 'durationMinutes'])">Unlimited Time
                     </mat-checkbox>
                 </div>
-                <h2 class="mt-4 mb-0 pb-0">Dates</h2>
+                <h2 class="mt-5">Dates</h2>
                 <div class="row px-4 align-items-center m-0">
                     <mat-form-field class="col-lg-2">
                         <input matInput [ngxMatDatetimePicker]="startDate" placeholder="start date"
                             [formControl]="dueStart" [max]="noDueDate.value ? null : subtractDays(dueEnd.value)"
                             [min]="today">
                         <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
-                        <ngx-mat-datetime-picker #startDate [showSeconds]="false"></ngx-mat-datetime-picker>
+                        <ngx-mat-datetime-picker #startDate [showSeconds]="false" ></ngx-mat-datetime-picker>
                     </mat-form-field>
                     <mat-form-field class="col-lg-2">
                         <input matInput [ngxMatDatetimePicker]="endDate" placeholder="end date" [formControl]="dueEnd"
@@ -69,26 +69,24 @@
                     <mat-checkbox class="col-lg-2 largeCheckBox" [formControl]="noDueDate"
                         (change)="toggleDisable($event.checked, ['dueEnd'])">No Due Date</mat-checkbox>
                 </div>
-                <h2 class="mt-4">Quiz Attempts</h2>
+                <h2 class="mt-5">Quiz Attempts</h2>
                 <div class="row px-5 align-items-center">
-                    <mat-form-field class="smallMatInput col-2">
+                    <mat-form-field class="smallMatInput col-lg-2">
                         <input matInput placeholder="Allowed Attempts" [formControl]="allowedAttempts" type="number"
                             min="0">
                         <mat-error>{{getControlErrors(allowedAttempts, 'attempts')}}</mat-error>
                     </mat-form-field>
-                    <mat-checkbox class="col-2 largeCheckBox" [formControl]="unlimitedAttempts"
+                    <mat-checkbox class="col-lg-2 largeCheckBox" [formControl]="unlimitedAttempts"
                         (change)="toggleDisable($event.checked, ['allowedAttempts'])">Unlimited Attempts
                     </mat-checkbox>
                 </div>
-                <h2 class="mt-4">Grading</h2>
+                <h2 class="mt-5">Grading</h2>
                 <div class="row">
-                    <mat-checkbox class="px-5 col-3 largeCheckBox" [formControl]="showGrade">Show Grade After Quiz
+                    <mat-checkbox class="px-5 col-lg-4 largeCheckBox" [formControl]="showGrade">Show Grade After Quiz
                     </mat-checkbox>
-                    <mat-checkbox class="px-5 col-3 largeCheckBox" [formControl]="autoGrade">Auto Grade The Quiz
+                    <mat-checkbox class="px-5 col-lg-4 largeCheckBox" [formControl]="autoGrade">Auto Grade The Quiz
                     </mat-checkbox>
                 </div>
-
-
             </div>
         </mat-expansion-panel>
 
@@ -171,10 +169,10 @@
             </div>
         </mat-expansion-panel>
 
-        <div class="d-flex justify-content-around mt-4">
-            <button mat-flat-button class="red large"
+        <div class="d-flex flex-wrap-reverse justify-content-around mt-4">
+            <button mat-flat-button class="red large my-3"
                 [routerLink]="mode == 1 ? '../manage' : '../../manage'">Cancel</button>
-            <button mat-flat-button class="blue large" [disabled]="!quizTitle.valid || (!includeAllQuestions.value && !includedQuestionsCount.valid)"
+            <button mat-flat-button class="blue large my-3" [disabled]="!quizTitle.valid || (!includeAllQuestions.value && !includedQuestionsCount.valid)"
                 (click)="mode == 1 ? createQuiz() : updateQuiz()" type="submit">Save</button>
         </div>
     </div>

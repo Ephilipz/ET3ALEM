@@ -3,7 +3,7 @@
 
         <div>
             <h2 class="formLabelHeader mb-0">Type</h2>
-            <mat-form-field class="ml-5 mb-3">
+            <mat-form-field class="ml-3 mb-3">
                 <mat-select [formControl]="questionTypeFC" (selectionChange)="onQuestionTypeChange($event)">
                     <mat-option *ngFor="let type of questionTypes" [value]="type.value">
                         {{type.text}}
@@ -13,7 +13,7 @@
         </div>
         <div *ngIf="!hideGrade">
             <h2 class="formLabelHeader mb-0">Grade</h2>
-            <mat-form-field class="mr-5 ml-5 smallMatInput">
+            <mat-form-field class="ml-3 smallMatInput">
                 <input matInput type="number" [formControl]="grade">
             </mat-form-field>
         </div>
@@ -28,15 +28,15 @@
     <ng-template dynamicComponentHost></ng-template>
 
     <div style="text-align: center;" class="my-4">
-        <button mat-flat-button class="green mx-2" (click)="showCommentBox = true" *ngIf="!showCommentBox">Add
+        <button mat-flat-button class="green mx-auto mb-3" style="display: block" (click)="showCommentBox = true" *ngIf="!showCommentBox">Add
             Comment</button>
         <div *ngIf="showCommentBox">
-            <mat-form-field class="mx-3 commentTextArea">
+            <mat-form-field class="mx-auto commentTextArea">
                 <mat-label>Additional Comments</mat-label>
                 <textarea matInput placeholder="Comment" [formControl]="commentFC"></textarea>
             </mat-form-field>
 
-            <button mat-flat-button class="red mx-3" (click)="commentFC.setValue(null); showCommentBox = false">Remove
+            <button mat-flat-button class="red mx-auto mb-3" style="display: block" (click)="commentFC.setValue(null); showCommentBox = false">Remove
                 Comment</button>
         </div>
         <span>*This comment will be shown after the quiz is graded</span>
