@@ -17,7 +17,7 @@ export class AuthGuardService implements CanActivate {
       return false;
     }
     if (this.authService.isLoggedOut()) {
-      this.authService.nextUrlPath = state.url.match(/(?:https?:\/\/)?(?:[^?\/\s]+[?\/])(.*)/)[0];
+      this.authService.nextUrlPath = state.url;
       this.router.navigate(['auth']);
       return false;
     }
