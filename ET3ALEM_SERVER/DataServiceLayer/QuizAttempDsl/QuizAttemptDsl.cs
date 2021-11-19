@@ -86,10 +86,10 @@ namespace DataServiceLayer
             if (!quiz.ShuffleQuestions)
                 return quiz.QuizQuestions;
             var quizQuestions = GetShuffledQuizQuestions(quiz);
-
+            int? questionCount = quiz.IncludeAllQuestions ? quiz.QuizQuestions.Count : quiz.IncludedQuestionsCount;
             return quizQuestions
                 .OrderBy(qQ => qQ.Sequence)
-                .Take(quiz.IncludedQuestionsCount ?? quiz.QuizQuestions.Count())
+                .Take(questionCount ?? quiz.QuizQuestions.Count)
                 .ToList();
         }
 

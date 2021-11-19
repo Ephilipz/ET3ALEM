@@ -248,9 +248,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       (quiz: Quiz) => {
         this.toastr.success('Quiz Created');
         this.router.navigate(['../manage'], {relativeTo: this.route})
-      },
-      () => {
-        this.toastr.error('Quiz not created');
       }
     )
   }

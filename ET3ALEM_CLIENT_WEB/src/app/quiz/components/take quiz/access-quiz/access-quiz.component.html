@@ -3,9 +3,9 @@
         <h1 class="mainTitle">Take a Quiz</h1>
     </div>
     <div class="row mt-5">
-        <div class="col-sm m-auto">
+        <div class="col-lg m-auto">
             <div class="d-flex justify-content-center row">
-                <mat-form-field>
+                <mat-form-field class="quizCodeInput">
                     <mat-label>Enter Quiz Code</mat-label>
                     <input matInput name="quizCode" autofocus (input)="getQuizFromCode($event)" maxlength="5"
                         [(ngModel)]="quizCode" autocomplete="off">
@@ -17,7 +17,7 @@
             </div>
             <mat-spinner class="mx-auto" *ngIf="!isLoaded"></mat-spinner>
         </div>
-        <div class="col-sm">
+        <div class="col-lg">
             <img src="../../../../assets/images/method-draw-image.svg" width="100%">
         </div>
     </div>

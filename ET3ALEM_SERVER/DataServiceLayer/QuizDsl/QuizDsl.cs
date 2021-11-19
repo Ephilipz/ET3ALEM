@@ -26,9 +26,9 @@ namespace DataServiceLayer
             return _iQuizDal.GetQuiz(quizId);
         }
 
-        public Task<string> GetQuizTitleFromCode(string code)
+        public async Task<string> GetQuizTitleFromCode(string code)
         {
-            return _iQuizDal.GetQuizTitleFromCode(code);
+            return await _iQuizDal.GetQuizTitleFromCode(code);
         }
 
         public Task<Quiz> GetSimpleQuiz(int quizId)

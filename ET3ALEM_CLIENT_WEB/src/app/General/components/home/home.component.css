@@ -15,3 +15,9 @@
 .mainTitle.dark{
     font-weight: 900;
 }
+
+.textColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

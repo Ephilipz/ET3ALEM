@@ -44,10 +44,8 @@ namespace DataAccessLayer
 
         public async Task<string> GetQuizTitleFromCode(string code)
         {
-            var quiz = await _context.Quizzes.FirstAsync(q => q.Code.ToUpper() == code.ToUpper());
-            if (quiz != null)
-                return quiz.Name;
-            return null;
+            var quiz = await _context.Quizzes.AsNoTracking().FirstOrDefaultAsync(q => q.Code.ToUpper() == code.ToUpper()); 
+            return quiz?.Name;
         }
 
         public async Task<Quiz> GetSimpleQuiz(int quizId)

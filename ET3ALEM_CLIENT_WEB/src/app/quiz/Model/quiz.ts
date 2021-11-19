@@ -97,6 +97,5 @@ export class Quiz {
     this.AutoGrade = AutoGrade;
     this.ShuffleQuestions = ShuffleQuestions;
     this.IncludeAllQuestions = IncludeAllQuestions || IncludedQuestionsCount == this.QuizQuestions?.length;
-    ;
   }
 }

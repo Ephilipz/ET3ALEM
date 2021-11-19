@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { QuizService } from '../../../services/quiz.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {QuizService} from '../../../services/quiz.service';
 
 @Component({
   selector: 'app-access-quiz',
@@ -14,7 +14,8 @@ export class AccessQuizComponent implements OnInit {
   quizCode: string = '';
   isLoaded = true;
 
-  constructor(private quizService: QuizService, private toastr: ToastrService, private route: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private quizService: QuizService, private toastr: ToastrService, private route: Router, private activatedRoute: ActivatedRoute) {
+  }
 
   ngOnInit(): void {
   }
@@ -25,21 +26,18 @@ export class AccessQuizComponent implements OnInit {
       this.quizService.getQuizTitleFromCode(this.quizCode).subscribe(
         obj => {
           this.quizTitle = obj["title"];
-          this.isLoaded = true;
+        }, _ => {
         },
-        err => {
-          this.toastr.info('No quiz found with the entered code');
-          this.quizTitle = '';
+        () => {
           this.isLoaded = true;
         });
-    }
-    else {
+    } else {
       this.quizTitle = '';
     }
   }
 
   quizClick() {
-    this.route.navigate(['../take', this.quizCode], { relativeTo: this.activatedRoute });
+    this.route.navigate(['../take', this.quizCode], {relativeTo: this.activatedRoute});
   }
 
 }

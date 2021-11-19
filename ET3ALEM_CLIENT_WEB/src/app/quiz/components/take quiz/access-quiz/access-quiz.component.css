@@ -1,29 +1,31 @@
 .mainTitle {
-    font-size: 5vw;
-    margin: 1% auto;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-align: center;
+  font-size: 5vw;
+  margin: 1% auto;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
 }
 
-.mat-form-field {
-    font-size: 3em;
-    text-align: center;
-    width: 20vw;
-}
-.mat-form-field input{
-    font-size: 2em;
+.quizCodeInput {
+  font-size: 3em;
+  text-align: center;
+  max-width: 20vw;
+  min-width: 300px;
 }
 
-.buttonRow{
-    text-align: center;
+.mat-form-field input {
+  font-size: 2em;
 }
 
-.takeQuizButton:hover{
-    background-color: #4d81b1;
+.buttonRow {
+  text-align: center;
 }
 
-.takeQuizButton{
-    min-width: 200px;
+.takeQuizButton:hover {
+  background-color: #4d81b1;
+}
+
+.takeQuizButton {
+  min-width: 200px;
 }
 

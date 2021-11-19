@@ -1,23 +1,24 @@
 <div class="container-fluid p-5">
   <h1 class="topBoldTitle mb-5">Quiz History</h1>
 
-  <table mat-table [dataSource]="quizAttemptListDS" class="mat-elevation-z3" matSort>
+  <table mat-table [dataSource]="quizAttemptListDS" class="mat-elevation-z3" matSort
+         [ngStyle]="{'display' : quizAttemptListDS.data.length > 0 ? 'table' : 'none'}">
 
     <!-- Quiz Column -->
     <ng-container matColumnDef="Quiz.Name">
-      <th mat-header-cell *matHeaderCellDef> Quiz </th>
+      <th mat-header-cell *matHeaderCellDef> Quiz</th>
       <td mat-cell *matCellDef="let element"> {{element.Quiz.Name}} </td>
     </ng-container>
 
     <!-- Date Column -->
     <ng-container matColumnDef="SubmitTime">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date</th>
       <td mat-cell *matCellDef="let element"> {{element.SubmitTime.toString() + 'Z' | date:'d-MMM-YYYY, h:mm a'}} </td>
     </ng-container>
 
     <!-- Grade Column -->
     <ng-container matColumnDef="Grade">
-      <th mat-header-cell *matHeaderCellDef> Grade </th>
+      <th mat-header-cell *matHeaderCellDef> Grade</th>
       <td mat-cell *matCellDef="let element"> {{getGrade(element)}} </td>
     </ng-container>
 
@@ -26,7 +27,8 @@
       <th mat-header-cell *matHeaderCellDef class="alignRight"></th>
       <td mat-cell *matCellDef="let element" class="alignRight">
         <button mat-flat-button class="blue" [routerLink]="'../viewAttempt/'+ element.Id"
-          style="font-size: 0.95em; font-weight: 300;">View</button>
+                style="font-size: 0.95em; font-weight: 300;">View
+        </button>
       </td>
     </ng-container>
 
@@ -39,5 +41,5 @@
   <div class="col emptyListCol mt-5" *ngIf="isLoaded" style="text-align: center;">
     <h1 class="emptyQuizzes" *ngIf="quizAttemptListDS.data.length == 0">You have not taken any quizzes yet</h1>
     <button mat-flat-button class="blue large takeQuizButton" [routerLink]="'../take'">Take a quiz</button>
-</div>
+  </div>
 </div>

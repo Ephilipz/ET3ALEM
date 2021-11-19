@@ -1,7 +1,7 @@
-<div class="container-fluid mainContainer p-5">
+<div class="container-fluid p-lg-5 py-4">
     <h1 class="topBoldTitle">Created Quizzes</h1>
     <div class="row px-3 mt-5">
-        <mat-form-field class="ml-auto" *ngIf="quizListDS.data.length > 0">
+        <mat-form-field class="ml-auto searchField" *ngIf="quizListDS.data.length > 0">
             <mat-label>Search</mat-label>
             <input matInput type="search" (keyup)="applyFilter($event)">
             <mat-icon matSuffix>search</mat-icon>
@@ -11,7 +11,8 @@
     <mat-spinner *ngIf="!isLoaded" class="mx-auto my-5"></mat-spinner>
 
 
-    <table mat-table [dataSource]="quizListDS" matSort class="mat-elevation-z3">
+    <table mat-table [dataSource]="quizListDS" matSort class="mat-elevation-z3"
+           [ngStyle]="{'display' : quizListDS.data.length > 0 ? 'table' : 'none'}">
         <!-- Name Column -->
         <ng-container matColumnDef="Name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
@@ -68,6 +69,6 @@
 
     <div class="col emptyListCol" *ngIf="isLoaded">
         <h1 class="largeNote" *ngIf="quizListDS.data.length == 0">You do not have any quizzes yet</h1>
-        <button mat-flat-button class="blue large newQuizButton" [routerLink]="'../create'">New Quiz</button>
+        <button mat-flat-button class="blue large newQuizButton" routerLink='../create'>New Quiz</button>
     </div>
 </div>

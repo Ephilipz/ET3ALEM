@@ -1,105 +1,115 @@
 .blueSec {
-    background-color: #5F8EBA;
-    color: white;
+  background-color: #5F8EBA;
+  color: white;
 }
 
 h1 {
-    font-size: 3.2em;
-    letter-spacing: 0.8em;
-    font-weight: 500;
-    margin-bottom: 0.8em;
+  font-size: 3em;
+  letter-spacing: 0.8em;
+  font-weight: 500;
+  margin-bottom: 0.8em;
 }
 
 .secondTitle {
-    font-size: 2.5em;
-    font-weight: 100;
+  font-size: 2.5em;
+  font-weight: 100;
 }
 
 p.RegisterButtonLabel {
-    font-size: 2.2em;
-    color: black;
+  font-size: 2.2em;
+  color: black;
 }
 
-p.RecoverButtonLabel{
-    font-size: 2.2em;
-    margin-bottom: 1em;
-    color: black;
+p.RecoverButtonLabel {
+  font-size: 2.2em;
+  margin-bottom: 1em;
+  color: black;
 }
 
 .mat-flat-button {
-    padding: 0.5em 4em;
-    font-size: 2.2em;
+  padding: 0.5em 4em;
+  font-size: 2.2em;
 }
 
-.mat-flat-button.recoverButton{
-    font-size: 2.2em;
-    padding: 0.5em 1.5em;
+.mat-flat-button.recoverButton {
+  font-size: 2.2em;
+  padding: 0.5em 1.5em;
 }
 
 .signInTitle {
-    font-size: 2.2em;
-    color: #5F8EBA;
+  font-size: 2.5em;
+  color: #5F8EBA;
+  text-align: center;
 }
 
-.largeHorizontalPadding{
-    padding: 0em 2vw;
+.largeHorizontalPadding {
+  padding: 0 2vw;
 }
 
-mat-form-field{
-    width: 30vw;
-    font-size: 2em;
+mat-form-field {
+  width: 30vw;
+  font-size: 2em;
 }
 
-.fromSection{
-    margin-top: 10vh;
+.fromSection {
+  margin-top: 10vh;
 }
 
 @media (max-width: 990px) {
-    .smallerMobileCol {
-        height: 20%;
-    }
-    .fullHeightMobile {
-        height: 100%;
-    }
-    .hideMobile {
-        display: none;
-    }
-    .LargerMobileCol {
-        flex: auto;
-    }
-    .mat-flat-button.grey {
-        font-size: 1.5em;
-    }
-    p.RegisterButtonLabel {
-        font-size: 1.8em;
-        color: black;
-    }
-    .largeHorizontalPadding{
-        padding: 0em 1em;
-    }
-    mat-form-field{
-        width: 50vw;
-        font-size: 2em;
-    }
-    .fromSection{
-        margin-top: 5vh;
-    }
+  .smallerMobileCol {
+    height: 20%;
+  }
+
+  .fullHeightMobile {
+    height: 100%;
+  }
+
+  .hideMobile {
+    display: none;
+  }
+
+  .LargerMobileCol {
+    flex: auto;
+  }
+
+  .mat-flat-button.grey {
+    font-size: 1.5em;
+  }
+
+  p.RegisterButtonLabel {
+    font-size: 1.8em;
+    color: black;
+  }
+
+  .largeHorizontalPadding {
+    padding: 0em 1em;
+  }
+
+  mat-form-field {
+    width: 50vw;
+    font-size: 2em;
+  }
+
+  .fromSection {
+    margin-top: 5vh;
+  }
 }
 
-@media (max-width: 768px){
-    mat-form-field{
-        width: 70vw;
-        font-size: 2em;
-    }
-    .blueSec{
-        padding-top: 1.5em;
-    }
+@media (max-width: 768px) {
+  mat-form-field {
+    width: 70vw;
+    font-size: 2em;
+  }
 
-    .mat-flat-button.recoverButton{
-        font-size: 2em;
-    }
+  .blueSec {
+    padding-top: 1.5em;
+  }
 
-    .mat-flat-button.loginButton{
-        font-size: 2em;
-    }
+  .mat-flat-button.recoverButton {
+    font-size: 2em;
+  }
+
+  .mat-flat-button.loginButton {
+    font-size: 2em;
+  }
 }

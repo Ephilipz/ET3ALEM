@@ -1,7 +1,7 @@
-.mainContainer {
-  width: 80%;
-  padding: 20px;
-}
+/*.mainContainer {*/
+/*  width: 80%;*/
+/*  padding: 20px;*/
+/*}*/
 
 table {
   width: 100%;
@@ -9,11 +9,11 @@ table {
 }
 
 .mat-header-cell {
-  font-size: 1.2em;
+  font-size: 1.1em;
 }
 
 .mat-cell {
-  font-size: 1.2em;
+  font-size: 1.1em;
 }
 
 .header-align-right {
@@ -21,8 +21,9 @@ table {
   justify-content: flex-end;
 }
 
-mat-form-field {
-  width: 15vw;
+.searchField {
+  max-width: 15vw;
+  min-width: 200px;
   font-size: 1.5em;
 }
 

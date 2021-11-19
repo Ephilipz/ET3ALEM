@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
 using DataServiceLayer;
+using ExceptionHandling.CustomExceptions;
 using Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,8 @@ namespace Server_Application.Controllers
         {
             var title = await _iQuizDsl.GetQuizTitleFromCode(code);
 
-            if (string.IsNullOrEmpty(title)) return NotFound();
+            if (string.IsNullOrEmpty(title)) 
+                throw new CustomExceptionBase("No quiz found with this code");
 
             var returnedTitle = new
             {
