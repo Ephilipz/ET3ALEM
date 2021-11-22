@@ -16,8 +16,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { MainMenuComponent } from './General/components/main-menu/main-menu.component';
 import { HttpErrorInterceptor } from './Shared/services/error.interceptor';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
