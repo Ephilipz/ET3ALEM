@@ -10,10 +10,10 @@ export class LoginUser {
 }
 
 export class RegisterUser extends LoginUser {
-    public FullName: string;
+    public Name: string;
 
     constructor(name: string, email: string, password: string) {
         super(email, password);
-        this.FullName = name;
+        this.Name = name;
     }
 }

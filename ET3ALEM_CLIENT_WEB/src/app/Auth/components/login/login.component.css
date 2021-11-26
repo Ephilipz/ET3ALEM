@@ -1,8 +1,3 @@
-.blueSec {
-  background-color: #5F8EBA;
-  color: white;
-}
-
 h1 {
   font-size: 3em;
   letter-spacing: 0.8em;
@@ -34,12 +29,6 @@ p.RecoverButtonLabel {
 .mat-flat-button.recoverButton {
   font-size: 2.2em;
   padding: 0.5em 1.5em;
-}
-
-.signInTitle {
-  font-size: 2.5em;
-  color: #5F8EBA;
-  text-align: center;
 }
 
 .largeHorizontalPadding {

@@ -43,10 +43,12 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit(contactForm: FormGroup, formDirective: FormGroupDirective) {
-    this.contactService.submitContactForm(this.contactForm.value).subscribe({
+    console.log(contactForm.value);
+    this.contactService.submitContactForm(this.contactForm.getRawValue()).subscribe({
       next: () => {
-        contactForm.reset();
-        formDirective.resetForm();
+        contactForm.get('subject').reset();
+        contactForm.get('message').reset();
+        contactForm.updateValueAndValidity();
         this.toastyService.success('message sent successfully');
       }
     });

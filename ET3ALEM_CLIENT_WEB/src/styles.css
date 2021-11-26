@@ -131,3 +131,14 @@ h1.largeNote {
   text-align: right;
   justify-content: flex-end;
 }
+
+.blueSec {
+  background-color: #5F8EBA;
+  color: white;
+}
+
+h2.formTitle {
+  font-size: 2.5em;
+  color: #5F8EBA;
+  text-align: center;
+}

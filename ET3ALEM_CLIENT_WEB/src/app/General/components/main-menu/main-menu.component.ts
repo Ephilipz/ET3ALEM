@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {AuthService} from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-main-menu',
@@ -11,10 +11,14 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 export class MainMenuComponent implements OnInit {
 
   isLoggedIn: boolean = false;
-  constructor(private auth: AuthService, private toastr: ToastrService, private router: Router) { }
+
+  constructor(private auth: AuthService, private toastr: ToastrService, private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.isLoggedIn = this.auth.isLoggedIn();
+    this.auth.loginStateChanged.subscribe(
+      (isLoggedIn) => this.isLoggedIn = isLoggedIn
+    )
   }
 
   logout() {
@@ -24,9 +28,6 @@ export class MainMenuComponent implements OnInit {
         this.toastr.info('Logged Out');
       },
       (err) => {
-        this.isLoggedIn = this.auth.isLoggedIn();
-        this.toastr.info('Logged Out');
-        console.error('logout error', err);
       },
       () => {
         this.router.navigate(['']);

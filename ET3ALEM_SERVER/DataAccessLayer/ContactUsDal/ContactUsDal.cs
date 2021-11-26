@@ -18,6 +18,7 @@ namespace DataAccessLayer
         public async Task<ContactUsMessage> InsertContactUsMessage(ContactUsMessage contactUsMessage)
         {
             await _context.ContactUsMessages.AddAsync(contactUsMessage);
+            await _context.SaveChangesAsync();
             return contactUsMessage;
         }
 

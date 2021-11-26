@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
 import { MainMenuComponent } from './General/components/main-menu/main-menu.component';
 import { HttpErrorInterceptor } from './Shared/services/error.interceptor';
+import { PrivacyComponent } from './General/components/privacy/privacy.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { HttpErrorInterceptor } from './Shared/services/error.interceptor';
     ContactComponent,
     NotFoundComponent,
     MainMenuComponent,
+    PrivacyComponent,
   ],
   imports: [
     BrowserModule,

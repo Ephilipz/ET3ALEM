@@ -5,7 +5,7 @@ import {tap, catchError, mapTo} from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
 import {Router} from '@angular/router';
 import {Tokens} from '../Model/Tokens';
-import {Observable, of, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
 import {LocalstorgeService} from 'src/app/Shared/services/localstorge.service';
 
@@ -18,11 +18,12 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     private toastyService: ToastrService,
-    private localstorgeService: LocalstorgeService) {
+    private localStorageService: LocalstorgeService) {
 
   }
 
   private _nextUrlPath: string;
+  loginStateChanged: Subject<boolean> = new BehaviorSubject<boolean>(this.isLoggedIn());
 
   get nextUrlPath() {
     if (this._nextUrlPath) {
@@ -41,6 +42,7 @@ export class AuthService {
         tokens => {
           this.setSession(tokens);
           this.toastyService.success('Welcome');
+          this.loginStateChanged.next(true);
         })
     );
   }
@@ -67,13 +69,14 @@ export class AuthService {
   }
 
   setSession(tokens: Tokens) {
-    this.localstorgeService.JWT = tokens.JWT;
-    this.localstorgeService.RefreshToken = tokens.RefreshToken;
-    this.localstorgeService.UserId = tokens.UserId;
+    this.localStorageService.JWT = tokens.JWT;
+    this.localStorageService.RefreshToken = tokens.RefreshToken;
+    this.localStorageService.UserId = tokens.UserId;
   }
 
   logout() {
-    this.localstorgeService.clear();
+    this.localStorageService.clear();
+    this.loginStateChanged.next(false);
     return this.http.get(environment.baseUrl + '/api/Account/Logout');
   }
 
@@ -86,11 +89,11 @@ export class AuthService {
   }
 
   getJWT() {
-    return this.localstorgeService.JWT;
+    return this.localStorageService.JWT;
   }
 
   getRefreshToken() {
-    return this.localstorgeService.RefreshToken;
+    return this.localStorageService.RefreshToken;
   }
 
   sendRecoveryMail(email: string) {

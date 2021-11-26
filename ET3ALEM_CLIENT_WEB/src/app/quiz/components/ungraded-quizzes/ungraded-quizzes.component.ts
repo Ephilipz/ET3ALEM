@@ -34,8 +34,7 @@ export class UngradedQuizzesComponent implements OnInit {
       (result) => {
         this.quizList = result;
       },
-      (error) => {
-        this.toast.error('Unable to load ungraded quizzes')
+      () => {
       },
       () => {
         this.isLoaded = true;
