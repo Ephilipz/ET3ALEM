@@ -62,7 +62,15 @@ namespace DataServiceLayer
             var quiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
             var assignedQuizQuestions = GetAssignedQuestionsForQuiz(quiz);
             foreach (var quizQuestion in assignedQuizQuestions)
-                quizAttempt.QuestionsAttempts.Add(GetQuestionAttemptFromQuizQuestion(quizQuestion));
+                quizAttempt.QuestionsAttempts.Add(
+                    QuestionAttemptFactory.GetQuestionAttemptFromQuizQuestion(
+                        quizQuestion,
+                        qa =>
+                        {
+                            qa.QuizQuestion = quizQuestion;
+                            qa.QuizQuestionId = quizQuestion.Id;
+                            qa.Id = 0;
+                        }));
             return await _IQuizAttemptDal.InsertQuizAttempt(quizAttempt);
         }
 
@@ -108,42 +116,7 @@ namespace DataServiceLayer
             return quizQuestions;
         }
 
-        private QuestionAttempt GetQuestionAttemptFromQuizQuestion(QuizQuestion quizQuestion)
-        {
-            switch (quizQuestion.Question.QuestionType)
-            {
-                case QuestionType.MCQ:
-                    return new MCQAttmept
-                    {
-                        QuizQuestion = quizQuestion,
-                        QuizQuestionId = quizQuestion.Id,
-                        Id = 0
-                    };
-                case QuestionType.TrueFalse:
-                    return new TrueFalseAttempt
-                    {
-                        QuizQuestion = quizQuestion,
-                        QuizQuestionId = quizQuestion.Id,
-                        Id = 0
-                    };
-                case QuestionType.ShortAnswer:
-                    return new ShortAnswerAttempt
-                    {
-                        QuizQuestion = quizQuestion,
-                        QuizQuestionId = quizQuestion.Id,
-                        Id = 0
-                    };
-                case QuestionType.LongAnswer:
-                    return new LongAnswerAttempt
-                    {
-                        QuizQuestion = quizQuestion,
-                        QuizQuestionId = quizQuestion.Id,
-                        Id = 0
-                    };
-                default:
-                    throw new InvalidCastException("No valid question type was provided");
-            }
-        }
+
 
         public async Task<ActionResult<QuizAttemptVM>> GetQuizAttemptWithQuizLight(int id)
         {
