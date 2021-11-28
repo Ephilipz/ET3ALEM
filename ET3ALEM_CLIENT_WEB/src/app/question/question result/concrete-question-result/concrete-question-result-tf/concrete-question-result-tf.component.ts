@@ -17,7 +17,7 @@ export class ConcreteQuestionResultTFComponent implements OnInit, AC_ConcreteQue
 
   ngOnInit(): void {
     if (this.questionAttempt) {
-      this.answer = (<TrueFalseQuestion>this.questionAttempt.QuizQuestion.Question).Answer;
+      this.answer = (this.questionAttempt.QuizQuestion.Question as TrueFalseQuestion).Answer;
     }
   }
 
@@ -27,11 +27,14 @@ export class ConcreteQuestionResultTFComponent implements OnInit, AC_ConcreteQue
    * @returns string with tooltip text
    */
   getToolTipText(currentBool: boolean) {
-    if(this.answer == this.questionAttempt.Answer){
+    if (this.answer == this.questionAttempt.Answer) {
       return null;
     }
-
-    return currentBool == this.questionAttempt.Answer ? 'Your Answer' : 'Correct Answer';
+    if (currentBool == this.questionAttempt.Answer && this.questionAttempt.IsAnswered)
+      return 'Your Answer';
+    else if (currentBool == this.questionAttempt.Answer && !this.questionAttempt.IsAnswered)
+      return null;
+    else
+      return 'Correct Answer';
   }
-
 }

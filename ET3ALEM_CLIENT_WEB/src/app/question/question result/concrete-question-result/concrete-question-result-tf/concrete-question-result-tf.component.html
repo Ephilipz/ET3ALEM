@@ -1,19 +1,21 @@
 <div class="container-fluid" style="text-align: center;">
     <div class="row">
         <mat-button-toggle-group class="col-9" name="True / False" disabled>
-            <mat-button-toggle [ngClass]="{'isAnswer' : questionAttempt.Answer}" [matTooltip]="getToolTipText(true)">
+            <mat-button-toggle [ngClass]="{'isAnswer' : (questionAttempt.Answer && questionAttempt.IsAnswered)}" [matTooltip]="getToolTipText(true)">
                 True</mat-button-toggle>
-            <mat-button-toggle [ngClass]="{'isAnswer' : !questionAttempt.Answer}" [matTooltip]="getToolTipText(false)">
+            <mat-button-toggle [ngClass]="{'isAnswer' : (!questionAttempt.Answer && questionAttempt.IsAnswered)}" [matTooltip]="getToolTipText(false)">
                 False</mat-button-toggle>
         </mat-button-toggle-group>
         <div class="col-3">
-            <div *ngIf="answer == questionAttempt.Answer" class="sideBubble isAnswer">
+            <div *ngIf="answer == questionAttempt.Answer && questionAttempt.IsAnswered" class="sideBubble isAnswer">
                 <h2>Your answer was correct</h2>
             </div>
-            <div *ngIf="!answer == questionAttempt.Answer" class="sideBubble isWrongAnswer">
+            <div *ngIf="!answer == questionAttempt.Answer && questionAttempt.IsAnswered" class="sideBubble isWrongAnswer">
                 <h2>Your answer was incorrect</h2>
             </div>
+            <div *ngIf="!questionAttempt.IsAnswered" class="sideBubble isWrongAnswer">
+              <h2>You didn't choose an answer</h2>
+          </div>
         </div>
     </div>
-
 </div>
