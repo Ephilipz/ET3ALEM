@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TrueFalseAttempt } from 'src/app/question/Models/true-false-attempt';
 import { TrueFalseQuestion } from 'src/app/question/Models/true-false-question';
-import { QuizQuestion } from 'src/app/quiz/Model/quizQuestion';
 import { AC_ConcreteAnswerQuestion } from '../ac-concrete-answer-question';
 
 @Component({
@@ -14,17 +13,21 @@ export class ConcreteAnswerQuestionTFComponent extends AC_ConcreteAnswerQuestion
   @Input() questionAttempt: TrueFalseAttempt;
   question: TrueFalseQuestion;
   Answer: boolean;
-  
+
   constructor() {
     super();
   }
-  
+
   ngOnInit(): void {
-    this.question = <TrueFalseQuestion>this.questionAttempt.QuizQuestion.Question;
+    this.question = this.questionAttempt.QuizQuestion.Question as TrueFalseQuestion;
   }
-  
+
   getAnswers() {
     this.questionAttempt.Answer = this.Answer;
     return this.questionAttempt;
+  }
+
+  onMatButtonToggleChange() {
+    this.questionAttempt.IsAnswered = true;
   }
 }

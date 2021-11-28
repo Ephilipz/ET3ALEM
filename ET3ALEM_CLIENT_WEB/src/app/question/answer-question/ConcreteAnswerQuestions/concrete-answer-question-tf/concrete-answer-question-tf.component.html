@@ -1,5 +1,5 @@
 <div class="content-fluid mt-4" style="width: 100%; text-align: center;">
-    <mat-button-toggle-group name="True / False" [(ngModel)]="Answer">
+    <mat-button-toggle-group name="True / False" [(ngModel)]="Answer" (change)="onMatButtonToggleChange()">
         <mat-button-toggle [value]="true" class="true">True</mat-button-toggle>
         <mat-button-toggle [value]="false" class="false">False</mat-button-toggle>
     </mat-button-toggle-group>
