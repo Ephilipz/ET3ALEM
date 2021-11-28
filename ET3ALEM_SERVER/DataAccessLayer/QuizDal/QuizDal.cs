@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
-using BusinessEntities.ViewModels;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
 using Server_Application.Data;

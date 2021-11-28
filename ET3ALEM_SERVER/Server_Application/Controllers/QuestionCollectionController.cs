@@ -14,16 +14,18 @@ namespace Server_Application.Controllers
     public class QuestionCollectionController : ControllerBase
     {
         private readonly IQuestionCollectionDsl _iQuestionCollectionDsl;
+        private readonly IAccountHelper _accountHelper;
 
-        public QuestionCollectionController(IQuestionCollectionDsl questionCollectionDsl)
+        public QuestionCollectionController(IQuestionCollectionDsl questionCollectionDsl, IAccountHelper accountHelper)
         {
             _iQuestionCollectionDsl = questionCollectionDsl;
+            _accountHelper = accountHelper;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<QuestionCollection>>> GetQuestionCollections()
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 return BadRequest();
             return await _iQuestionCollectionDsl.GetQuestionCollections(userId);
@@ -32,7 +34,7 @@ namespace Server_Application.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<QuestionCollection>> GetQuestionCollection(int id)
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 return BadRequest();
             return await _iQuestionCollectionDsl.GetQuestionCollection(id, userId);
@@ -41,7 +43,7 @@ namespace Server_Application.Controllers
         [HttpPost]
         public async Task<ActionResult<QuestionCollection>> Post(QuestionCollection questionCollection)
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 return BadRequest();
             questionCollection.UserId = userId;

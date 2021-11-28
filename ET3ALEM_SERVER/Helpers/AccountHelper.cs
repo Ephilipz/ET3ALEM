@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace Helpers
 {
-    public class AccountHelper
+    public class AccountHelper : IAccountHelper
     {
-        public static string getUserId(dynamic httpContext, ClaimsPrincipal User)
+        public string GetUserId(HttpContext httpContext, ClaimsPrincipal User)
         {
             var identity = httpContext.User.Identity as ClaimsIdentity;
             var userId = string.Empty;

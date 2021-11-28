@@ -16,16 +16,18 @@ namespace Server_Application.Controllers
     public class ProfileController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private readonly IAccountHelper _accountHelper;
 
-        public ProfileController(UserManager<User> userManager, IConfiguration configuration)
+        public ProfileController(UserManager<User> userManager, IAccountHelper accountHelper)
         {
             _userManager = userManager;
+            _accountHelper = accountHelper;
         }
 
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordVM changePasswordVm)
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();
 
@@ -48,7 +50,7 @@ namespace Server_Application.Controllers
         [HttpGet("GetUserEmail")]
         public async Task<IActionResult> GetUserEmail()
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             if (string.IsNullOrWhiteSpace(userId)) throw new CustomExceptionBase("Invalid User");
 
             var userEmail = (await _userManager.FindByIdAsync(userId)).Email;

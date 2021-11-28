@@ -16,10 +16,12 @@ namespace Server_Application.Controllers
     public class QuizAttemptController : ControllerBase
     {
         private readonly IQuizAttemptDsl _IQuizAttemptDsl;
+        private readonly IAccountHelper _accountHelper;
 
-        public QuizAttemptController(IQuizAttemptDsl quizAttemptDsl)
+        public QuizAttemptController(IQuizAttemptDsl quizAttemptDsl, IAccountHelper accountHelper)
         {
             _IQuizAttemptDsl = quizAttemptDsl;
+            _accountHelper = accountHelper;
         }
 
         [HttpPost("{userId}")]
@@ -33,7 +35,7 @@ namespace Server_Application.Controllers
         [HttpGet]
         public async Task<ActionResult<List<QuizAttempt>>> GetQuizAttempts()
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 return BadRequest();
             return await _IQuizAttemptDsl.GetQuizAttempts(userId);
@@ -59,7 +61,7 @@ namespace Server_Application.Controllers
         [HttpPut]
         public async Task<ActionResult<QuizAttempt>> PutQuizAttempt(QuizAttempt quizAttempt)
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
                 throw new CustomExceptionBase("Invalid quiz attempt");
             quizAttempt.UserId = userId;
@@ -70,7 +72,7 @@ namespace Server_Application.Controllers
         [HttpPut("UpdateQuizAttemptGrade")]
         public async Task<ActionResult<QuizAttempt>> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId) || userId != quizAttempt.Quiz.UserId) return BadRequest();
             await _IQuizAttemptDsl.UpdateQuizAttemptGrade(quizAttempt);
             return NoContent();
@@ -79,7 +81,7 @@ namespace Server_Application.Controllers
         [HttpGet("GetUserQuizAttemptsForQuiz/{quizId}")]
         public async Task<ActionResult<List<QuizAttempt>>> GetUserQuizAttemptsForQuiz(int quizId)
         {
-            var userId = AccountHelper.getUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             if (string.IsNullOrEmpty(userId))
                 throw new CustomExceptionBase("Invalid user id");
             return await _IQuizAttemptDsl.GetUserQuizAttemptsForQuiz(quizId, userId);

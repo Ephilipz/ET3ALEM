@@ -17,10 +17,12 @@ namespace Server_Application.Controllers
     public class QuizController : ControllerBase
     {
         private readonly IQuizDsl _iQuizDsl;
+        private readonly IAccountHelper _accountHelper;
 
-        public QuizController(IQuizDsl quizDsl)
+        public QuizController(IQuizDsl quizDsl, IAccountHelper accountHelper)
         {
             _iQuizDsl = quizDsl;
+            _accountHelper = accountHelper;
         }
 
         [HttpGet("{id}")]
@@ -28,7 +30,10 @@ namespace Server_Application.Controllers
         {
             var quiz = await _iQuizDsl.GetQuiz(id);
 
-            if (quiz == null) return NotFound();
+            if (quiz == null)
+            {
+                return NotFound();
+            }
 
             return quiz;
         }
@@ -38,7 +43,7 @@ namespace Server_Application.Controllers
         {
             var title = await _iQuizDsl.GetQuizTitleFromCode(code);
 
-            if (string.IsNullOrEmpty(title)) 
+            if (string.IsNullOrEmpty(title))
                 throw new CustomExceptionBase("No quiz found with this code");
 
             var returnedTitle = new
@@ -64,7 +69,7 @@ namespace Server_Application.Controllers
         [HttpGet]
         public async Task<List<Quiz>> GetQuizzes()
         {
-            string userId = AccountHelper.getUserId(HttpContext, User);
+            string userId = _accountHelper.GetUserId(HttpContext, User);
             List<Quiz> quizList = await _iQuizDsl.GetQuizzes(userId);
             return quizList;
         }
@@ -72,7 +77,7 @@ namespace Server_Application.Controllers
         [HttpGet("GetUngradedQuizzes")]
         public async Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser()
         {
-            string userId = AccountHelper.getUserId(HttpContext, User);
+            string userId = _accountHelper.GetUserId(HttpContext, User);
             List<UngradedQuizTableVM> ungradedQuizzes = await _iQuizDsl.GetUngradedQuizzesForUser(userId);
             return ungradedQuizzes;
         }
@@ -80,8 +85,12 @@ namespace Server_Application.Controllers
         [HttpPost]
         public async Task<ActionResult<Quiz>> PostQuiz(Quiz quiz)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (!ModelState.IsValid || string.IsNullOrEmpty(userId)) return BadRequest(quiz);
+            string userId = _accountHelper.GetUserId(HttpContext, User);
+            if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
+            {
+                return BadRequest(quiz);
+            }
+
             quiz.UserId = userId;
             await _iQuizDsl.InsertQuiz(quiz);
             return CreatedAtAction("GetQuiz", new {id = quiz.Id}, quiz);
@@ -91,7 +100,11 @@ namespace Server_Application.Controllers
         public async Task<ActionResult<Quiz>> DeleteQuiz(int id)
         {
             var quiz = await _iQuizDsl.DeleteQuiz(id);
-            if (quiz == null) return NotFound();
+            if (quiz == null)
+            {
+                return NotFound();
+            }
+
             return quiz;
         }
 

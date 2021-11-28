@@ -9,6 +9,7 @@ using BusinessEntities.Models;
 using DataAccessLayer;
 using DataServiceLayer;
 using ExceptionHandling;
+using Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +32,7 @@ namespace Server_Application
     public class Startup
     {
         private readonly string AllowCORS = "_AllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -46,7 +48,7 @@ namespace Server_Application
             ConfigureUserIdentity(services);
             ConfigureJWT(services);
             ConfigureNewtonsoft(services);
-            
+
             ConfigureRollbar();
 
             services.AddAutoMapper(typeof(UserProfile).Assembly);
@@ -70,7 +72,7 @@ namespace Server_Application
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver
-                { NamingStrategy = new DefaultNamingStrategy() };
+                    {NamingStrategy = new DefaultNamingStrategy()};
             });
         }
 
@@ -165,6 +167,7 @@ namespace Server_Application
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseRouting();
             app.UseCors(AllowCORS);
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -190,6 +193,8 @@ namespace Server_Application
             services.AddScoped<IEmailDsl, SendGridEmailDsl>();
             services.AddScoped<IContactUsDsl, ContactUsDsl>();
             services.AddScoped<IContactUsDal, ContactUsDal>();
+
+            services.AddSingleton<IAccountHelper, AccountHelper>();
         }
     }
 }
