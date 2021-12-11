@@ -3,6 +3,7 @@ using BusinessEntities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Server_Application.Data
 {
@@ -56,7 +57,7 @@ namespace Server_Application.Data
             modelBuilder.Entity<ContactUsMessage>().ToTable("ContactUsMessage");
 
             modelBuilder.Entity<LongAnswer>().ToTable("LongAnswer");
-
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }
     }

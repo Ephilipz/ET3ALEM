@@ -1,51 +1,48 @@
 <nav class="navbar navbar-expand-lg navbar-light" *ngIf="!routeContains('Auth')">
-  <a class="navbar-brand" href="#">ET3ALLIM</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
-          aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="#">ET3ALLIM</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto mr-5">
-      <li class="nav-item" *ngIf="!isLoggedIn">
-        <a class="nav-link" [routerLink]="[ '/auth/login' ]"> Sign In </a>
-      </li>
-      <li class="nav-item" *ngIf="!isLoggedIn">
-        <a class="nav-link" [routerLink]="[ '/auth/register' ]"> Register </a>
-      </li>
-      <li class="nav-item dropdown" *ngIf="isLoggedIn">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown"> Student </a>
-        <ul class="dropdown-menu ml-auto">
-          <li><a class="dropdown-item" [routerLink]="[ '/quiz/take' ]"
-                 [ngClass]="{'active': routeContains('quiz/take')}">Take a Quiz</a></li>
-          <li><a class="dropdown-item" [routerLink]="[ '/quiz/history' ]">Quiz History</a></li>
-        </ul>
-      </li>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto mr-5">
+            <li class="nav-item" *ngIf="!isLoggedIn">
+                <a class="nav-link" [routerLink]="[ '/auth/login' ]"> Sign In </a>
+            </li>
+            <li class="nav-item" *ngIf="!isLoggedIn">
+                <a class="nav-link" [routerLink]="[ '/auth/register' ]"> Register </a>
+            </li>
+            <li class="nav-item dropdown" *ngIf="isLoggedIn">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown"> Student </a>
+                <ul class="dropdown-menu ml-auto">
+                    <li><a class="dropdown-item" [routerLink]="[ '/quiz/take' ]" [ngClass]="{'active': routeContains('quiz/take')}">Take a Quiz</a></li>
+                    <li><a class="dropdown-item" [routerLink]="[ '/quiz/history' ]">Quiz History</a></li>
+                </ul>
+            </li>
 
-      <li class="nav-item dropdown" *ngIf="isLoggedIn">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown"> Teacher </a>
-        <ul class="dropdown-menu ml-auto">
-          <li><a class="dropdown-item" [routerLink]="[ '/quiz/create' ]">New Quiz</a></li>
-          <li><a class="dropdown-item" [routerLink]="[ '/quiz/manage' ]">Created Quizzes</a></li>
-          <li><a class="dropdown-item" [routerLink]="[ '/quiz/grade' ]">Grade Quizzes</a></li>
-          <li><a class="dropdown-item" [routerLink]="[ '/questionCollection' ]"> Question Collections </a></li>
-        </ul>
-      </li>
+            <li class="nav-item dropdown" *ngIf="isLoggedIn">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown"> Teacher </a>
+                <ul class="dropdown-menu ml-auto">
+                    <li><a class="dropdown-item" [routerLink]="[ '/quiz/create' ]">New Quiz</a></li>
+                    <li><a class="dropdown-item" [routerLink]="[ '/quiz/manage' ]">Created Quizzes</a></li>
+                    <li><a class="dropdown-item" [routerLink]="[ '/quiz/grade' ]">Grade Quizzes</a></li>
+                    <li><a class="dropdown-item" [routerLink]="[ '/questionCollection' ]"> Question Collections </a></li>
+                </ul>
+            </li>
 
-      <li class="nav-item dropdown" *ngIf="isLoggedIn" [ngClass]="{'active': routeContains('auth')}">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown"> Profile </a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" [routerLink]="[ '/profile/changePassword' ]"
-                 [ngClass]="{'active': routeContains('auth/changePassword')}">Change Password</a></li>
-          <li><a class="dropdown-item" [routerLink]="" (click)="logout()">Logout</a></li>
-        </ul>
-      </li>
+            <li class="nav-item dropdown" *ngIf="isLoggedIn" [ngClass]="{'active': routeContains('auth')}">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown"> Profile </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" [routerLink]="[ '/profile/changePassword' ]" [ngClass]="{'active': routeContains('auth/changePassword')}">Change Password</a></li>
+                    <li><a class="dropdown-item" [routerLink]="" (click)="logout()">Logout</a></li>
+                </ul>
+            </li>
 
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="[ '/contact' ]"> Contact Us </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="[ '/privacy' ]"> Privacy Policy </a>
-      </li>
-    </ul>
-  </div>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="[ '/contact' ]"> Contact Us </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="[ '/privacy' ]"> Privacy Policy </a>
+            </li>
+        </ul>
+    </div>
 </nav>

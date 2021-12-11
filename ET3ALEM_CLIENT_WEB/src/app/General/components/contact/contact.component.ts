@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, FormGroupDirective, NgForm, Validators} from '@a
 import {ToastrService} from 'ngx-toastr';
 import {ProfileService} from "../../../profile/services/profile.service";
 import {AuthService} from "../../../auth/services/auth.service";
-import {ContactService} from "./contact.service";
+import {ContactService} from "../../../Shared/services/contact.service";
 
 @Component({
   selector: 'app-contact',
