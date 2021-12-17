@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ContactService } from 'src/app/Shared/services/contact.service';
+import { MessageDialogComponent } from '../message-dialog/message-dialog.component';
 
 @Component({
   selector: 'app-admin-contact-us',
@@ -11,7 +13,7 @@ export class AdminContactUsComponent implements OnInit {
 
   messagesListDs = new MatTableDataSource();
   displayedColumns: string[] = ['Email', 'Subject', 'Message'];
-  constructor(private contactService: ContactService) { }
+  constructor(private contactService: ContactService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.loadContactUsMessages();
@@ -22,6 +24,22 @@ export class AdminContactUsComponent implements OnInit {
         this.messagesListDs.data = res;
       }
     );
+  }
+  openDialog(subject: string, message: string) {
+    this.dialog.open(MessageDialogComponent, {
+      minHeight: '400px',
+      minWidth: '600px',
+      data: {
+        subject,
+        message
+      },
+    });
+  }
+  formatMessage(message: string): string {
+    if (message.length > 8) {
+      return message.substring(0, 8) + '...';
+    }
+    return message;
   }
 
 }
