@@ -17,9 +17,8 @@ namespace Server_Application.Controllers
         {
             _iContactUsDsl = contactUsDsl;
         }
-        
-        [Authorize]
         [HttpGet("GetAll")]
+        [Authorize(Roles = "Administrator")]
         public async Task<List<ContactUsMessage>> GetAll()
         {
             return await _iContactUsDsl.GetAllContactUsMessages();

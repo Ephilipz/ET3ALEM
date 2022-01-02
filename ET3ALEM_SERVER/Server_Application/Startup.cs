@@ -48,9 +48,7 @@ namespace Server_Application
             ConfigureUserIdentity(services);
             ConfigureJWT(services);
             ConfigureNewtonsoft(services);
-
             ConfigureRollbar();
-
             services.AddAutoMapper(typeof(UserProfile).Assembly);
         }
 
@@ -72,7 +70,7 @@ namespace Server_Application
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver
-                    {NamingStrategy = new DefaultNamingStrategy()};
+                { NamingStrategy = new DefaultNamingStrategy() };
             });
         }
 
@@ -126,6 +124,7 @@ namespace Server_Application
                     options.Password.RequireNonAlphanumeric = false;
                     options.User.RequireUniqueEmail = true;
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>()
                 .AddTokenProvider("UserRefresh", typeof(DataProtectorTokenProvider<User>))
                 .AddDefaultTokenProviders();
@@ -146,13 +145,13 @@ namespace Server_Application
 
         private void EnableCors(IServiceCollection services)
         {
+            string[] allowedOrigins = new string[] { "http://localhost:4200", "http://192.168.1.6:4200", "https://et3allim.com", "https://www.et3allim.com" };
             services.AddCors(options =>
             {
                 options.AddPolicy(AllowCORS,
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:4200", "http://192.168.1.6:4200", "https://et3allim.com",
-                                "https://www.et3allim.com")
+                        builder.WithOrigins(allowedOrigins)
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();

@@ -56,6 +56,7 @@ namespace Server_Application.Data
             modelBuilder.Entity<ContactUsMessage>().ToTable("ContactUsMessage");
 
             modelBuilder.Entity<LongAnswer>().ToTable("LongAnswer");
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.Entity<LongAnswer>()
                 .HasOne(longAnswer => longAnswer.LongAnswerAttempt)
                 .WithOne(attempt => attempt.LongAnswer)

@@ -42,7 +42,7 @@ namespace Server_Application.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterVM registerVM)
         {
             if (!ModelState.IsValid) return BadRequest(registerVM);
-            var user = new User {FullName = registerVM.Name, Email = registerVM.Email, UserName = registerVM.Email};
+            var user = new User { FullName = registerVM.Name, Email = registerVM.Email, UserName = registerVM.Email };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
             if (!result.Succeeded)
             {
@@ -56,7 +56,6 @@ namespace Server_Application.Controllers
                 new(JwtRegisteredClaimNames.Sub, user.Email),
                 new(ClaimTypes.NameIdentifier, user.Id)
             };
-
             var newTokens = new Tokens(_tokenHandler.GenerateJwt(claims), _tokenHandler.GenerateRefreshToken(),
                 user.Id);
             await SaveToken(user, newTokens.RefreshToken, RefreshToken);
@@ -79,7 +78,11 @@ namespace Server_Application.Controllers
                     new(JwtRegisteredClaimNames.Sub, user.Email),
                     new(ClaimTypes.NameIdentifier, user.Id)
                 };
-
+                var userRolesList = await _userManager.GetRolesAsync(user);
+                foreach (var role in userRolesList)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
                 var newTokens = new Tokens(_tokenHandler.GenerateJwt(claims), _tokenHandler.GenerateRefreshToken(),
                     user.Id);
                 await DeleteToken(user, RefreshToken);
@@ -145,7 +148,7 @@ namespace Server_Application.Controllers
             if (user == null)
                 throw new CustomExceptionBase("No user found with this email");
             await DeleteToken(user, PasswordRecoveryToken);
-            List<Claim> claims = new List<Claim> {new(JwtRegisteredClaimNames.Sub, user.Email)};
+            List<Claim> claims = new List<Claim> { new(JwtRegisteredClaimNames.Sub, user.Email) };
             string recoveryToken = _tokenHandler.GenerateJwt(claims, 15);
 
             await SaveToken(user, recoveryToken, PasswordRecoveryToken);
