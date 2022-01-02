@@ -59,7 +59,6 @@ export class QuizDetailsComponent implements OnInit {
       return;
     }
     this.router.navigate(['./start'], { relativeTo: this.route, state: { quizAttemptId: this.latestQuizAttempt.Id } })
-    // this.router.navigateByUrl('/user', { state: { orderId: 1234 } });
   }
 
   startQuiz() {
@@ -87,7 +86,7 @@ export class QuizDetailsComponent implements OnInit {
       return;
     this.latestQuizAttempt = this.quizAttempts[0];
     const latestQuizEndTime = moment.utc(this.latestQuizAttempt.StartTime.toString() + 'Z').add(this.quiz.DurationSeconds + this.secondsBuffer, 'seconds');
-    this.inProgress = latestQuizEndTime.isAfter(currentTime) && this.latestQuizAttempt.SubmitTime == null;
+    this.inProgress = latestQuizEndTime.isAfter(currentTime);
     this.quizAttemptLimitReached = this.quizAttempts.length >= this.quiz.AllowedAttempts && !this.quiz.UnlimitedAttempts && !this.inProgress;
   }
 

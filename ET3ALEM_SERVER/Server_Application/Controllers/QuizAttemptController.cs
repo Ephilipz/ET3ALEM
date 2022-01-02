@@ -28,7 +28,7 @@ namespace Server_Application.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<QuizAttempt>> PostQuizAttempt(string userId, QuizAttempt quizAttempt)
         {
-            await _IQuizAttemptDsl.PostQuizAttempt(userId, quizAttempt);
+            await _IQuizAttemptDsl.PutQuizAttempt(userId, quizAttempt);
             return NoContent();
         }
 
@@ -65,7 +65,7 @@ namespace Server_Application.Controllers
             if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
                 throw new CustomExceptionBase("Invalid quiz attempt");
             quizAttempt.UserId = userId;
-            await _IQuizAttemptDsl.InsertQuizAttempt(quizAttempt);
+            await _IQuizAttemptDsl.PostQuizAttempt(quizAttempt);
             return CreatedAtAction("GetQuizAttempt", new {id = quizAttempt.Id}, quizAttempt);
         }
 

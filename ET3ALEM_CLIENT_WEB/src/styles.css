@@ -142,3 +142,9 @@ h2.formTitle {
   color: #5F8EBA;
   text-align: center;
 }
+
+@media (max-width: 990px) {
+  .hideMobile {
+    display: none !important;
+  }
+}

@@ -149,7 +149,7 @@ namespace Et3allim.Tests
             {
                 Id = id,
                 Name = "Quiz #" + id,
-                Code = Helpers.QuizHelper.GetCode(id)
+                Code = "ABCDE3"
             };
         }
     }

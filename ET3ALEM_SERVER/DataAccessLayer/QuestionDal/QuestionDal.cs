@@ -34,12 +34,10 @@ namespace DataAccessLayer
             if (question != null)
             {
                 _context.Questions.Remove(question);
-                switch (question.QuestionType)
+                if (question.QuestionType == QuestionType.MCQ)
                 {
-                    case QuestionType.MCQ:
-                        var mcq = question as MultipleChoiceQuestion;
-                        _context.Choices.RemoveRange(mcq.Choices);
-                        break;
+                    var mcq = question as MultipleChoiceQuestion;
+                    _context.Choices.RemoveRange(mcq.Choices);
                 }
 
                 await _context.SaveChangesAsync();

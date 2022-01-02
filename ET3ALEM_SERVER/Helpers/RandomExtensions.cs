@@ -10,9 +10,7 @@ namespace Helpers
             while (n > 1)
             {
                 var k = rng.Next(n--);
-                var temp = array[n];
-                array[n] = array[k];
-                array[k] = temp;
+                (array[n], array[k]) = (array[k], array[n]);
             }
         }
     }

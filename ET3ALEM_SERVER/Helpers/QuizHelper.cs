@@ -2,11 +2,11 @@
 
 namespace Helpers
 {
-    public class QuizHelper
+    public class QuizHelper : IQuizHelper
     {
-        private static readonly string salt = "r8455qRJMx";
+        private readonly string salt = "r8455qRJMx";
 
-        public static string GetCode(int id)
+        public string GetCode(int id)
         {
             var hashids = new Hashids(salt, 5, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
             return hashids.Encode(id);

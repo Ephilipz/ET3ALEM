@@ -195,6 +195,7 @@ namespace Server_Application
             services.AddScoped<IContactUsDal, ContactUsDal>();
 
             services.AddSingleton<IAccountHelper, AccountHelper>();
+            services.AddSingleton<IQuizHelper, QuizHelper>();
         }
     }
 }

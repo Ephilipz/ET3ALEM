@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BusinessEntities.Enumerators;
 using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
 using DataAccessLayer;
 using Helpers;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DataServiceLayer
 {
@@ -18,7 +16,8 @@ namespace DataServiceLayer
         private readonly IQuizDsl _IQuizDsl;
         private readonly IMapper _IMapper;
 
-        public QuizAttemptDsl(IQuizAttemptDal quizAttemptDal, IQuizDsl quizDsl, IMapper iMapper)
+        public QuizAttemptDsl(IQuizAttemptDal quizAttemptDal, IQuizDsl quizDsl,
+            IMapper iMapper)
         {
             _IQuizAttemptDal = quizAttemptDal;
             _IQuizDsl = quizDsl;
@@ -33,35 +32,47 @@ namespace DataServiceLayer
         public async Task<QuizAttempt> GetQuizAttemptWithQuiz(int id)
         {
             var attempt = await _IQuizAttemptDal.GetQuizAttemptWithQuiz(id);
-            attempt.QuestionsAttempts = attempt.QuestionsAttempts.OrderBy(qA => qA.QuizQuestion.Sequence).ToList();
+            attempt.QuestionsAttempts = attempt.QuestionsAttempts
+                .OrderBy(qA => qA.QuizQuestion.Sequence).ToList();
             return attempt;
         }
 
-        public async Task<QuizAttempt> PostQuizAttempt(string userId, QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> PutQuizAttempt(string userId,
+            QuizAttempt quizAttempt)
         {
-            //check that userId matches
-            var matchingQuizAttempt = await _IQuizAttemptDal.GetQuizAttempt(quizAttempt.Id);
-            if (matchingQuizAttempt.UserId != userId) return null;
+            var matchingQuizAttempt =
+                await _IQuizAttemptDal.GetQuizAttempt(quizAttempt.Id);
+            if (matchingQuizAttempt.UserId != userId)
+            {
+                return null;
+            }
+
             quizAttempt.UserId = userId;
-            if (quizAttempt.SubmitTime != null && quizAttempt.Quiz.AutoGrade)
+            if (quizAttempt.Quiz.AutoGrade)
                 quizAttempt.GradeQuiz();
-            return await _IQuizAttemptDal.PostQuizAttempt(quizAttempt);
+            
+            return await _IQuizAttemptDal.PutQuizAttempt(quizAttempt);
         }
 
-        public async Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> UpdateQuizAttemptGrade(
+            QuizAttempt quizAttempt)
         {
             quizAttempt.QuestionsAttempts.ForEach(qA => qA.IsGraded = true);
-            quizAttempt.Grade = quizAttempt.QuestionsAttempts.Sum(qA => qA.Grade);
+            quizAttempt.Grade =
+                quizAttempt.QuestionsAttempts.Sum(qA => qA.Grade);
             quizAttempt.IsGraded = true;
+
             return await _IQuizAttemptDal.UpdateQuizAttemptGrade(quizAttempt);
         }
 
 
-        public async Task<QuizAttempt> InsertQuizAttempt(QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> PostQuizAttempt(
+            QuizAttempt quizAttempt)
         {
             var quiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
             var assignedQuizQuestions = GetAssignedQuestionsForQuiz(quiz);
             foreach (var quizQuestion in assignedQuizQuestions)
+            {
                 quizAttempt.QuestionsAttempts.Add(
                     QuestionAttemptFactory.GetQuestionAttemptFromQuizQuestion(
                         quizQuestion,
@@ -71,10 +82,13 @@ namespace DataServiceLayer
                             qa.QuizQuestionId = quizQuestion.Id;
                             qa.Id = 0;
                         }));
-            return await _IQuizAttemptDal.InsertQuizAttempt(quizAttempt);
+            }
+
+            return await _IQuizAttemptDal.PostQuizAttempt(quizAttempt);
         }
 
-        public Task<List<QuizAttempt>> GetUserQuizAttemptsForQuiz(int quizId, string userId)
+        public Task<List<QuizAttempt>> GetUserQuizAttemptsForQuiz(int quizId,
+            string userId)
         {
             return _IQuizAttemptDal.GetUserQuizAttemptsForQuiz(quizId, userId);
         }
@@ -94,7 +108,9 @@ namespace DataServiceLayer
             if (!quiz.ShuffleQuestions)
                 return quiz.QuizQuestions;
             var quizQuestions = GetShuffledQuizQuestions(quiz);
-            int? questionCount = quiz.IncludeAllQuestions ? quiz.QuizQuestions.Count : quiz.IncludedQuestionsCount;
+            int? questionCount = quiz.IncludeAllQuestions
+                ? quiz.QuizQuestions.Count
+                : quiz.IncludedQuestionsCount;
             return quizQuestions
                 .OrderBy(qQ => qQ.Sequence)
                 .Take(questionCount ?? quiz.QuizQuestions.Count)
@@ -116,23 +132,18 @@ namespace DataServiceLayer
             return quizQuestions;
         }
 
-
-
-        public async Task<ActionResult<QuizAttemptVM>> GetQuizAttemptWithQuizLight(int id)
+        public async Task<QuizAttemptVM> GetQuizAttemptWithQuizLight(int id)
         {
             var attempt = await _IQuizAttemptDal.GetQuizAttemptWithQuiz(id);
-            attempt.QuestionsAttempts = attempt.QuestionsAttempts.OrderBy(qA => qA.QuizQuestion.Sequence).ToList();
-            return GetQuizAttemptVM(attempt);
+            attempt.QuestionsAttempts = attempt.QuestionsAttempts
+                .OrderBy(qA => qA.QuizQuestion.Sequence).ToList();
+            return _IMapper.Map<QuizAttemptVM>(attempt);
         }
 
-        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId)
+        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(
+            int quizId)
         {
             return await _IQuizAttemptDal.GetUngradedAttemptsForQuiz(quizId);
-        }
-
-        private QuizAttemptVM GetQuizAttemptVM(QuizAttempt attempt)
-        {
-            return _IMapper.Map<QuizAttemptVM>(attempt);
         }
     }
 }

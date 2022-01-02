@@ -56,6 +56,11 @@ namespace Server_Application.Data
             modelBuilder.Entity<ContactUsMessage>().ToTable("ContactUsMessage");
 
             modelBuilder.Entity<LongAnswer>().ToTable("LongAnswer");
+            modelBuilder.Entity<LongAnswer>()
+                .HasOne(longAnswer => longAnswer.LongAnswerAttempt)
+                .WithOne(attempt => attempt.LongAnswer)
+                .HasForeignKey<LongAnswer>(longAnswer =>
+                    longAnswer.LongAnswerAttemptId);
 
             base.OnModelCreating(modelBuilder);
         }

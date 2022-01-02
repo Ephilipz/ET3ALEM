@@ -60,7 +60,6 @@ export class CountDownTimerComponent implements OnInit, OnDestroy {
     }
     if (this.displaySeconds) {
       this.seconds = secondsLeft
-      secondsLeft = 0;
     }
   }
 

@@ -1,23 +1,103 @@
-.mainTitle{
-    font-size: 8vw;
-    letter-spacing: 0.1em;
-    line-height: 9vw;
+.mainTitle {
+  font-size: 7vw;
+  letter-spacing: 0.1em;
+  line-height: 10vw;
 }
 
 .mainTitle.light {
-    font-weight: 200;
+  font-weight: 200;
 }
 
-.mainTitle.mid{
-    font-weight: 400;
+.mainTitle.mid {
+  font-weight: 400;
 }
 
-.mainTitle.dark{
-    font-weight: 900;
+.mainTitle.dark {
+  font-weight: 900;
 }
 
 .textColumn {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+div.sectionTitleContainer {
+  height: 5vh;
+  min-height: 150px;
+  margin: 50px 0;
+  display: flex;
+  align-items: center;
+  background-color: #ececec;
+}
+
+h2.sectionTitle {
+  font-size: 2.8vw;
+  font-weight: 600;
+  text-align: center;
+  margin: auto;
+  letter-spacing: 4px;
+  word-spacing: 8px;
+}
+
+div.featuresRow{
+  gap: 50px;
+  margin: 10vh 0;
+}
+
+div.featuresRow .col-lg-2 {
+  min-width: 400px;
+  max-width: 90vw;
+
+  padding: 50px;
+  border-radius: 20px;
+  color: white;
+}
+
+div.featuresRow div mat-icon {
+  font-size: 3em;
+  margin-bottom: 32px;
+}
+
+div.featuresRow div h2 {
+  font-size: 2em;
+}
+
+div.featuresRow div p {
+  font-size: 1.4em;
+  color: #eeeeee;
+  font-weight: 300;
+  line-height: 1.2em;
+}
+
+h1.columnTitle {
+  font-size: 2em;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
+
+h3.columnText {
+  font-size: 2em;
+  font-weight: 300;
+  margin: 0 auto;
+  padding-top: 2%;
+  line-height: 1.6em;
+  text-align: left;
+  max-width: 900px;
+}
+
+.appInfoText{
+  font-size: 2.5em;
+  font-weight: 200;
+  word-spacing: 5px;
+  line-height: 40px;
+}
+
+div.mainPageSection{
+  margin: 8% auto;
+}
+
+button.contactUsBtn{
+  font-size: 3em;
+  padding: 20px 50px;
 }

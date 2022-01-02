@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {Component} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +9,18 @@ import { ActivatedRoute } from '@angular/router';
 export class AppComponent {
   title = 'ET3ALLEM';
 
-  constructor(private activatedRoute: ActivatedRoute){}
+  constructor(private activatedRoute: ActivatedRoute) {
+  }
 
-  public isAuthRoute(): boolean{
+  public isAuthRoute(): boolean {
     return window.location.toString().toLowerCase().indexOf('auth') != -1;
+  }
+
+  public noScrolling(): boolean {
+    return this.isHomePage();
+  }
+
+  private isHomePage(): boolean {
+    return window.location.pathname.trim() == '/';
   }
 }

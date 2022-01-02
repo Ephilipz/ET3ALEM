@@ -11,10 +11,12 @@ namespace DataAccessLayer
     public class QuizDal : IQuizDal
     {
         private readonly ApplicationContext _context;
+        private readonly IQuizHelper _quizHelper;
 
-        public QuizDal(ApplicationContext context)
+        public QuizDal(ApplicationContext context, IQuizHelper quizHelper)
         {
             _context = context;
+            _quizHelper = quizHelper;
         }
 
         public async Task<Quiz> DeleteQuiz(int id)
@@ -66,7 +68,7 @@ namespace DataAccessLayer
                 quiz.TotalGrade = quiz.QuizQuestions.Sum(question => question.Grade);
             await _context.Quizzes.AddAsync(quiz);
             await _context.SaveChangesAsync();
-            quiz.Code = QuizHelper.GetCode(quiz.Id);
+            quiz.Code = _quizHelper.GetCode(quiz.Id);
             await _context.SaveChangesAsync();
             return quiz;
         }
