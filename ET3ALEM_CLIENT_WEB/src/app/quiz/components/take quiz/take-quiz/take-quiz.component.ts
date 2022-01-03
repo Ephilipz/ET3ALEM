@@ -47,15 +47,15 @@ export class TakeQuizComponent implements OnInit {
       this.getInProgressQuiz();
     }
 
-    interval(this.AutoSaveMinutes * 60 * 1000)
-      .pipe(
-        takeWhile(() => this.quiz.UnlimitedTime || moment.duration(moment(this.endDate).diff(moment.utc())).asMinutes() > this.AutoSaveMinutes),
-        mergeMap(() => {
-          this.prepareQuizAttemptForSubmission();
-          return this.quizAttemptService.updateQuizAttempt(this.quizAttempt);
-        })
-      )
-      .subscribe(() => this.toastr.info('quiz auto saved'));
+    // interval(this.AutoSaveMinutes * 60 * 1000)
+    //   .pipe(
+    //     takeWhile(() => this.quiz.UnlimitedTime || moment.duration(moment(this.endDate).diff(moment.utc())).asMinutes() > this.AutoSaveMinutes),
+    //     mergeMap(() => {
+    //       this.prepareQuizAttemptForSubmission();
+    //       return this.quizAttemptService.updateQuizAttempt(this.quizAttempt);
+    //     })
+    //   )
+    //   .subscribe(() => this.toastr.info('quiz auto saved'));
   }
 
   private setIdFromRouteParams() {

@@ -31,7 +31,7 @@ namespace DataAccessLayer
             builder.HasData(admin);
         }
 
-        public string PassGenerate(User user)
+        private string PassGenerate(User user)
         {
             var passHash = new PasswordHasher<User>();
             return passHash.HashPassword(user, "Ar9mswin1256");
