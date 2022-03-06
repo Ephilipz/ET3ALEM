@@ -51,13 +51,13 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef class="header-align-right"></th>
             <td mat-cell *matCellDef="let element" class="header-align-right">
-                <button mat-flat-button class="green" [routerLink]="[ '../grades', element.Id ]" matTooltip="Grade">
-                    Grade
+                <button mat-flat-button class="green" [routerLink]="[ '../grades', element.Id ]">
+                    Grades
                 </button>
-                <button mat-flat-button class="blue" [routerLink]="[ '../edit', element.Id ]" matTooltip="Edit">
+                <button mat-flat-button class="blue" [routerLink]="[ '../edit', element.Id ]">
                     Edit
                 </button>
-                <button mat-flat-button class="red" (click)="delete(element.Id)" matTooltip="Delete">
+                <button mat-flat-button class="red" (click)="delete(element.Id)">
                     Delete
                 </button>
             </td>

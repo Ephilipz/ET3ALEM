@@ -81,13 +81,23 @@ export class QuizDetailsComponent implements OnInit {
         return;
     }
 
-    //check previous attempts
-    if (!this.quizAttempts || this.quizAttempts.length == 0)
+    if (this.noPreviousAttempts())
       return;
+
+    this.quizAttemptLimitReached = this.quizAttempts.length >= this.quiz.AllowedAttempts && !this.quiz.UnlimitedAttempts;
+
     this.latestQuizAttempt = this.quizAttempts[0];
+    if(this.quiz.NoDueDate){
+      this.inProgress = !this.latestQuizAttempt.IsSubmitted;
+      return;
+    }
+
     const latestQuizEndTime = moment.utc(this.latestQuizAttempt.StartTime.toString() + 'Z').add(this.quiz.DurationSeconds + this.secondsBuffer, 'seconds');
-    this.inProgress = latestQuizEndTime.isAfter(currentTime);
-    this.quizAttemptLimitReached = this.quizAttempts.length >= this.quiz.AllowedAttempts && !this.quiz.UnlimitedAttempts && !this.inProgress;
+    this.inProgress = latestQuizEndTime.isAfter(currentTime) && !this.latestQuizAttempt.IsSubmitted;
+    this.quizAttemptLimitReached &&= !this.inProgress;
   }
 
+  private noPreviousAttempts() {
+    return !this.quizAttempts || this.quizAttempts.length == 0;
+  }
 }

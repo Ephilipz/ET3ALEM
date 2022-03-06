@@ -1,4 +1,10 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {plainToClass} from 'class-transformer';
 import * as moment from 'moment';
@@ -10,6 +16,7 @@ import {QuizAttempt} from 'src/app/quiz/Model/quiz-attempt';
 import {QuizAttemptService} from 'src/app/quiz/services/quiz-attempt.service';
 import {QuizService} from 'src/app/quiz/services/quiz.service';
 import {interval} from "rxjs";
+import {Subscription} from "rxjs/internal/Subscription";
 
 @Component({
   selector: 'take-quiz',
@@ -17,7 +24,7 @@ import {interval} from "rxjs";
   styleUrls: ['./take-quiz.component.css']
 })
 
-export class TakeQuizComponent implements OnInit {
+export class TakeQuizComponent implements OnInit, OnDestroy{
 
   @ViewChildren('AnswerQuestion') private AnswerQuestionComponents: QueryList<AnswerQuestionHeaderComponent>;
 
@@ -27,6 +34,7 @@ export class TakeQuizComponent implements OnInit {
   endDate: Date;
   id: number = -1;
   readonly AutoSaveMinutes = 0.5;
+  private autoSaveObservable: Subscription;
 
   constructor(private quizService: QuizService, private route: ActivatedRoute,
               private toastr: ToastrService, private router: Router,
@@ -47,15 +55,28 @@ export class TakeQuizComponent implements OnInit {
       this.getInProgressQuiz();
     }
 
-    // interval(this.AutoSaveMinutes * 60 * 1000)
-    //   .pipe(
-    //     takeWhile(() => this.quiz.UnlimitedTime || moment.duration(moment(this.endDate).diff(moment.utc())).asMinutes() > this.AutoSaveMinutes),
-    //     mergeMap(() => {
-    //       this.prepareQuizAttemptForSubmission();
-    //       return this.quizAttemptService.updateQuizAttempt(this.quizAttempt);
-    //     })
-    //   )
-    //   .subscribe(() => this.toastr.info('quiz auto saved'));
+    this.setAutoSaveObservable();
+  }
+
+  private setAutoSaveObservable() {
+    this.autoSaveObservable = interval(this.AutoSaveMinutes * 60 * 1000)
+      .pipe(
+        takeWhile(() => this.quiz.UnlimitedTime || this.getMinutesRemaining() > this.AutoSaveMinutes),
+        mergeMap(() => {
+          this.prepareQuizAttemptForSubmission();
+          return this.quizAttemptService.updateQuizAttempt(this.quizAttempt);
+        })
+      )
+      .subscribe((quizAttempt) => {
+        this.toastr.info('quiz auto saved');
+        console.log('quiz attempt after auto save : ', quizAttempt);
+      });
+
+  }
+
+  private getMinutesRemaining() {
+    const timeDifference = moment(this.endDate).diff(moment.utc());
+    return moment.duration(timeDifference).asMinutes();
   }
 
   private setIdFromRouteParams() {
@@ -85,20 +106,24 @@ export class TakeQuizComponent implements OnInit {
       let code = params['code'];
       this.quizService.getBasicQuizFromCode(code).subscribe(
         (quiz) => {
-          this.quiz = plainToClass(Quiz, quiz);
-          this.quizAttempt = new QuizAttempt(0, 0, this.quiz.Id, moment.utc());
-          this.quizAttemptService.createQuizAttempt(this.quizAttempt).subscribe(
-            (quizAttempt) => {
-              this.quizAttempt = plainToClass(QuizAttempt, quizAttempt);
-              this.endDate = moment.utc().add(this.quiz.DurationSeconds, 'seconds').toDate();
-              this.isLoaded = true;
-            },
-            () => this.errorLoadingQuiz()
-          )
+          this.getNewQuizWithAttempt(quiz);
         },
         () => this.errorLoadingQuiz()
       )
     });
+  }
+
+  private getNewQuizWithAttempt(quiz: Quiz) {
+    this.quiz = plainToClass(Quiz, quiz);
+    this.quizAttempt = new QuizAttempt(0, 0, this.quiz.Id, moment.utc());
+    this.quizAttemptService.createQuizAttempt(this.quizAttempt).subscribe(
+      (quizAttempt) => {
+        this.quizAttempt = plainToClass(QuizAttempt, quizAttempt);
+        this.endDate = moment.utc().add(this.quiz.DurationSeconds, 'seconds').toDate();
+        this.isLoaded = true;
+      },
+      () => this.errorLoadingQuiz()
+    )
   }
 
   errorLoadingQuiz() {
@@ -113,6 +138,7 @@ export class TakeQuizComponent implements OnInit {
 
   submitQuiz() {
     this.prepareQuizAttemptForSubmission();
+    this.quizAttempt.IsSubmitted = true;
     this.quizAttemptService.updateQuizAttempt(this.quizAttempt).subscribe(
       () => {
         this.router.navigate(['../../../viewAttempt', this.quizAttempt.Id], {relativeTo: this.route});
@@ -133,6 +159,10 @@ export class TakeQuizComponent implements OnInit {
     this.AnswerQuestionComponents.forEach((component, i) => {
       this.quizAttempt.QuestionsAttempts[i] = component.getQuestionAttempt();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.autoSaveObservable?.unsubscribe();
   }
 
 }

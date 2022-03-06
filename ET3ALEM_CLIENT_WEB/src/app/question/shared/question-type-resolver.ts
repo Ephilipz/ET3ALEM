@@ -23,7 +23,7 @@ import { ConcreteAnswerQuestionLongAnswerComponent } from "../answer-question/Co
 import { ConcreteEditQuestionLongAnswerComponent } from "../edit-create-question/ConcreteQuestions/concrete-edit-question-long-answer/concrete-edit-question-long-answer.component";
 
 /**
- * A shared class with the question type dictionaries for the creation of specific questions 
+ * A shared class with the question type dictionaries for the creation of specific questions
  */
 export class QuestionTypeResolver {
 
@@ -74,7 +74,7 @@ export class QuestionTypeResolver {
 
     public static getSpecificQuestion(question: any) {
         if (!question) return null;
-        let type: QuestionType = question.QuestionType;
+        const type: QuestionType = question.QuestionType;
         switch (type) {
             case QuestionType.MCQ:
                 return new MultipleChoiceQuestion(question.Id, question.Body, question.Choices, question.McqAnswerType, question.Comment);

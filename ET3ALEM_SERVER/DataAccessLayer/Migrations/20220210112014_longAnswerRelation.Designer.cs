@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server_Application.Data;
 
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220210112014_longAnswerRelation")]
+    partial class longAnswerRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,9 +248,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("IsGraded")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("IsSubmitted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int>("QuizId")
                         .HasColumnType("int");
 
@@ -369,15 +368,15 @@ namespace DataAccessLayer.Migrations
                         {
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a1729689-670a-4010-91ab-3ba298755f2d",
+                            ConcurrencyStamp = "169b1f71-4c87-43ac-b123-49b1d958ad08",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM2DmoQ1bCAk0gE7S2urROADwkTyzJyzOn8CKk3ieDN7SU34xJp5AU6pbw3GLiecCA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOBBoLesW/FBBTySYa0FhCh1apPSdAgpVPsgIiIszLxRROXA0GcbRvOOFuEg9UEG0Q==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "c5299ecc-8c59-470d-b3ea-02c1c909ce1d",
+                            SecurityStamp = "a23f830a-de8b-4528-aac1-8bcc9bfd77ac",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -427,7 +426,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "6e2c7b15-36e6-4321-978b-e14e9178074a",
+                            ConcurrencyStamp = "b0842d52-45b2-4a84-bf60-c9c33ddc694f",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

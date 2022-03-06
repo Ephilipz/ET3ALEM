@@ -17,7 +17,7 @@ export class QuizAttemptHistoryComponent implements OnInit {
 
   isLoaded = false;
   quizAttemptListDS = new MatTableDataSource<QuizAttempt>();
-  displayedColumns = ['Quiz.Name', 'SubmitTime', 'Grade', 'ViewButton'];
+  displayedColumns = ['Quiz.Name', 'SubmitTime', 'Grade', 'Actions'];
   @ViewChild(MatSort) matSort: MatSort;
 
   constructor(private quizAttemptService: QuizAttemptService, private toastr: ToastrService) { }
@@ -41,4 +41,7 @@ export class QuizAttemptHistoryComponent implements OnInit {
     return QuizGradingHelper.getGradeAsPercentage(attempt);
   }
 
+  canRetakeQuiz(Quiz: any) {
+    return true
+  }
 }

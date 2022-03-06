@@ -9,12 +9,14 @@ import { AC_ConcreteQuestionResult } from '../ac-concrete-question-result';
   templateUrl: './concrete-question-result-mcq.component.html',
   styleUrls: ['./concrete-question-result-mcq.component.css']
 })
-export class ConcreteQuestionResultMCQComponent implements OnInit, AC_ConcreteQuestionResult {
+export class ConcreteQuestionResultMCQComponent extends AC_ConcreteQuestionResult implements OnInit  {
 
   questionAttempt: MCQAttempt;
   choices: Array<Choice> = [];
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit(): void {
     if (this.questionAttempt) {
@@ -26,4 +28,7 @@ export class ConcreteQuestionResultMCQComponent implements OnInit, AC_ConcreteQu
     return this.questionAttempt.Choices.findIndex(c => c.Id == choice.Id) != -1;
   }
 
+  isCorrectAnswer(choice: Choice) {
+    return choice.IsAnswer || this.questionAttempt.Grade >= this.questionAttempt.QuizQuestion.Grade;
+  }
 }

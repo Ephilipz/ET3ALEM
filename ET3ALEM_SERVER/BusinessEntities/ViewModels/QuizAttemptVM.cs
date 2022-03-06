@@ -9,6 +9,7 @@ namespace BusinessEntities.ViewModels
         public int Id { get; set; }
         public int QuizId { get; set; }
         public string UserId { get; set; }
+        public bool IsSubmitted { get; set; }
         public DateTime StartTime { get; set; }
         public QuizVM Quiz { get; set; }
         public List<QuestionAttemptVM> QuestionsAttempts { get; set; }

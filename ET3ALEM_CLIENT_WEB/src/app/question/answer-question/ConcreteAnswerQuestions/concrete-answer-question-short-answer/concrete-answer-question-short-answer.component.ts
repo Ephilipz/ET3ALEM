@@ -23,6 +23,7 @@ export class ConcreteAnswerQuestionShortAnswerComponent extends AC_ConcreteAnswe
   ngOnInit(): void {
     this.quizQuestion = this.questionAttempt.QuizQuestion;
     this.question = <ShortAnswerQuestion>this.quizQuestion.Question;
+    this.Answer = this.questionAttempt.Answer;
   }
 
   getAnswers(){

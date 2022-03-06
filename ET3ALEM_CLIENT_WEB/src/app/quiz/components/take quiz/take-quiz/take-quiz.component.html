@@ -3,7 +3,8 @@
     <div *ngFor="let questionAttempt of quizAttempt.QuestionsAttempts; let i = index" class="questionsContainer">
         <div class="row question">
             <h2 class="QuestionTitle" style="width: fit-content;">Question {{i+1}}</h2>
-            <h2 style="margin-left: auto;">{{questionAttempt.QuizQuestion.Grade.toString() + (questionAttempt.QuizQuestion.Grade > 1 ? ' Points' : 'Point') }}</h2>
+            <h2
+              style="margin-left: auto;">{{questionAttempt.QuizQuestion.Grade.toString() + (questionAttempt.QuizQuestion.Grade > 1 ? ' Points' : ' Point') }}</h2>
         </div>
         <answer-question-header #AnswerQuestion class="answerQuestionComponent row" [questionAttempt]="questionAttempt">
         </answer-question-header>

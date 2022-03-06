@@ -19,7 +19,7 @@ export class QuizAttemptService {
   }
 
   public createQuizAttempt(quizAttempt: QuizAttempt): Observable<QuizAttempt> {
-    return this.httpClient.put<QuizAttempt>(this.baseRoute, quizAttempt);
+    return this.httpClient.post<QuizAttempt>(this.baseRoute, quizAttempt);
   }
 
   public getQuizAttempt(quizAttemptId: number) {
@@ -48,7 +48,7 @@ export class QuizAttemptService {
 
   public updateQuizAttempt(quizAttempt: QuizAttempt) {
     const userId = this.localStorageService.UserId;
-    return this.httpClient.post(this.baseRoute + `/${userId}`, quizAttempt);
+    return this.httpClient.put(this.baseRoute + `/${userId}`, quizAttempt);
   }
 
   public updateQuizAttemptGrade(quizAttempt: QuizAttempt) {

@@ -6,8 +6,7 @@ namespace BusinessEntities.Models
 {
     public class MCQAttmept : QuestionAttempt
     {
-#nullable enable
-        public virtual List<Choice>? Choices { get; set; }
+        public virtual List<Choice> Choices { get; set; }
 
         public override void GradeQuestion()
         {

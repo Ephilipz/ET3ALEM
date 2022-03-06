@@ -45,17 +45,17 @@ div.featuresRow{
   margin: 10vh 0;
 }
 
-div.featuresRow .col-lg-2 {
-  min-width: 400px;
-  max-width: 90vw;
+div.featuresRow .featuresCol {
+  /*width: 500px;*/
+  /*max-width: 90vw;*/
 
   padding: 50px;
-  border-radius: 20px;
+  border-radius: 15px;
   color: white;
 }
 
 div.featuresRow div mat-icon {
-  font-size: 3em;
+  font-size: 3.5em;
   margin-bottom: 32px;
 }
 
@@ -64,10 +64,10 @@ div.featuresRow div h2 {
 }
 
 div.featuresRow div p {
-  font-size: 1.4em;
+  font-size: 1.6em;
   color: #eeeeee;
   font-weight: 300;
-  line-height: 1.2em;
+  line-height: 1.4em;
 }
 
 h1.columnTitle {
@@ -87,7 +87,7 @@ h3.columnText {
 }
 
 .appInfoText{
-  font-size: 2.5em;
+  font-size: 2.2em;
   font-weight: 200;
   word-spacing: 5px;
   line-height: 40px;

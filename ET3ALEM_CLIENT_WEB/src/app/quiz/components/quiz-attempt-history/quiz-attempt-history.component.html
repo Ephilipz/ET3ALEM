@@ -22,12 +22,17 @@
       <td mat-cell *matCellDef="let element"> {{getGrade(element)}} </td>
     </ng-container>
 
-    <!-- View Button Column -->
-    <ng-container matColumnDef="ViewButton">
+    <!-- Actions Column -->
+    <ng-container matColumnDef="Actions">
       <th mat-header-cell *matHeaderCellDef class="alignRight"></th>
       <td mat-cell *matCellDef="let element" class="alignRight">
         <button mat-flat-button class="blue" [routerLink]="'../viewAttempt/'+ element.Id"
                 style="font-size: 0.95em; font-weight: 300;">View
+        </button>
+        <button mat-flat-button class="darkBlue ml-3"
+                [routerLink]="'../take/' + element.Quiz.Code"
+                style="font-size: 0.95em; font-weight: 300;"
+                *ngIf="canRetakeQuiz(element.Quiz)">Retake
         </button>
       </td>
     </ng-container>

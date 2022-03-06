@@ -1,11 +1,14 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnInit } from '@angular/core';
-import { Choice } from 'src/app/question/Models/choice';
-import { McqAnswerType, MultipleChoiceQuestion } from 'src/app/question/Models/mcq';
-import { MCQAttempt } from 'src/app/question/Models/mcq-attempt';
-import { QuestionAttempt } from 'src/app/question/Models/question-attempt';
-import { QuizQuestion } from 'src/app/quiz/Model/quizQuestion';
-import { AC_ConcreteAnswerQuestion } from '../ac-concrete-answer-question';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {Component, Input, OnInit} from '@angular/core';
+import {Choice} from 'src/app/question/Models/choice';
+import {
+  McqAnswerType,
+  MultipleChoiceQuestion
+} from 'src/app/question/Models/mcq';
+import {MCQAttempt} from 'src/app/question/Models/mcq-attempt';
+import {QuestionAttempt} from 'src/app/question/Models/question-attempt';
+import {QuizQuestion} from 'src/app/quiz/Model/quizQuestion';
+import {AC_ConcreteAnswerQuestion} from '../ac-concrete-answer-question';
 
 @Component({
   selector: 'app-concrete-answer-question-mcq',
@@ -44,6 +47,9 @@ export class ConcreteAnswerQuestionMCQComponent extends AC_ConcreteAnswerQuestio
   ngOnInit(): void {
     this.quizQuestion = this.questionAttempt.QuizQuestion;
     this.question = <MultipleChoiceQuestion>this.quizQuestion.Question;
+    console.log('mcq received ', this.question);
+    if (this.questionAttempt.Choices?.length > 0)
+      this.questionAttempt.Choices.forEach(choice => this.selectChoice(choice));
     if (this.question.McqAnswerType == McqAnswerType.MultipleChoice)
       this.headerText = 'select all that apply'
   }

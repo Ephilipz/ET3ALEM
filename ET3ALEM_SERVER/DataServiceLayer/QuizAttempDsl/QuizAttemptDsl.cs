@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BusinessEntities.Factories;
 using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
 using DataAccessLayer;
@@ -42,15 +43,23 @@ namespace DataServiceLayer
         {
             var matchingQuizAttempt =
                 await _IQuizAttemptDal.GetQuizAttempt(quizAttempt.Id);
+            
             if (matchingQuizAttempt.UserId != userId)
             {
                 return null;
             }
 
+            var matchingQuiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
+            quizAttempt.QuestionsAttempts.ForEach(qa =>
+            {
+                qa.QuizQuestion = matchingQuiz.QuizQuestions
+                    .FirstOrDefault(qQ => qQ.Id == qa.QuizQuestionId);
+            });
+
             quizAttempt.UserId = userId;
             if (quizAttempt.Quiz.AutoGrade)
                 quizAttempt.GradeQuiz();
-            
+
             return await _IQuizAttemptDal.PutQuizAttempt(quizAttempt);
         }
 

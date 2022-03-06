@@ -46,19 +46,46 @@ namespace DataAccessLayer
         {
             quizAttempt.QuestionsAttempts.ForEach(qA => qA.QuizQuestion = null);
             quizAttempt.Quiz = null;
-            var choices = quizAttempt.QuestionsAttempts
-                .OfType<MCQAttmept>().SelectMany(mcqA => mcqA.Choices);
-            // foreach (var item in choices)
-            // {
-            //     _context.Entry(item).State = EntityState.Unchanged;
-            // }
-            _context.Update(quizAttempt);
+            quizAttempt.QuestionsAttempts.ForEach(qA =>
+            {
+                if (qA is not MCQAttmept)
+                    _context.Entry(qA).State = EntityState.Modified;
+            });
+            
+            var mcqIds = quizAttempt.QuestionsAttempts.OfType<MCQAttmept>()
+                .Select(mcq => mcq.Id).ToList();
+            
+            var matchingMCQFromDBList = _context.QuestionAttempts
+                .OfType<MCQAttmept>().Where(mcq => mcqIds.Contains(mcq.Id))
+                .Include(mcq => mcq.Choices)
+                .ToList();
+
+            foreach (var mcqAttempt in quizAttempt.QuestionsAttempts
+                         .OfType<MCQAttmept>())
+            {
+                _context.Entry(mcqAttempt).State = EntityState.Detached;
+                var matchingMCQFromDB = matchingMCQFromDBList.FirstOrDefault
+                    (mcq => mcq.Id == mcqAttempt.Id);
+                matchingMCQFromDB.Choices.RemoveAll(choice => !mcqAttempt
+                    .Choices.Exists(c => c.Id == choice.Id));
+                matchingMCQFromDB.Choices.AddRange(mcqAttempt.Choices
+                    .Where(c =>
+                        !matchingMCQFromDB.Choices.Exists(choice =>
+                            c.Id == choice.Id)));
+
+                matchingMCQFromDB.Choices.ForEach(
+                    choice => _context.Entry(choice).State =
+                        EntityState.Unchanged);
+                mcqAttempt.Choices = matchingMCQFromDB.Choices;
+                _context.Entry(matchingMCQFromDB).CurrentValues.SetValues(mcqAttempt);
+            }
+
+            _context.Entry(quizAttempt).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return quizAttempt;
         }
 
-        public async Task<QuizAttempt> PostQuizAttempt(
-            QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> PostQuizAttempt(QuizAttempt quizAttempt)
         {
             foreach (var qA in quizAttempt.QuestionsAttempts)
             {
@@ -73,13 +100,12 @@ namespace DataAccessLayer
         public async Task<QuizAttempt> UpdateQuizAttemptGrade(
             QuizAttempt quizAttempt)
         {
-            
             //detach child entities that will not be tracked
             quizAttempt.QuestionsAttempts.ForEach(qA => qA.QuizQuestion = null);
             quizAttempt.QuestionsAttempts.OfType<MCQAttmept>().ToList()
                 .ForEach(mcqA => mcqA.Choices = null);
             quizAttempt.Quiz = null;
-            
+
             _context.Update(quizAttempt);
             await _context.SaveChangesAsync();
             return quizAttempt;
@@ -119,7 +145,8 @@ namespace DataAccessLayer
                 .ToListAsync();
         }
 
-        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId)
+        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(
+            int quizId)
         {
             return await _context.QuizAttempts
                 .Where(attempt => !attempt.IsGraded && attempt.QuizId == quizId)

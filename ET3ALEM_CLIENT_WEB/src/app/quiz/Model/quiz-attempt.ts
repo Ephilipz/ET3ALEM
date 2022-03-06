@@ -24,6 +24,7 @@ export class QuizAttempt {
     IsGraded: boolean;
     @Type(() => Date)
     SubmitTime?: Date;
+    IsSubmitted: boolean;
 
     constructor(Id, UserId, QuizId, StartTime, QuestionAttempts = [], Grade = 0, IsGraded = false, SubmitTime?: Date) {
         this.Id = Id;

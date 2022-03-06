@@ -9,8 +9,9 @@ namespace BusinessEntities.ViewModels
         public int QuizQuestionId { get; set; }
         public QuizQuestionVM QuizQuestion { get; set; }
     }
+
     public class LongAnswerAttemptVM : QuestionAttemptVM
-    { 
+    {
         public LongAnswer LongAnswer { get; set; }
     }
 
@@ -18,12 +19,15 @@ namespace BusinessEntities.ViewModels
     {
         public List<ChoiceVM> Choices { get; set; }
     }
+
     public class ShortAnswerAttemptVM : QuestionAttemptVM
     {
-        public string Answer{ get; set; }
+        public string Answer { get; set; }
     }
+
     public class TrueFalseAttemptVM : QuestionAttemptVM
     {
-        public bool Answer{ get; set; }
+        public bool Answer { get; set; }
+        public bool IsAnswered { get; set; }
     }
 }

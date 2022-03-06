@@ -3,14 +3,16 @@
         <div class="choice col-9" [ngClass]="{'correctChoice': isSelected(choice)}">
             <h1>{{choice.Body}}</h1>
         </div>
-        <div class="col-3">
-            <div *ngIf="choice.IsAnswer && isSelected(choice)" class="sideBubble isAnswer">
+        <div class="col-3" *ngIf="questionAttempt.IsGraded">
+            <div *ngIf="isCorrectAnswer(choice) && isSelected(choice)"
+                 class="sideBubble isAnswer">
                 <h2>Your answer was correct</h2>
             </div>
             <div *ngIf="choice.IsAnswer && !isSelected(choice)" class="sideBubble isWrongAnswer">
                 <h2>Correct Answer</h2>
             </div>
-            <div *ngIf="!choice.IsAnswer && isSelected(choice)" class="sideBubble isWrongAnswer">
+            <div *ngIf="!isCorrectAnswer(choice)  && isSelected(choice)"
+                 class="sideBubble isWrongAnswer">
                 <h2>Your answer was incorrect</h2>
             </div>
         </div>

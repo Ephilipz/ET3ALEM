@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataServiceLayer
+namespace BusinessEntities.Factories
 {
-    internal class QuestionAttemptFactory
+    public class QuestionAttemptFactory
     {
         public static QuestionAttempt GetQuestionAttemptFromQuizQuestion(QuizQuestion quizQuestion, Action<QuestionAttempt> configure = null)
         {

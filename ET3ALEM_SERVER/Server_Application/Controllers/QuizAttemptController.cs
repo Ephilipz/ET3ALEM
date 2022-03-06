@@ -24,9 +24,10 @@ namespace Server_Application.Controllers
             _accountHelper = accountHelper;
         }
 
-        [HttpPost("{userId}")]
+        [HttpPut("{userId}")]
         [AllowAnonymous]
-        public async Task<ActionResult<QuizAttempt>> PostQuizAttempt(string userId, QuizAttempt quizAttempt)
+        public async Task<ActionResult<QuizAttempt>> PutQuizAttempt(string 
+        userId, QuizAttempt quizAttempt)
         {
             await _IQuizAttemptDsl.PutQuizAttempt(userId, quizAttempt);
             return NoContent();
@@ -58,8 +59,9 @@ namespace Server_Application.Controllers
             return await _IQuizAttemptDsl.GetQuizAttemptWithQuizLight(id);
         }
 
-        [HttpPut]
-        public async Task<ActionResult<QuizAttempt>> PutQuizAttempt(QuizAttempt quizAttempt)
+        [HttpPost]
+        public async Task<ActionResult<QuizAttempt>> PostQuizAttempt(QuizAttempt 
+        quizAttempt)
         {
             var userId = _accountHelper.GetUserId(HttpContext, User);
             if (!ModelState.IsValid || string.IsNullOrEmpty(userId))

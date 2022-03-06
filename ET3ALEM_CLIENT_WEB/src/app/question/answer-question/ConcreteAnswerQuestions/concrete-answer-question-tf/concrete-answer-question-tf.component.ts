@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { TrueFalseAttempt } from 'src/app/question/Models/true-false-attempt';
-import { TrueFalseQuestion } from 'src/app/question/Models/true-false-question';
-import { AC_ConcreteAnswerQuestion } from '../ac-concrete-answer-question';
+import {Component, Input, OnInit} from '@angular/core';
+import {TrueFalseAttempt} from 'src/app/question/Models/true-false-attempt';
+import {TrueFalseQuestion} from 'src/app/question/Models/true-false-question';
+import {AC_ConcreteAnswerQuestion} from '../ac-concrete-answer-question';
 
 @Component({
   selector: 'app-concrete-answer-question-tf',
@@ -20,6 +20,8 @@ export class ConcreteAnswerQuestionTFComponent extends AC_ConcreteAnswerQuestion
 
   ngOnInit(): void {
     this.question = this.questionAttempt.QuizQuestion.Question as TrueFalseQuestion;
+    if (this.questionAttempt.IsAnswered)
+      this.Answer = this.questionAttempt.Answer;
   }
 
   getAnswers() {

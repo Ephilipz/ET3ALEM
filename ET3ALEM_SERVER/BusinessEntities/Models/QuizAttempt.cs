@@ -19,6 +19,7 @@ namespace BusinessEntities.Models
         public List<QuestionAttempt> QuestionsAttempts { get; set; }
         public double Grade { get; set; }
         public bool IsGraded { get; set; }
+        public bool IsSubmitted { get; set; }
         public DateTime? SubmitTime { get; set; }
 
         public void GradeQuiz()
