@@ -4,9 +4,9 @@ import { QuizService } from '../../services/quiz.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import * as moment from 'moment';
 import { Location, LocationStrategy } from '@angular/common';
 import { Clipboard } from '@angular/cdk/clipboard';
+import DateHelper from 'src/app/Shared/helper/date.helper';
 
 @Component({
   selector: 'app-list-quizzes',
@@ -21,10 +21,10 @@ export class ListQuizzesComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort) matSort: MatSort;
 
-  constructor(private quizService: QuizService, 
-    private toastr: ToastrService, 
-    private locationStrategy: LocationStrategy, 
-    private clipboard: Clipboard, 
+  constructor(private quizService: QuizService,
+    private toastr: ToastrService,
+    private locationStrategy: LocationStrategy,
+    private clipboard: Clipboard,
     private Location: Location) { }
 
   ngOnInit(): void {
@@ -69,8 +69,8 @@ export class ListQuizzesComponent implements OnInit, AfterViewInit {
   }
 
   getQuizStatus(quiz: Quiz) {
-    const isExpired = moment(quiz.EndDate).isBefore(moment.utc()) && !quiz.NoDueDate;
-    const isNotStarted = moment(quiz.StartDate).isAfter(moment.utc());
+    const isExpired = DateHelper.isBefore(quiz.EndDate, DateHelper.utcNow) && !quiz.NoDueDate;
+    const isNotStarted = DateHelper.isAfter(quiz.StartDate, DateHelper.utcNow);
     if (isExpired)
       return 'Expired'
     if (isNotStarted)
@@ -78,7 +78,7 @@ export class ListQuizzesComponent implements OnInit, AfterViewInit {
     return 'Active';
   }
 
-  getQuizLink(quiz: Quiz){
+  getQuizLink(quiz: Quiz) {
     const baseURL = window.location.origin;
     const fullURL = baseURL + '/quiz/take/' + quiz.Code;
     this.clipboard.copy(fullURL);

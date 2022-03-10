@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { plainToClass } from 'class-transformer';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { QuizAttempt } from 'src/app/quiz/Model/quiz-attempt';
 import { QuizAttemptService } from 'src/app/quiz/services/quiz-attempt.service';
+import DateHelper from 'src/app/Shared/helper/date.helper';
 import { Quiz } from '../../../Model/quiz';
 import { QuizService } from '../../../services/quiz.service';
 // import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
@@ -71,12 +71,12 @@ export class QuizDetailsComponent implements OnInit {
   }
 
   checkQuizValidityAndProgress() {
-    const currentTime = moment.utc();
+    const currentTime = DateHelper.utcNow;
 
     //check due date
     if (!this.quiz.NoDueDate) {
-      const endTime = moment.utc(this.quiz.EndDate.toString() + 'Z');
-      this.dueDatePassed = endTime.isBefore(currentTime);
+      const endTime = DateHelper.utc(this.quiz.EndDate.toString() + 'Z');
+      this.dueDatePassed = DateHelper.isBefore(endTime, currentTime);;
       if (this.dueDatePassed)
         return;
     }
@@ -87,13 +87,14 @@ export class QuizDetailsComponent implements OnInit {
     this.quizAttemptLimitReached = this.quizAttempts.length >= this.quiz.AllowedAttempts && !this.quiz.UnlimitedAttempts;
 
     this.latestQuizAttempt = this.quizAttempts[0];
-    if(this.quiz.NoDueDate){
+    if (this.quiz.NoDueDate) {
       this.inProgress = !this.latestQuizAttempt.IsSubmitted;
       return;
     }
 
-    const latestQuizEndTime = moment.utc(this.latestQuizAttempt.StartTime.toString() + 'Z').add(this.quiz.DurationSeconds + this.secondsBuffer, 'seconds');
-    this.inProgress = latestQuizEndTime.isAfter(currentTime) && !this.latestQuizAttempt.IsSubmitted;
+    const latestQuizEndTime = DateHelper.addSeconds(
+      DateHelper.utc(this.latestQuizAttempt.StartTime.toString() + 'Z'), this.quiz.DurationSeconds + this.secondsBuffer);
+    this.inProgress = DateHelper.isAfter(latestQuizEndTime, currentTime) && !this.latestQuizAttempt.IsSubmitted;
     this.quizAttemptLimitReached &&= !this.inProgress;
   }
 

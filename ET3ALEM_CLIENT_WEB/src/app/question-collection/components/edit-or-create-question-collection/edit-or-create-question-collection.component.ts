@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import * as moment from 'moment';
 import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +11,7 @@ import { plainToClass } from 'class-transformer';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { QuestionCollectionService } from '../../question-collection.service';
 import { QuestionCollection } from '../../models/question-collection';
+import DateHelper from 'src/app/Shared/helper/date.helper';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class EditOrCreateQuestionCollectionComponent extends ExtraFormOptions im
   questions: Array<any> = [];
   deletedQuestions: Array<any> = [];
   isLoaded: boolean = false;
-  today: Date = moment().toDate();
+  today: Date = DateHelper.now;
   collectionName = new FormControl('', Validators.required);
 
   constructor(
