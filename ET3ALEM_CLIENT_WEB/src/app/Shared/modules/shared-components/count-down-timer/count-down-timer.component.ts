@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import * as moment from 'moment';
+
 import { timer } from 'rxjs/internal/observable/timer';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { takeWhile, tap } from 'rxjs/operators';
+import DateHelper from 'src/app/Shared/helper/date.helper';
 
 @Component({
   selector: 'count-down-timer',
@@ -29,9 +30,9 @@ export class CountDownTimerComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit(): void {
-    const now = this.isUTC ? moment().utc() : moment();
-    const end = moment(this.endDate);
-    let secondsLeft = moment.duration(end.diff(now)).asSeconds();
+    const now = this.isUTC ? DateHelper.utcNow : DateHelper.now;
+    const diff = DateHelper.difference(this.endDate, now);
+    const secondsLeft = DateHelper.asSeconds(diff);
     const source = timer(0, 1000);
     this.subscriber = source.pipe(
       tap(val => {

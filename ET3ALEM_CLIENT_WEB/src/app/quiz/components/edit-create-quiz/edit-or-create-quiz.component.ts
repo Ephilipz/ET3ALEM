@@ -1,22 +1,21 @@
-import {Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit} from '@angular/core';
-
-import {FormControl, Validators} from '@angular/forms';
-import * as moment from 'moment'
-import {ExtraFormOptions} from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
-import {ToastrService} from 'ngx-toastr';
-import {Quiz} from '../../Model/quiz.js';
-import {QuizService} from '../../services/quiz.service.js';
-import {ActivatedRoute, Router} from '@angular/router';
-import {RichTextEditorComponent} from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component.js';
-import {Question} from 'src/app/question/Models/question.js';
-import {MultipleChoiceQuestion} from 'src/app/question/Models/mcq.js';
-import {EditOrCreateQuestionHeaderComponent} from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
-import {QuizQuestion} from '../../Model/quizQuestion.js';
-import {GeneralHelper} from 'src/app/Shared/Classes/helpers/GeneralHelper.js';
-import {plainToClass} from 'class-transformer';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {MatDialog} from '@angular/material/dialog';
-import {AddFromQuestionCollectionDialogComponent} from 'src/app/question-collection/components/add-from-question-collection-dialog/add-from-question-collection-dialog.component.js';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
+import { ToastrService } from 'ngx-toastr';
+import { Quiz } from '../../Model/quiz.js';
+import { QuizService } from '../../services/quiz.service.js';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component.js';
+import { Question } from 'src/app/question/Models/question.js';
+import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
+import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
+import { QuizQuestion } from '../../Model/quizQuestion.js';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper.js';
+import { plainToClass } from 'class-transformer';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { AddFromQuestionCollectionDialogComponent } from 'src/app/question-collection/components/add-from-question-collection-dialog/add-from-question-collection-dialog.component.js';
+import DateHelper from 'src/app/Shared/helper/date.helper.js';
 
 @Component({
   selector: 'app-create-quiz',
@@ -40,7 +39,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   isLoaded: boolean = false;
   richTextLoaded: boolean = false;
 
-  today: Date = moment().toDate();
+  today: Date = DateHelper.now;
 
   questionLimit = 50;
 
@@ -49,8 +48,8 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   durationHours = new FormControl(1, [Validators.max(5), Validators.min(0)]);
   durationMinutes = new FormControl(0, [Validators.min(0)]);
   unlimitedTime = new FormControl(false);
-  dueStart = new FormControl(moment().toDate());
-  dueEnd = new FormControl(moment().add(3, 'days').toDate());
+  dueStart = new FormControl(DateHelper.now);
+  dueEnd = new FormControl(DateHelper.addDays(DateHelper.now, 3));
   noDueDate = new FormControl(false);
   allowedAttempts = new FormControl(1, [Validators.max(10), Validators.min(1)]);
   unlimitedAttempts = new FormControl(false);
@@ -91,8 +90,8 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.durationHours.setValue(Math.floor(this.currentQuiz.DurationSeconds / 3600));
     this.durationMinutes.setValue(this.currentQuiz.DurationSeconds % 3600 / 60);
     this.unlimitedTime.setValue(this.currentQuiz.UnlimitedTime);
-    this.dueStart.setValue(GeneralHelper.getLocalDateFromUTC(this.currentQuiz.StartDate));
-    this.dueEnd.setValue(GeneralHelper.getLocalDateFromUTC(this.currentQuiz.EndDate));
+    this.dueStart.setValue(DateHelper.getLocalDateFromUTC(this.currentQuiz.StartDate));
+    this.dueEnd.setValue(DateHelper.getLocalDateFromUTC(this.currentQuiz.EndDate));
     this.noDueDate.setValue(this.currentQuiz.NoDueDate);
     this.randomOrderQuestions.setValue(this.currentQuiz.ShuffleQuestions);
     this.allowedAttempts.setValue(this.currentQuiz.AllowedAttempts);
@@ -124,7 +123,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   }
 
   subtractDays(date: Date, days = 1) {
-    return moment(date).subtract(days, 'days').toDate();
+    return DateHelper.subtractDays(date, days);
   }
 
   addQuestion() {
@@ -209,7 +208,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       this.toastr.error('duration must be at least 1 minute or unlimited time');
       return false;
     }
-    if (!this.unlimitedTime.value && moment(this.dueEnd.value).isSameOrBefore(moment(this.dueStart.value))) {
+    if (!this.unlimitedTime.value && DateHelper.isSameOrBefore(this.dueEnd.value, this.dueStart.value)) {
       this.toastr.error('The due date cannot be the same as the start date');
       return false;
     }
@@ -247,17 +246,17 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.quizService.createQuiz(this.currentQuiz).subscribe(
       (quiz: Quiz) => {
         this.toastr.success('Quiz Created');
-        this.router.navigate(['../manage'], {relativeTo: this.route})
+        this.router.navigate(['../manage'], { relativeTo: this.route });
       }
-    )
+    );
   }
 
   private createQuizWithQuizQuestions(quizQuestions: Array<QuizQuestion>) {
     const quizDuration = (this.durationHours.value * 3600 + this.durationMinutes.value * 60);
     this.currentQuiz = new Quiz(0, '',
       this.quizTitle.value, this.quizInstructions.value,
-      quizDuration, this.unlimitedTime.value, GeneralHelper.getUTCFromLocal(this.dueStart.value),
-      GeneralHelper.getUTCFromLocal(this.dueEnd.value), moment.utc().toDate(),
+      quizDuration, this.unlimitedTime.value, DateHelper.getUTCFromLocal(this.dueStart.value),
+      DateHelper.getUTCFromLocal(this.dueEnd.value), DateHelper.utcNow,
       this.noDueDate.value, quizQuestions, this.allowedAttempts.value,
       this.unlimitedAttempts.value, this.showGrade.value,
       this.autoGrade.value, this.randomOrderQuestions.value,
@@ -271,12 +270,13 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     await this.richTextComponent.removeUnusedImages();
     await this.getQuizQuestionsFromChildComponents();
 
-    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value, GeneralHelper.getUTCFromLocal(this.dueStart.value), GeneralHelper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
+    this.currentQuiz.updateQuiz(this.quizTitle.value, this.quizInstructions.value, (this.durationHours.value * 3600 + this.durationMinutes.value * 60), this.unlimitedTime.value,
+      DateHelper.getUTCFromLocal(this.dueStart.value), DateHelper.getUTCFromLocal(this.dueEnd.value), this.noDueDate.value, this.currentQuiz.QuizQuestions, this.allowedAttempts.value, this.unlimitedAttempts.value, this.showGrade.value, this.autoGrade.value, this.randomOrderQuestions.value, this.includeAllQuestions.value, this.includedQuestionsCount.value);
 
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
       () => {
         this.toastr.success('Quiz Updated');
-        this.router.navigate(['../../manage'], {relativeTo: this.route});
+        this.router.navigate(['../../manage'], { relativeTo: this.route });
       }
     );
   }

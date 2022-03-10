@@ -1,5 +1,3 @@
-import * as moment from 'moment';
-
 export class GeneralHelper {
 
     static deepCopy(input: any) {
@@ -12,14 +10,6 @@ export class GeneralHelper {
 
     static randomInteger(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    static getLocalDateFromUTC(date: Date): Date {
-        return moment.utc(date).local().toDate();
-    }
-
-    static getUTCFromLocal(date: Date): Date {
-        return moment(date).utc().toDate();
     }
 
     static getProperty(obj, path) {
