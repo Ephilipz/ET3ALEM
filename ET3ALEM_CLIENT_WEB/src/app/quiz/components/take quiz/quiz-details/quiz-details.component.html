@@ -14,13 +14,11 @@
         <mat-divider class="my-4"></mat-divider>
         <div class="d-flex flex-row justify-content-center" style="text-align: center;" *ngIf="!quizAttemptLimitReached && !dueDatePassed">
             <a [routerLink]="" class="startButton" *ngIf="!inProgress" (click)="startQuiz()">
-                <img src="../../../../../assets/images/undraw_To_the_stars_qhyy.svg" class="m-auto" width="45%"
-                    class="m-auto startQuizImage">
+                <img src="../../../../../assets/images/undraw_To_the_stars_qhyy.svg" width="45%" class="m-auto startQuizImage">
                 <h2 class="startText">Start</h2>
             </a>
             <a [routerLink]="" class="startButton" *ngIf="inProgress" (click)="resumeQuiz()">
-                <img src="../../../../../assets/images/method-draw-image (1).svg" class="m-auto" width="45%"
-                    class="m-auto startQuizImage">
+                <img src="../../../../../assets/images/method-draw-image (1).svg" width="45%" class="m-auto startQuizImage">
                 <h2 class="startText">Resume</h2>
             </a>
         </div>

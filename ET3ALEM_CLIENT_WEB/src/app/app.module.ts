@@ -10,12 +10,12 @@ import { NotFoundComponent } from './General/components/not-found/not-found.comp
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from './Shared/modules/material.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './Shared/services/auth.interceptor';
 import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
 import { MainMenuComponent } from './General/components/main-menu/main-menu.component';
-import { HttpErrorInterceptor } from './Shared/services/error.interceptor';
 import { PrivacyComponent } from './General/components/privacy/privacy.component';
+import {AuthInterceptor} from "./Shared/interceptors/auth.interceptor";
+import {HttpErrorInterceptor} from "./Shared/interceptors/error.interceptor";
 
 @NgModule({
   declarations: [

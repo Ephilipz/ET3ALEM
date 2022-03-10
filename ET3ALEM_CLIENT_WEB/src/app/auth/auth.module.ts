@@ -8,9 +8,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '../Shared/modules/material.module';
 import { RouterModule } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from '../Shared/services/auth.interceptor';
-import { AuthGuardService } from './services/auth-guard.service';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import {AuthInterceptor} from "../Shared/interceptors/auth.interceptor";
 
 
 @NgModule({
@@ -28,7 +27,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     CommonModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ]
 })
 export class AuthModule { }
