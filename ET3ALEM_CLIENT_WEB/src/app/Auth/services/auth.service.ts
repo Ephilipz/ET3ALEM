@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {RegisterUser} from '../Model/User';
-import {tap, catchError, mapTo} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
 import {Router} from '@angular/router';
 import {Tokens} from '../Model/Tokens';
-import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
 import {LocalstorgeService} from 'src/app/Shared/services/localstorge.service';
 
@@ -105,5 +105,7 @@ export class AuthService {
     return this.http.post(environment.baseUrl + '/api/Account/ResetPassword', resetPasswordVM);
   }
 
-
+  redirectToLogin() {
+    this.router.navigate(['auth/login']);
+  }
 }
