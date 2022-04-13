@@ -192,9 +192,11 @@ namespace Server_Application
             services.AddScoped<IEmailDsl, SendGridEmailDsl>();
             services.AddScoped<IContactUsDsl, ContactUsDsl>();
             services.AddScoped<IContactUsDal, ContactUsDal>();
+            services.AddScoped<StorageFactory>();
 
             services.AddSingleton<IAccountHelper, AccountHelper>();
             services.AddSingleton<IQuizHelper, QuizHelper>();
+
         }
     }
 }
