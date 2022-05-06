@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -82,7 +81,7 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
         MatButtonToggleModule,
         MatDialogModule    ],
     providers: [
-        MatDatepickerModule,
+        MatDatepickerModule
     ]
 })
 

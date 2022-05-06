@@ -15,7 +15,7 @@ import { plainToClass } from 'class-transformer';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { AddFromQuestionCollectionDialogComponent } from 'src/app/question-collection/components/add-from-question-collection-dialog/add-from-question-collection-dialog.component';
-import DateHelper from 'src/app/Shared/helper/date.helper';
+import { DateHelper } from 'src/app/Shared/helper/date.helper';
 
 @Component({
   selector: 'app-create-quiz',

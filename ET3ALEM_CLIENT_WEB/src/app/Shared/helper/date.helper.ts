@@ -1,8 +1,9 @@
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
 import * as duration from 'dayjs/plugin/duration';
-
-export default class DateHelper {
+dayjs.extend(utc);
+dayjs.extend(duration);
+export class DateHelper {
 
     public static get now(): Date {
         return new Date();
@@ -74,3 +75,4 @@ export default class DateHelper {
     }
 
 }
+
