@@ -16,7 +16,7 @@ import { QuizAttemptService } from 'src/app/quiz/services/quiz-attempt.service';
 import { QuizService } from 'src/app/quiz/services/quiz.service';
 import { interval } from "rxjs";
 import { Subscription } from "rxjs/internal/Subscription";
-import { DateHelper } from 'src/app/Shared/helper/date.helper';
+import DateHelper from 'src/app/Shared/helper/date.helper';
 
 @Component({
   selector: 'take-quiz',

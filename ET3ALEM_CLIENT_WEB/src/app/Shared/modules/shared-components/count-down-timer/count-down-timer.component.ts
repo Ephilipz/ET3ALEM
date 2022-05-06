@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { timer } from 'rxjs/internal/observable/timer';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { takeWhile, tap } from 'rxjs/operators';
-import { DateHelper } from 'src/app/Shared/helper/date.helper';
+import  DateHelper from 'src/app/Shared/helper/date.helper';
 
 @Component({
   selector: 'count-down-timer',

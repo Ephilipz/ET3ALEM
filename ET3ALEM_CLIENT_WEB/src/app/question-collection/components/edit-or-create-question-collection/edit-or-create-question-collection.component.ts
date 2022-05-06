@@ -11,7 +11,7 @@ import { plainToClass } from 'class-transformer';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { QuestionCollectionService } from '../../question-collection.service';
 import { QuestionCollection } from '../../models/question-collection';
-import { DateHelper } from 'src/app/Shared/helper/date.helper';
+import DateHelper from 'src/app/Shared/helper/date.helper';
 
 
 @Component({
