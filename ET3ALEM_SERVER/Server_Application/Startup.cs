@@ -136,8 +136,7 @@ namespace Server_Application
                 dbContextOptions => dbContextOptions
                     .UseMySql(
                         Configuration.GetConnectionString("DefaultConnection"),
-                        new MySqlServerVersion(new Version(8, 0, 20)),
-                        mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend))
+                        new MySqlServerVersion(new Version(8, 0, 20)))
                     // Everything from this point on is optional but helps with debugging.
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors());
