@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
+import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Question } from 'src/app/question/Models/question.js';
-import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
-import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
-import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper.js';
+import { Question } from 'src/app/question/Models/question';
+import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq';
+import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
 import { plainToClass } from 'class-transformer';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { QuestionCollectionService } from '../../question-collection.service';

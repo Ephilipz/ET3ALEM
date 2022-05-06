@@ -1,21 +1,21 @@
 import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
+import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions';
 import { ToastrService } from 'ngx-toastr';
-import { Quiz } from '../../Model/quiz.js';
-import { QuizService } from '../../services/quiz.service.js';
+import { Quiz } from '../../Model/quiz';
+import { QuizService } from '../../services/quiz.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component.js';
-import { Question } from 'src/app/question/Models/question.js';
-import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
-import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
-import { QuizQuestion } from '../../Model/quizQuestion.js';
-import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper.js';
+import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component';
+import { Question } from 'src/app/question/Models/question';
+import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq';
+import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component';
+import { QuizQuestion } from '../../Model/quizQuestion';
+import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
 import { plainToClass } from 'class-transformer';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
-import { AddFromQuestionCollectionDialogComponent } from 'src/app/question-collection/components/add-from-question-collection-dialog/add-from-question-collection-dialog.component.js';
-import DateHelper from 'src/app/Shared/helper/date.helper.js';
+import { AddFromQuestionCollectionDialogComponent } from 'src/app/question-collection/components/add-from-question-collection-dialog/add-from-question-collection-dialog.component';
+import DateHelper from 'src/app/Shared/helper/date.helper';
 
 @Component({
   selector: 'app-create-quiz',
