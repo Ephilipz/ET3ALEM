@@ -5,5 +5,5 @@ export abstract class AC_ConcreteQuestionResult {
   //   return this.questionAttempt?.Grade >= this.questionAttempt?.QuizQuestion?.Grade;
   // }
 
-  abstract questionAttempt: QuestionAttempt = null;
+  abstract questionAttempt: QuestionAttempt;
 }

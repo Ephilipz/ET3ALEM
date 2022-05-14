@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Location, LocationStrategy } from '@angular/common';
 import { Clipboard } from '@angular/cdk/clipboard';
-import DateHelper from 'src/app/Shared/helper/date.helper';
+import { DateHelper } from 'src/app/Shared/helper/date.helper';
 
 @Component({
   selector: 'app-list-quizzes',
