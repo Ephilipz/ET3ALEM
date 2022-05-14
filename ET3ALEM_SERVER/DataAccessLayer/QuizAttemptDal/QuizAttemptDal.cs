@@ -16,11 +16,13 @@ namespace DataAccessLayer
             _context = context;
         }
 
-        public Task<QuizAttempt> GetQuizAttempt(int id)
+        public async Task<QuizAttempt> GetQuizAttempt(int id)
         {
-            return _context.QuizAttempts.Where(qA => qA.Id == id)
-                .Include(qA => qA.QuestionsAttempts).AsSplitQuery()
-                .AsNoTracking().FirstAsync();
+            return await _context.QuizAttempts.Where(qA => qA.Id == id)
+                .Include(qA => qA.QuestionsAttempts)
+                .AsSplitQuery()
+                .AsNoTracking()
+                .FirstAsync();
         }
 
         public Task<QuizAttempt> GetQuizAttemptWithQuiz(int id)
@@ -31,12 +33,14 @@ namespace DataAccessLayer
                 .ThenInclude(qAS => ((MCQAttmept) qAS).Choices)
                 .Include(qA => qA.QuestionsAttempts)
                 .ThenInclude(qAS => ((LongAnswerAttempt) qAS).LongAnswer)
-                .Include(
-                    qA => qA.QuestionsAttempts.OrderBy(qAs => qAs.Sequence))
+                .Include(qA => qA.QuestionsAttempts.OrderBy(qAs => qAs.Sequence))
                 .ThenInclude(qAS => qAS.QuizQuestion)
                 .ThenInclude(quizQuestion => quizQuestion.Question)
-                .ThenInclude(question =>
-                    ((MultipleChoiceQuestion) question).Choices)
+                .ThenInclude(question => ((MultipleChoiceQuestion) question).Choices)
+                .Include(qA => qA.QuestionsAttempts.OrderBy(qAs => qAs.Sequence))
+                .ThenInclude(qAS => qAS.QuizQuestion)
+                .ThenInclude(quizQuestion => quizQuestion.Question)
+                .ThenInclude(question => ((OrderQuestion) question).OrderedElements)
                 .AsSplitQuery()
                 .AsNoTracking()
                 .FirstAsync();
@@ -51,38 +55,50 @@ namespace DataAccessLayer
                 if (qA is not MCQAttmept)
                     _context.Entry(qA).State = EntityState.Modified;
             });
-            
+
+            UpdateChoicesForMCQ(quizAttempt);
+            _context.Entry(quizAttempt).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return quizAttempt;
+        }
+
+        private void UpdateChoicesForMCQ(QuizAttempt quizAttempt)
+        {
             var mcqIds = quizAttempt.QuestionsAttempts.OfType<MCQAttmept>()
-                .Select(mcq => mcq.Id).ToList();
-            
+                .Select(mcq => mcq.Id).ToHashSet();
+
+            if (mcqIds.Count == 0)
+            {
+                return;
+            }
+
             var matchingMCQFromDBList = _context.QuestionAttempts
                 .OfType<MCQAttmept>().Where(mcq => mcqIds.Contains(mcq.Id))
                 .Include(mcq => mcq.Choices)
                 .ToList();
 
-            foreach (var mcqAttempt in quizAttempt.QuestionsAttempts
-                         .OfType<MCQAttmept>())
+            foreach (var mcqAttempt in quizAttempt.QuestionsAttempts.OfType<MCQAttmept>())
             {
+                //detaches the attempt so the context doesn't track two entities with the same Id which gives an error
                 _context.Entry(mcqAttempt).State = EntityState.Detached;
-                var matchingMCQFromDB = matchingMCQFromDBList.FirstOrDefault
-                    (mcq => mcq.Id == mcqAttempt.Id);
-                matchingMCQFromDB.Choices.RemoveAll(choice => !mcqAttempt
-                    .Choices.Exists(c => c.Id == choice.Id));
-                matchingMCQFromDB.Choices.AddRange(mcqAttempt.Choices
-                    .Where(c =>
-                        !matchingMCQFromDB.Choices.Exists(choice =>
-                            c.Id == choice.Id)));
 
-                matchingMCQFromDB.Choices.ForEach(
-                    choice => _context.Entry(choice).State =
-                        EntityState.Unchanged);
-                mcqAttempt.Choices = matchingMCQFromDB.Choices;
-                _context.Entry(matchingMCQFromDB).CurrentValues.SetValues(mcqAttempt);
+                var matchingMCQFromDB = matchingMCQFromDBList.FirstOrDefault(mcq => mcq.Id == mcqAttempt.Id);
+
+                matchingMCQFromDB.Choices.RemoveAll(choice => !mcqAttempt.Choices.Exists(c => c.Id == choice.Id));
+
+                var addedChoices = mcqAttempt.Choices
+                    .Where(c => !matchingMCQFromDB.Choices.Exists(choice => c.Id == choice.Id));
+                matchingMCQFromDB.Choices.AddRange(addedChoices);
+
+                UpdateMCQInContext(matchingMCQFromDB, mcqAttempt);
             }
+        }
 
-            _context.Entry(quizAttempt).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return quizAttempt;
+        private void UpdateMCQInContext(MCQAttmept mcqAttemptFromDB, MCQAttmept mcqAttempt)
+        {
+            mcqAttemptFromDB.Choices.ForEach(choice => _context.Entry(choice).State = EntityState.Unchanged);
+            mcqAttempt.Choices = mcqAttemptFromDB.Choices;
+            _context.Entry(mcqAttemptFromDB).CurrentValues.SetValues(mcqAttempt);
         }
 
         public async Task<QuizAttempt> PostQuizAttempt(QuizAttempt quizAttempt)
@@ -92,13 +108,12 @@ namespace DataAccessLayer
                 _context.Entry(qA.QuizQuestion).State = EntityState.Unchanged;
             }
 
-            await _context.QuizAttempts.AddAsync(quizAttempt);
+            _context.QuizAttempts.Add(quizAttempt);
             await _context.SaveChangesAsync();
             return quizAttempt;
         }
 
-        public async Task<QuizAttempt> UpdateQuizAttemptGrade(
-            QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
         {
             //detach child entities that will not be tracked
             quizAttempt.QuestionsAttempts.ForEach(qA => qA.QuizQuestion = null);
@@ -120,10 +135,9 @@ namespace DataAccessLayer
                 .ToListAsync();
         }
 
-        public async Task<List<QuizAttempt>> GetAllQuizAttemptsForQuiz(
-            int quizId)
+        public async Task<List<QuizAttempt>> GetAllQuizAttemptsForQuiz(int quizId)
         {
-            List<QuizAttempt> quizAttempts = await _context.QuizAttempts
+            var quizAttempts = await _context.QuizAttempts
                 .Where(qA => qA.QuizId == quizId)
                 .Include(qA => qA.Quiz)
                 .Include(qA => qA.User)
@@ -145,8 +159,7 @@ namespace DataAccessLayer
                 .ToListAsync();
         }
 
-        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(
-            int quizId)
+        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId)
         {
             return await _context.QuizAttempts
                 .Where(attempt => !attempt.IsGraded && attempt.QuizId == quizId)

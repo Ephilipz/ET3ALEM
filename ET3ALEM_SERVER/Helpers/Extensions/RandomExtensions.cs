@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Helpers
+namespace Helpers.Extensions
 {
     public static class RandomExtensions
     {

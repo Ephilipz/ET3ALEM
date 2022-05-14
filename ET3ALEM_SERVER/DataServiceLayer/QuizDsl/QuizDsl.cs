@@ -12,13 +12,13 @@ namespace DataServiceLayer
     {
         private readonly IQuestionDsl _iQuestionDsl;
         private readonly IQuizDal _iQuizDal;
-        private readonly IMapper _IMapper;
+        private readonly IMapper _iMapper;
 
-        public QuizDsl(IQuizDal quizDal, IQuestionDsl questionDsl, IQuizAttemptDal quizAttemptDal, IMapper iMapper)
+        public QuizDsl(IQuizDal quizDal, IQuestionDsl questionDsl, IMapper iMapper)
         {
             _iQuizDal = quizDal;
             _iQuestionDsl = questionDsl;
-            _IMapper = iMapper;
+            _iMapper = iMapper;
         }
 
         public Task<Quiz> GetQuiz(int quizId)
@@ -43,44 +43,55 @@ namespace DataServiceLayer
 
         public async Task<Quiz> InsertQuiz(Quiz quiz)
         {
-            foreach (var quizQuestion in quiz.QuizQuestions)
-                if (quizQuestion.QuestionId <= 0)
-                {
-                    Question insertedQuestion = await _iQuestionDsl.InsertQuestion(quizQuestion.Question);
-                    quizQuestion.QuestionId = insertedQuestion.Id;
-                }
+            foreach (var quizQuestion in quiz.QuizQuestions.Where(quizQuestion => quizQuestion.QuestionId <= 0))
+            {
+                var insertedQuestion = await _iQuestionDsl.InsertQuestion(quizQuestion.Question);
+                quizQuestion.QuestionId = insertedQuestion.Id;
+            }
 
             return await _iQuizDal.InsertQuiz(quiz);
         }
 
         public async Task<Quiz> DeleteQuiz(int id)
         {
-            //remove quiz
             var quiz = await _iQuizDal.DeleteQuiz(id);
 
-            if (quiz != null)
-                //remove questions
-                foreach (var questionId in quiz.QuizQuestions.Select(quizQuestion => quizQuestion.QuestionId))
-                    await _iQuestionDsl.DeleteQuestion(questionId);
+            if (quiz == null) return null;
+
+            var questionIds = quiz.QuizQuestions.Select(quizQuestion => quizQuestion.QuestionId);
+            foreach (var questionId in questionIds)
+            {
+                await _iQuestionDsl.DeleteQuestion(questionId);
+            }
 
             return quiz;
         }
 
         public async Task PutQuiz(Quiz quiz)
         {
-            foreach (var Qquestion in quiz.QuizQuestions)
-                if (Qquestion.Question.Id == 0)
-                    Qquestion.QuestionId = _iQuestionDsl.InsertQuestion(Qquestion.Question).Id;
-                else if (Qquestion.Question.Id < 0)
-                    await _iQuestionDsl.DeleteQuestion(Qquestion.Question.Id);
-                else
-                    await _iQuestionDsl.PutQuestion(Qquestion.Question);
+            foreach (var quizQuestion in quiz.QuizQuestions)
+            {
+                switch (quizQuestion.Question.Id)
+                {
+                    case 0:
+                        quizQuestion.QuestionId = _iQuestionDsl.InsertQuestion(quizQuestion.Question).Id;
+                        break;
+                    case < 0:
+                        await _iQuestionDsl.DeleteQuestion(quizQuestion.Question.Id);
+                        break;
+                    default:
+                        await _iQuestionDsl.PutQuestion(quizQuestion.Question);
+                        break;
+                }
+            }
+
             await _iQuizDal.PutQuiz(quiz);
         }
 
         public async Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser(string userId)
         {
-            List<QuizAttempt> ungradedAttempts = await _iQuizDal.GetUngradedQuizzesForUser(userId);
+            var ungradedAttempts = await _iQuizDal.GetUngradedQuizzesForUser(userId);
+            
             return ungradedAttempts
                 .GroupBy(attempt => attempt.Quiz)
                 .Select(attemptGrouping => new UngradedQuizTableVM
@@ -88,7 +99,7 @@ namespace DataServiceLayer
                     QuizId = attemptGrouping.Key.Id,
                     QuizTitle = attemptGrouping.Key.Name,
                     UngradedAttemptCount = attemptGrouping.Count(),
-                    User = _IMapper.Map<SimpleUserVM>(attemptGrouping.FirstOrDefault()?.User)
+                    User = _iMapper.Map<SimpleUserVM>(attemptGrouping.FirstOrDefault()?.User)
                 })
                 .ToList();
         }

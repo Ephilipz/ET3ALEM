@@ -80,6 +80,25 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("LongAnswer");
                 });
 
+            modelBuilder.Entity("BusinessEntities.Models.OrderedElement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderQuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderQuestionId");
+
+                    b.ToTable("OrderedElement");
+                });
+
             modelBuilder.Entity("BusinessEntities.Models.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -369,15 +388,15 @@ namespace DataAccessLayer.Migrations
                         {
                             Id = "B22698B8-42A2-4115-9631-1C2D1E2AC5F7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a1729689-670a-4010-91ab-3ba298755f2d",
+                            ConcurrencyStamp = "afa86a57-2626-4963-b6f4-708167ace85c",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM2DmoQ1bCAk0gE7S2urROADwkTyzJyzOn8CKk3ieDN7SU34xJp5AU6pbw3GLiecCA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB8jvcNaXVYkOVfYhFGHNuJHSWrtF+QWv6yFpwJuzXvSuSDtt2Y/6UfwkJYyFtzykg==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "c5299ecc-8c59-470d-b3ea-02c1c909ce1d",
+                            SecurityStamp = "760da905-e385-4ac5-b97c-f8056b7668fd",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -427,7 +446,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = "2301D884-221A-4E7D-B509-0113DCC043E1",
-                            ConcurrencyStamp = "6e2c7b15-36e6-4321-978b-e14e9178074a",
+                            ConcurrencyStamp = "48a05d2c-985d-445d-b79c-94219ee3af9a",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -559,6 +578,16 @@ namespace DataAccessLayer.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
+            modelBuilder.Entity("BusinessEntities.Models.OrderQuestion", b =>
+                {
+                    b.HasBaseType("BusinessEntities.Models.Question");
+
+                    b.Property<string>("CorrectOrderIds")
+                        .HasColumnType("longtext");
+
+                    b.HasDiscriminator().HasValue(4);
+                });
+
             modelBuilder.Entity("BusinessEntities.Models.ShortAnswerQuestion", b =>
                 {
                     b.HasBaseType("BusinessEntities.Models.Question");
@@ -596,12 +625,23 @@ namespace DataAccessLayer.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("BusinessEntities.Models.ShortAnswerAttempt", b =>
+            modelBuilder.Entity("BusinessEntities.Models.OrderAttempt", b =>
                 {
                     b.HasBaseType("BusinessEntities.Models.QuestionAttempt");
 
                     b.Property<string>("Answer")
                         .HasColumnType("longtext");
+
+                    b.HasDiscriminator().HasValue(4);
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.ShortAnswerAttempt", b =>
+                {
+                    b.HasBaseType("BusinessEntities.Models.QuestionAttempt");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("longtext")
+                        .HasColumnName("ShortAnswerAttempt_Answer");
 
                     b.HasDiscriminator().HasValue(2);
                 });
@@ -638,6 +678,15 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("LongAnswerAttempt");
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.OrderedElement", b =>
+                {
+                    b.HasOne("BusinessEntities.Models.OrderQuestion", null)
+                        .WithMany("OrderedElements")
+                        .HasForeignKey("OrderQuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.Question", b =>
@@ -811,6 +860,11 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("BusinessEntities.Models.MultipleChoiceQuestion", b =>
                 {
                     b.Navigation("Choices");
+                });
+
+            modelBuilder.Entity("BusinessEntities.Models.OrderQuestion", b =>
+                {
+                    b.Navigation("OrderedElements");
                 });
 
             modelBuilder.Entity("BusinessEntities.Models.LongAnswerAttempt", b =>

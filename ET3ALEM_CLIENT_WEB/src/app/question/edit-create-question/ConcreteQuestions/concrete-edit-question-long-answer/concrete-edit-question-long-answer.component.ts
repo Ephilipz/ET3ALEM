@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { AC_ConcreteAnswerQuestion } from 'src/app/question/answer-question/ConcreteAnswerQuestions/ac-concrete-answer-question';
 import { LongAnswerQuestion } from 'src/app/question/Models/long-answer-question';
 import { Question } from 'src/app/question/Models/question';
-import { QuestionAttempt } from 'src/app/question/Models/question-attempt';
 import { AC_ConcreteEditQuestion } from '../ac-concrete-question';
 
 @Component({
@@ -18,7 +15,7 @@ export class ConcreteEditQuestionLongAnswerComponent extends AC_ConcreteEditQues
   constructor() {
     super();
   }
-  
+
   ngOnInit(): void {
   }
 

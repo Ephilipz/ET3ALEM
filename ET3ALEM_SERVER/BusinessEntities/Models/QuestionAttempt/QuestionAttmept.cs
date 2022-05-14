@@ -12,7 +12,7 @@ namespace BusinessEntities.Models
         [Required] public int QuizQuestionId { get; set; }
 
         public virtual QuizQuestion QuizQuestion { get; set; }
-        public double Grade { get; set; }
+        public double Grade { get; protected set; }
         public bool IsGraded { get; set; }
         public int Sequence { get; set; }
         public abstract void GradeQuestion();

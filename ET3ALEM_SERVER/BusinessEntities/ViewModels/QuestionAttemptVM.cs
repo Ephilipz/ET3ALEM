@@ -30,4 +30,9 @@ namespace BusinessEntities.ViewModels
         public bool Answer { get; set; }
         public bool IsAnswered { get; set; }
     }
+    
+    public class OrderAttemptVM : QuestionAttemptVM
+    {
+        public bool Answer { get; set; }
+    }
 }

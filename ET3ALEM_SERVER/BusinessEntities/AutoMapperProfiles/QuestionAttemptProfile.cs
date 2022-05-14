@@ -13,6 +13,7 @@ namespace BusinessEntities.AutoMapperProfiles
             CreateMap<MCQAttmept, MCQAttemptVM>();
             CreateMap<TrueFalseAttempt, TrueFalseAttemptVM>();
             CreateMap<ShortAnswerAttempt, ShortAnswerAttemptVM>();
+            CreateMap<OrderAttempt, OrderAttemptVM>();
         }
     }
 }

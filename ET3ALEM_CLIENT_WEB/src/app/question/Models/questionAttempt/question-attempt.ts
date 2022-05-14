@@ -1,5 +1,5 @@
 import { QuizQuestion } from "src/app/quiz/Model/quizQuestion";
-import { QuestionType } from "./question-type.enum";
+import { QuestionType } from "../question-type.enum";
 
 export abstract class QuestionAttempt {
     Id: number;

@@ -1,5 +1,4 @@
 import { environment } from 'src/environments/environment'
-import { Converter } from '../helpers/GeneralHelper';
 
 export class CustomImageUploadAdapter {
     loader: any;
@@ -42,7 +41,7 @@ export class CustomImageUploadAdapter {
     _initListeners(resolve, reject, file: File) {
 
         //check file size
-        if (Converter.BtoMB(file.size) > 5) {
+        if (file.size > 5242880) {
             reject('file size cannot exceed 5 MB');
         }
 

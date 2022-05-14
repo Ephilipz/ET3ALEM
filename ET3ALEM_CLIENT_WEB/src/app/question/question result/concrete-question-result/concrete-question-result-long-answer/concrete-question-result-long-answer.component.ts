@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { LongAnswerAttempt } from 'src/app/question/Models/long-answer-attempt';
 import { AC_ConcreteQuestionResult } from '../ac-concrete-question-result';
+import {
+  LongAnswerAttempt
+} from "../../../Models/questionAttempt/long-answer-attempt";
 
 @Component({
   selector: 'app-concrete-question-result-long-answer',

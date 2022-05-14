@@ -1,11 +1,10 @@
 import { Transform, Type } from "class-transformer";
 import { RegisterUser } from "src/app/auth/Model/User";
-import { MCQAttempt } from "src/app/question/Models/mcq-attempt";
-import { QuestionAttempt } from "src/app/question/Models/question-attempt";
-import { QuestionType } from "src/app/question/Models/question-type.enum";
-import { TrueFalseAttempt } from "src/app/question/Models/true-false-attempt";
 import { QuestionTypeResolver } from "src/app/question/shared/question-type-resolver";
 import { Quiz } from "./quiz";
+import {
+  QuestionAttempt
+} from "../../question/Models/questionAttempt/question-attempt";
 
 export class QuizAttempt {
     Id: number;

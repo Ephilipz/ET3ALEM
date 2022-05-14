@@ -31,4 +31,15 @@ namespace BusinessEntities.ViewModels
     public class ShortAnswerQuestionVM : QuestionVM
     {
     }
+
+    public class OrderQuestionVM : QuestionVM
+    {
+        public List<OrderedElementVM> OrderedElements { get; set; }
+    }
+
+    public class OrderedElementVM
+    {
+        public int Id { get; set; }
+        public string Text { get; set; }
+    }
 }

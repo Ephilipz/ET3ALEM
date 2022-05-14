@@ -20,8 +20,9 @@ namespace Server_Application.Controllers
         {
             return Ok(await UploadFile(fileUpload));
         }
+        
         [HttpPost("UploadImage")]
-        public async Task<IActionResult> UploadImage(FileUpload fileUpload)
+        public async Task<IActionResult> UploadImage([FromForm] FileUpload fileUpload)
         {
             return Ok(await UploadFile(fileUpload));
         }

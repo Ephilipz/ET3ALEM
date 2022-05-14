@@ -51,7 +51,6 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
 
   questionTypes = QuestionTypeResolver.questionTypeNames;
 
-
   questionTypeFC: FormControl = new FormControl();
   questionContentFC: FormControl = new FormControl();
   grade: FormControl = new FormControl(null, [Validators.min(0)]);

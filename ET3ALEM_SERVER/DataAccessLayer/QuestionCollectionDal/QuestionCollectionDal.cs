@@ -34,7 +34,7 @@ namespace DataAccessLayer
 
         public async Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection)
         {
-            await _context.QuestionCollections.AddAsync(questionCollection);
+            _context.QuestionCollections.Add(questionCollection);
             await _context.SaveChangesAsync();
             return questionCollection;
         }

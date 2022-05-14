@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
+using BusinessEntities.Models.Interfaces;
 using DataAccessLayer;
 
 namespace DataServiceLayer
@@ -9,9 +10,9 @@ namespace DataServiceLayer
     {
         private readonly IQuestionDal _IQuestionDal;
 
-        public QuestionDsl(IQuestionDal QuestionDal)
+        public QuestionDsl(IQuestionDal questionDal)
         {
-            _IQuestionDal = QuestionDal;
+            _IQuestionDal = questionDal;
         }
 
 
@@ -20,9 +21,23 @@ namespace DataServiceLayer
             return _IQuestionDal.GetQuestions();
         }
 
-        public Task<Question> InsertQuestion(Question question)
+        public async Task<Question> InsertQuestion(Question question)
         {
-            return _IQuestionDal.InsertQuestion(question);
+            var returnedQuestion = await _IQuestionDal.InsertQuestion(question);
+            await PreformAfterSaveAction(question);
+
+            return returnedQuestion;
+        }
+
+        private async Task PreformAfterSaveAction(Question question)
+        {
+            if (question is not IAfterSaveAction afterSaveAction)
+            {
+                return;
+            }
+
+            afterSaveAction.PreformAfterSaveAction();
+            await _IQuestionDal.PutQuestion(question);
         }
 
         public Task<Question> DeleteQuestion(int questionId)
@@ -30,9 +45,10 @@ namespace DataServiceLayer
             return _IQuestionDal.DeleteQuestion(questionId);
         }
 
-        public Task PutQuestion(Question question)
+        public async Task PutQuestion(Question question)
         {
-            return _IQuestionDal.PutQuestion(question);
+            await _IQuestionDal.PutQuestion(question);
+            await PreformAfterSaveAction(question);
         }
     }
 }

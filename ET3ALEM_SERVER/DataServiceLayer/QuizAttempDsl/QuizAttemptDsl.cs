@@ -8,6 +8,7 @@ using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
 using DataAccessLayer;
 using Helpers;
+using Helpers.Extensions;
 
 namespace DataServiceLayer
 {
@@ -43,7 +44,7 @@ namespace DataServiceLayer
         {
             var matchingQuizAttempt =
                 await _IQuizAttemptDal.GetQuizAttempt(quizAttempt.Id);
-            
+
             if (matchingQuizAttempt.UserId != userId)
             {
                 return null;
@@ -75,7 +76,7 @@ namespace DataServiceLayer
         }
 
 
-        public async Task<QuizAttempt> PostQuizAttempt(
+        public async Task<QuizAttemptVM> PostQuizAttempt(
             QuizAttempt quizAttempt)
         {
             var quiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
@@ -93,7 +94,8 @@ namespace DataServiceLayer
                         }));
             }
 
-            return await _IQuizAttemptDal.PostQuizAttempt(quizAttempt);
+            var attempt = await _IQuizAttemptDal.PostQuizAttempt(quizAttempt);
+            return _IMapper.Map<QuizAttemptVM>(attempt);
         }
 
         public Task<List<QuizAttempt>> GetUserQuizAttemptsForQuiz(int quizId,

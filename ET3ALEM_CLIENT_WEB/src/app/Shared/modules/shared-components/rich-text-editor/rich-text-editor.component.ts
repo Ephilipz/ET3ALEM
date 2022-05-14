@@ -16,6 +16,7 @@ export class RichTextEditorComponent implements OnInit {
 
   @Input('control') _formControl: FormControl;
   @Output() onLoad = new EventEmitter<void>();
+  readonly imageSizeLimit = 5;
 
   uploadedImages: Array<ImageUrls> = [];
 
@@ -32,7 +33,7 @@ export class RichTextEditorComponent implements OnInit {
     toolbar:
       'undo redo | formatselect forecolor | bold italic | \
       alignleft aligncenter alignright alignjustify | \
-      bullist numlist outdent indent | link preview',
+      bullist numlist outdent indent | link preview | \ image',
 
     images_upload_handler:
       (blobInfo, success, failure, progress) => {
@@ -41,8 +42,8 @@ export class RichTextEditorComponent implements OnInit {
 
         xhr = new XMLHttpRequest();
 
-        xhr.open('POST', environment.postUploadImgurImage, true);
-        xhr.setRequestHeader('Authorization', 'Client-ID ' + environment.imgurClientId)
+        xhr.open('POST', environment.baseUrl + '/api/Storage/UploadImage', true);
+        // xhr.setRequestHeader('Authorization', 'Client-ID ' + environment.imgurClientId)
 
         xhr.upload.onprogress = function (e) {
           progress((e.loaded / e.total * 100).toFixed(0));
@@ -50,23 +51,14 @@ export class RichTextEditorComponent implements OnInit {
 
         xhr.onload = () => {
 
-          var json;
-
           if (xhr.status < 200 || xhr.status >= 300) {
             failure('HTTP Error: ' + xhr.status);
             return;
           }
 
-          json = JSON.parse(xhr.responseText);
+          this.uploadedImages.push(new ImageUrls(xhr.responseText, 'deleteHash'));
 
-          if (!json || typeof json.data.link != 'string') {
-            failure('Invalid JSON: ' + xhr.responseText);
-            return;
-          }
-
-          this.uploadedImages.push(new ImageUrls(json.data.link, json.data.deletehash));
-
-          success(json.data.link);
+          success(xhr.responseText);
         };
 
         xhr.onerror = function () {
@@ -75,12 +67,13 @@ export class RichTextEditorComponent implements OnInit {
 
         formData = new FormData();
 
-        if (GeneralHelper.BtoMB(blobInfo.blob().size) > 2) {
-          failure('file cannot be larger than 2 mb');
+        if (GeneralHelper.BtoMB(blobInfo.blob().size) > this.imageSizeLimit) {
+          failure(`file cannot be larger than ${this.imageSizeLimit} mb`);
           return;
         }
 
-        formData.append('image', blobInfo.blob(), blobInfo.filename());
+        formData.append('File', blobInfo.blob(), blobInfo.blob().name);
+        formData.append('FileName', blobInfo.blob().name);
 
         xhr.send(formData);
       }
@@ -102,13 +95,7 @@ export class RichTextEditorComponent implements OnInit {
     });
 
     //iterate over the delete array
-    await imagesToBeDeleted.forEach(async deletHash => {
-      await this.http.delete(environment.postUploadImgurImage + '/' + deletHash, {
-        headers: {
-          'Authorization': 'Client-ID ' + environment.imgurClientId
-        }
-      });
-    });
+    //TODO : delete unused images logic
   }
 }
 

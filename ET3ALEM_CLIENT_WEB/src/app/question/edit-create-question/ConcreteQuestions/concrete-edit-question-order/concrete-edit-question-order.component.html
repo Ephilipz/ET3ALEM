@@ -1,0 +1,31 @@
+<h3>Enter the answers below</h3>
+<div cdkDropList class="container px-4 m-0" (cdkDropListDropped)="drop($event)">
+  <div class="row mb-3"
+       *ngFor="let orderElement of inputQuestion.OrderedElements; index as i"
+       cdkDrag
+       cdkDragLockAxis="y">
+    <div class="dragHandle my-auto mr-5" cdkDragHandle
+         matTooltip="Drag To Reorder">
+      <mat-icon>open_with</mat-icon>
+    </div>
+    <div class="flex-grow-1 row orderElementContainer px-3 py-1">
+      <h2 class="my-auto mr-4">{{i + 1}}.</h2>
+      <mat-form-field class="answerInputText">
+            <textarea matInput required cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
+                      placeholder="Enter Text"
+                      [(ngModel)]="orderElement.Text"></textarea>
+      </mat-form-field>
+    </div>
+    <button mat-icon-button class="mx-5 my-auto"
+            (click)="removeOrderElement(orderElement)"
+            [disabled]="!canDeleteElement()"
+            matTooltip="Delete Element">
+      <mat-icon class="medium">delete</mat-icon>
+    </button>
+  </div>
+
+  <button mat-flat-button class="darkBlue" (click)="addOrderElement()">Add
+    Element
+  </button>
+</div>

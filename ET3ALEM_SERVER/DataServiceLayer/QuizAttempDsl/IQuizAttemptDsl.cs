@@ -8,7 +8,7 @@ namespace DataServiceLayer
 {
     public interface IQuizAttemptDsl
     {
-        Task<QuizAttempt> PostQuizAttempt(QuizAttempt quizAttempt);
+        Task<QuizAttemptVM> PostQuizAttempt(QuizAttempt quizAttempt);
         Task<QuizAttempt> GetQuizAttempt(int id);
         Task<QuizAttempt> PutQuizAttempt(string userId, QuizAttempt quizAttempt);
         Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt);

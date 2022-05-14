@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BusinessEntities.Enumerators;
 using BusinessEntities.Models;
+using BusinessEntities.Models.Interfaces;
+using DataAccessLayer.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Server_Application.Data;
 
@@ -24,77 +25,83 @@ namespace DataAccessLayer
 
         public async Task<Question> InsertQuestion(Question question)
         {
-            await _context.Questions.AddAsync(question);
+            _context.Questions.Add(question);
+            await _context.SaveChangesAsync();
             return question;
         }
 
         public async Task<Question> DeleteQuestion(int questionId)
         {
             var question = await _context.Questions.FindAsync(questionId);
-            if (question != null)
-            {
-                _context.Questions.Remove(question);
-                if (question.QuestionType == QuestionType.MCQ)
-                {
-                    var mcq = question as MultipleChoiceQuestion;
-                    _context.Choices.RemoveRange(mcq.Choices);
-                }
+            if (question == null) return null;
 
-                await _context.SaveChangesAsync();
-            }
+            _context.Questions.Remove(question);
+
+            RemoveChildEntities(question);
+
+            await _context.SaveChangesAsync();
 
             return question;
         }
 
-        public async Task PutQuestion(Question question)
+        private void RemoveChildEntities(Question question)
         {
-            switch (question.QuestionType)
+            if (question is not IParentEntity parentEntity)
             {
-                case QuestionType.MCQ:
-                    TrackChangesInMCQ(question);
-                    break;
-                case QuestionType.TrueFalse:
-                    TrackChangesInTFQuestion(question);
-                    break;
+                return;
             }
 
+            foreach (var childEntityCollection in parentEntity.GetAllChildEntities())
+            {
+                _context.RemoveRange(childEntityCollection);
+            }
+        }
+
+        public async Task PutQuestion(Question question)
+        {
+            UpdateChildEntities(question);
+            RemoveOldData(question);
             _context.Entry(question).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
-        private void TrackChangesInTFQuestion(Question question)
+        private void UpdateChildEntities(Question question)
         {
-            var wasMCQ = _context.Questions.Any(q => question.Id == q.Id && q.QuestionType == QuestionType.MCQ);
-            if (wasMCQ)
+            if (question is not IParentEntity parentEntity)
             {
-                IQueryable<Choice> choices = _context.Choices.Where(c => c.MCQId == question.Id);
-                _context.Choices.RemoveRange(choices);
+                return;
+            }
+
+            foreach (var deleteCollection in parentEntity.GetChildEntitiesToDelete())
+            {
+                _context.RemoveRange(deleteCollection);
+            }
+
+            foreach (var addCollection in parentEntity.GetChildEntitiesToAdd())
+            {
+                _context.AddRange(addCollection);
+            }
+
+            foreach (var updateCollection in parentEntity.GetChildEntitiesToUpdate())
+            {
+                _context.UpdateRange(updateCollection);
             }
         }
 
-        private void TrackChangesInMCQ(Question question)
+        private void RemoveOldData(Question question)
         {
-            var mcq = question as MultipleChoiceQuestion;
+            var includedChildEntities = _context.GetIncludePaths(typeof(Question));
+            
+            var oldQuestion = _context.Questions
+                .AsNoTracking()
+                .Where(q => q.Id == question.Id)
+                .Include(includedChildEntities)
+                .First();
 
-            foreach (Choice c in mcq.Choices)
+            var isQuestionTypeChanged = oldQuestion.QuestionType != question.QuestionType;
+            if (isQuestionTypeChanged)
             {
-                bool isAdded = c.Id == 0;
-                bool isDeleted = c.Id < 0;
-                bool isEdited = c.Id > 0;
-                
-                if (isAdded)
-                {
-                    _context.Choices.Add(c);
-                }
-                else if (isDeleted)
-                {
-                    c.Id *= -1;
-                    _context.Choices.Remove(c);
-                }
-                else if(isEdited)
-                {
-                    _context.Entry(c).State = EntityState.Modified;
-                }
+                RemoveChildEntities(oldQuestion);
             }
         }
     }

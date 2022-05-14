@@ -24,7 +24,8 @@ namespace Et3allim.Tests
             //Arrange
             dataServiceStub.Setup(dsl => dsl.GetQuiz(0))
                 .ReturnsAsync((Quiz) null);
-            var controller = new QuizController(dataServiceStub.Object, accountHelperStub.Object);
+            var controller = new QuizController(dataServiceStub.Object,
+                accountHelperStub.Object);
 
             //Act
             var result = await controller.GetQuiz(0);
@@ -40,13 +41,15 @@ namespace Et3allim.Tests
             var expectedQuiz = GenerateRandomQuiz();
             dataServiceStub.Setup(dsl => dsl.GetQuiz(It.IsAny<int>()))
                 .ReturnsAsync(expectedQuiz);
-            var controller = new QuizController(dataServiceStub.Object, accountHelperStub.Object);
+            var controller = new QuizController(dataServiceStub.Object,
+                accountHelperStub.Object);
 
             //Act
-            var result = await controller.GetQuiz(random.Next(100));
+            var result = await controller.GetQuiz(random.Next(1, 100));
 
             //Assert
-            result.Value.Should().BeEquivalentTo(expectedQuiz, options => options.ComparingByMembers<Quiz>());
+            result.Value.Should().BeEquivalentTo(expectedQuiz,
+                options => options.ComparingByMembers<Quiz>());
         }
 
         [Fact]
@@ -61,33 +64,40 @@ namespace Et3allim.Tests
                 .ReturnsAsync(expectedQuizzes);
             accountHelperStub.Setup(helper => helper.GetUserId(null, null))
                 .Returns(new Guid().ToString());
-            var controller = new QuizController(dataServiceStub.Object, accountHelperStub.Object);
-            
+            var controller = new QuizController(dataServiceStub.Object,
+                accountHelperStub.Object);
+
             //Act
             var result = await controller.GetQuizzes();
-            
+
             //Assert
-            result.Should().BeEquivalentTo(expectedQuizzes, options => options.ComparingByMembers<Quiz>());
+            result.Should().BeEquivalentTo(expectedQuizzes,
+                options => options.ComparingByMembers<Quiz>());
         }
-        
+
         [Fact]
-        public async void GetQuizTitleFromCode_WithUnexistingCode_ReturnsNoQuizFoundMessage()
+        public async void
+            GetQuizTitleFromCode_WithUnexistingCode_ReturnsNoQuizFoundMessage()
         {
             //Arrange
             dataServiceStub.Setup(dsl => dsl.GetQuizTitleFromCode(""))
                 .ReturnsAsync((string) null);
-            var controller = new QuizController(dataServiceStub.Object, accountHelperStub.Object);
+            var controller = new QuizController(dataServiceStub.Object,
+                accountHelperStub.Object);
 
             //Act
             var result = controller.GetQuizTitleFromCode("");
 
             //Assert
-            var exception = await Assert.ThrowsAsync<CustomExceptionBase>(() => result);
-            exception.Message.Should().BeEquivalentTo("No quiz found with this code");
+            var exception =
+                await Assert.ThrowsAsync<CustomExceptionBase>(() => result);
+            exception.Message.Should()
+                .BeEquivalentTo("No quiz found with this code");
         }
 
         [Fact]
-        public async void GetQuizTitleFromCode_WithValidCode_ReturnsExpectedTitle()
+        public async void
+            GetQuizTitleFromCode_WithValidCode_ReturnsExpectedTitle()
         {
             //Arrange
             var expectedQuiz = GenerateRandomQuiz();
@@ -103,7 +113,8 @@ namespace Et3allim.Tests
 
             dataServiceStub.Setup(dsl => dsl.GetQuizTitleFromCode(code))
                 .ReturnsAsync(title);
-            var controller = new QuizController(dataServiceStub.Object, accountHelperStub.Object);
+            var controller = new QuizController(dataServiceStub.Object,
+                accountHelperStub.Object);
 
             //Act
             var result = await controller.GetQuizTitleFromCode(code);
@@ -118,7 +129,8 @@ namespace Et3allim.Tests
             //Arrange
             var quiz = GenerateRandomQuiz();
             var id = quiz.Id + 1;
-            var controller = new QuizController(dataServiceStub.Object, accountHelperStub.Object);
+            var controller = new QuizController(dataServiceStub.Object,
+                accountHelperStub.Object);
 
             //Act
             var result = await controller.PutQuiz(id, quiz);
@@ -132,7 +144,8 @@ namespace Et3allim.Tests
         {
             //Arrange
             var quiz = GenerateRandomQuiz();
-            var controller = new QuizController(dataServiceStub.Object, accountHelperStub.Object);
+            var controller = new QuizController(dataServiceStub.Object,
+                accountHelperStub.Object);
 
             //Act
             var result = await controller.PutQuiz(quiz.Id, quiz);
@@ -144,7 +157,7 @@ namespace Et3allim.Tests
 
         private Quiz GenerateRandomQuiz()
         {
-            int id = random.Next(1000);
+            int id = random.Next(1, 1000);
             return new Quiz
             {
                 Id = id,

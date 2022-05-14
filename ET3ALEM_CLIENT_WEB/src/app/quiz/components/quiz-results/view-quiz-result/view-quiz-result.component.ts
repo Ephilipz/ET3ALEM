@@ -16,7 +16,6 @@ export class ViewQuizResultComponent implements OnInit {
   quizAttempt: QuizAttempt;
   isLoaded = false;
   showGrade = true;
-  @ViewChildren('QuestionResult') private QuestionResultComponents: QueryList<QuestionResultHeaderComponent>;
 
   constructor(private quizAttemptService: QuizAttemptService, private route: ActivatedRoute, private toastr: ToastrService) { }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using BusinessEntities.Enumerators;
+using BusinessEntities.Factories;
 using BusinessEntities.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -31,15 +32,10 @@ namespace BusinessEntities.CustomConverters
         private Question Create(JObject jObject)
         {
             if (jObject == null) throw new ArgumentNullException(nameof(jObject));
-            return (QuestionType) jObject.GetValue("questionType", StringComparison.InvariantCultureIgnoreCase)
-                    .Value<int>() switch
-                {
-                    QuestionType.MCQ => new MultipleChoiceQuestion(),
-                    QuestionType.TrueFalse => new TrueFalseQuestion(),
-                    QuestionType.ShortAnswer => new ShortAnswerQuestion(),
-                    QuestionType.LongAnswer => new LongAnswerQuestion(),
-                    _ => throw new ArgumentNullException(nameof(jObject))
-                };
+            var questionType = (QuestionType) jObject.GetValue("questionType",
+                    StringComparison.InvariantCultureIgnoreCase)
+                .Value<int>();
+            return QuestionFactory.GetQuestionFromQuestionType(questionType);
         }
     }
 }

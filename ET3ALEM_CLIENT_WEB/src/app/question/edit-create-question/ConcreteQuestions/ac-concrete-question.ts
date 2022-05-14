@@ -1,8 +1,7 @@
-import {plainToClass, plainToClassFromExist} from "class-transformer";
 import {Question} from "../../Models/question";
 
 export abstract class AC_ConcreteEditQuestion {
-  constructor() {
+  protected constructor() {
   }
 
   saveQuestion(): any {

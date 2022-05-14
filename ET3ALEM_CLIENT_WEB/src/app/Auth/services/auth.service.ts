@@ -7,7 +7,7 @@ import {Router} from '@angular/router';
 import {Tokens} from '../Model/Tokens';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
-import {LocalstorgeService} from 'src/app/Shared/services/localstorge.service';
+import {LocalStorageService} from 'src/app/Shared/services/local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     private toastyService: ToastrService,
-    private localStorageService: LocalstorgeService) {
+    private localStorageService: LocalStorageService) {
 
   }
 

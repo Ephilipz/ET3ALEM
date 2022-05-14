@@ -46,10 +46,7 @@ namespace Server_Application.Controllers
             if (string.IsNullOrEmpty(title))
                 throw new CustomExceptionBase("No quiz found with this code");
 
-            var returnedTitle = new
-            {
-                title
-            };
+            var returnedTitle = new {title};
 
             return Ok(returnedTitle);
         }
@@ -69,23 +66,23 @@ namespace Server_Application.Controllers
         [HttpGet]
         public async Task<List<Quiz>> GetQuizzes()
         {
-            string userId = _accountHelper.GetUserId(HttpContext, User);
-            List<Quiz> quizList = await _iQuizDsl.GetQuizzes(userId);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
+            var quizList = await _iQuizDsl.GetQuizzes(userId);
             return quizList;
         }
 
         [HttpGet("GetUngradedQuizzes")]
         public async Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser()
         {
-            string userId = _accountHelper.GetUserId(HttpContext, User);
-            List<UngradedQuizTableVM> ungradedQuizzes = await _iQuizDsl.GetUngradedQuizzesForUser(userId);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
+            var ungradedQuizzes = await _iQuizDsl.GetUngradedQuizzesForUser(userId);
             return ungradedQuizzes;
         }
 
         [HttpPost]
         public async Task<ActionResult<Quiz>> PostQuiz(Quiz quiz)
         {
-            string userId = _accountHelper.GetUserId(HttpContext, User);
+            var userId = _accountHelper.GetUserId(HttpContext, User);
             if (!ModelState.IsValid || string.IsNullOrEmpty(userId))
             {
                 return BadRequest(quiz);
@@ -112,7 +109,9 @@ namespace Server_Application.Controllers
         public async Task<IActionResult> PutQuiz(int id, Quiz quiz)
         {
             if (id != quiz.Id)
+            {
                 return BadRequest();
+            }
 
             await _iQuizDsl.PutQuiz(quiz);
 

@@ -14,6 +14,7 @@
     <ItemGroup>
         <ProjectReference Include="..\BusinessEntities\BusinessEntities.csproj" />
         <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
+        <ProjectReference Include="..\ExceptionHandling\ExceptionHandling.csproj" />
     </ItemGroup>
 
 </Project>

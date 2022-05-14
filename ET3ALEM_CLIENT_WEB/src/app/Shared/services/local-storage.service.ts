@@ -4,7 +4,8 @@ import { EncryptDecryptService } from './encrypt-decrypt.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LocalstorgeService {
+
+export class LocalStorageService {
   constructor(private encryptdecryptservice: EncryptDecryptService) {
 
   }
@@ -39,10 +40,15 @@ export class LocalstorgeService {
   }
 
   private getItem(key: string): string {
-    return this.encryptdecryptservice.decrypt(localStorage.getItem(this.encryptdecryptservice.encrypt(key)));
+    let encryptedKey = this.encryptdecryptservice.encrypt(key);
+    let encryptedVal = localStorage.getItem(encryptedKey);
+    return this.encryptdecryptservice.decrypt(encryptedVal);
   }
+
   private setItem(key: string, value: any) {
-    localStorage.setItem(this.encryptdecryptservice.encrypt(key), this.encryptdecryptservice.encrypt(value));
+    let encryptedKey = this.encryptdecryptservice.encrypt(key);
+    let encryptedVal = this.encryptdecryptservice.encrypt(value);
+    localStorage.setItem(encryptedKey, encryptedVal);
   }
 
 }

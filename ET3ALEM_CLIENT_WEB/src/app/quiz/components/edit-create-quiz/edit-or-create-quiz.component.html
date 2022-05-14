@@ -103,7 +103,7 @@
                     <div class="dragHandle m-auto" cdkDragHandle matTooltip="Drag To Reorder">
                         <mat-icon>open_with</mat-icon>
                     </div>
-                    <mat-expansion-panel style="width: 90%" class="m-0">
+                    <mat-expansion-panel style="width: 90%" class="m-0" expanded>
                         <mat-expansion-panel-header>
                             <mat-panel-title class="questionTitle">
                                 {{'Question ' + (i + 1)}}
@@ -131,7 +131,7 @@
         </mat-expansion-panel>
 
         <!-- Question Settings -->
-        <mat-expansion-panel *ngIf="questions.length > 1">
+        <mat-expansion-panel *ngIf="questions.length > 1" expanded>
             <mat-expansion-panel-header>
                 <mat-panel-title class="boldPanelTitle">
                     Question Settings

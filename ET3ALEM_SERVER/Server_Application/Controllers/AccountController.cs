@@ -56,7 +56,7 @@ namespace Server_Application.Controllers
                 new(JwtRegisteredClaimNames.Sub, user.Email),
                 new(ClaimTypes.NameIdentifier, user.Id)
             };
-            var newTokens = new Tokens(_tokenHandler.GenerateJwt(claims), _tokenHandler.GenerateRefreshToken(),
+            var newTokens = new Tokens(_tokenHandler.GenerateJwt(claims), TokenHandler.GenerateRefreshToken(),
                 user.Id);
             await SaveToken(user, newTokens.RefreshToken, RefreshToken);
             return Ok(newTokens);
@@ -83,7 +83,7 @@ namespace Server_Application.Controllers
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role));
                 }
-                var newTokens = new Tokens(_tokenHandler.GenerateJwt(claims), _tokenHandler.GenerateRefreshToken(),
+                var newTokens = new Tokens(_tokenHandler.GenerateJwt(claims), TokenHandler.GenerateRefreshToken(),
                     user.Id);
                 await DeleteToken(user, RefreshToken);
                 await SaveToken(user, newTokens.RefreshToken, RefreshToken);
@@ -114,7 +114,7 @@ namespace Server_Application.Controllers
         private async Task<Tokens> GenerateJWTandRefreshTokens(ClaimsPrincipal principal, User user)
         {
             string newJWT = _tokenHandler.GenerateJwt(principal.Claims);
-            var newRefreshToken = _tokenHandler.GenerateRefreshToken();
+            var newRefreshToken = TokenHandler.GenerateRefreshToken();
             await DeleteToken(user, RefreshToken);
             await SaveToken(user, newRefreshToken, RefreshToken);
             Tokens result = new Tokens(newJWT, newRefreshToken, user.Id);

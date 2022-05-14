@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ComponentRef, Input, ComponentFactoryResolver, Type } from '@angular/core';
 import { DynamicComponentHostDirective } from 'src/app/Shared/directives/dynamic-component-host.directive';
-import { QuestionAttempt } from '../../Models/question-attempt';
 import { QuestionType } from '../../Models/question-type.enum';
 import { QuestionTypeResolver } from '../../shared/question-type-resolver';
 import { AC_ConcreteQuestionResult } from '../concrete-question-result/ac-concrete-question-result';
+import {QuestionAttempt} from "../../Models/questionAttempt/question-attempt";
 
 @Component({
   selector: 'question-result-header',

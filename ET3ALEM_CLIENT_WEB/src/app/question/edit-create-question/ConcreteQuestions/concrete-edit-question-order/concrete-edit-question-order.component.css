@@ -1,0 +1,16 @@
+.answerInputText {
+  width: 80%;
+}
+
+textarea {
+  font-size: 1.2em;
+  padding: 4px;
+  overflow: hidden;
+}
+
+.orderElementContainer {
+  border-width: 1px;
+  border-style: dashed;
+  border-radius: 20px;
+  border-color: gray;
+}

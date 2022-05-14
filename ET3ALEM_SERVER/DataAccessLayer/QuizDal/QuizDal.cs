@@ -23,11 +23,10 @@ namespace DataAccessLayer
         {
             var quiz = await GetQuiz(id);
 
-            if (quiz != null)
-            {
-                _context.Quizzes.Remove(quiz);
-                await _context.SaveChangesAsync();
-            }
+            if (quiz == null) return null;
+            
+            _context.Quizzes.Remove(quiz);
+            await _context.SaveChangesAsync();
 
             return quiz;
         }
@@ -37,8 +36,13 @@ namespace DataAccessLayer
             var quiz = await _context.Quizzes.Where(q => q.Id == quizId)
                 .Include(quiz => quiz.QuizQuestions)
                 .ThenInclude(quizQuestion => quizQuestion.Question)
-                .ThenInclude(question => ((MultipleChoiceQuestion) question).Choices).AsNoTracking().FirstAsync();
-
+                .ThenInclude(question =>
+                    ((MultipleChoiceQuestion) question).Choices)
+                .Include(quiz => quiz.QuizQuestions)
+                .ThenInclude(quizQuestion => quizQuestion.Question)
+                .ThenInclude(question =>
+                    ((OrderQuestion) question).OrderedElements)
+                .AsNoTracking().FirstAsync();
             return quiz;
         }
 
@@ -65,8 +69,10 @@ namespace DataAccessLayer
         public async Task<Quiz> InsertQuiz(Quiz quiz)
         {
             if (quiz.QuizQuestions.Count != 0)
+            {
                 quiz.TotalGrade = quiz.QuizQuestions.Sum(question => question.Grade);
-            await _context.Quizzes.AddAsync(quiz);
+            }
+            _context.Quizzes.Add(quiz);
             await _context.SaveChangesAsync();
             quiz.Code = _quizHelper.GetCode(quiz.Id);
             await _context.SaveChangesAsync();
@@ -76,9 +82,10 @@ namespace DataAccessLayer
         public async Task PutQuiz(Quiz quiz)
         {
             foreach (var quizQuestion in quiz.QuizQuestions)
+            {
                 if (quizQuestion.Id == 0)
                 {
-                    await _context.QuizQuestions.AddAsync(quizQuestion);
+                    _context.QuizQuestions.Add(quizQuestion);
                 }
                 else if (quizQuestion.Id < 0)
                 {
@@ -89,6 +96,7 @@ namespace DataAccessLayer
                 {
                     _context.Entry(quizQuestion).State = EntityState.Modified;
                 }
+            }
 
             quiz.TotalGrade = quiz.QuizQuestions.Sum(question => question.Grade);
             _context.Entry(quiz).State = EntityState.Modified;
@@ -106,18 +114,20 @@ namespace DataAccessLayer
         public Task<Quiz> GetFullQuizByCode(string code)
         {
             var id = _context.Quizzes.First(q => q.Code.ToLower() == code)?.Id;
-            if (id == null)
+            if (!id.HasValue)
+            {
                 return null;
-            return GetQuiz((int) id);
+            }
+            return GetQuiz(id.Value);
         }
 
         public async Task<List<QuizAttempt>> GetUngradedQuizzesForUser(string userId)
         {
-            List<QuizAttempt> ungradedAttempts = await _context.QuizAttempts
+            var ungradedAttempts = await _context.QuizAttempts
                 .Where(attempt => !attempt.IsGraded && attempt.Quiz.UserId == userId)
                 .Include(attempt => attempt.Quiz)
                 .Include(attempt => attempt.User)
-                .OrderByDescending(attempt => attempt.Quiz.CreatedDate)
+                .OrderByDescending(attempt => attempt.SubmitTime)
                 .ToListAsync();
             return ungradedAttempts;
         }

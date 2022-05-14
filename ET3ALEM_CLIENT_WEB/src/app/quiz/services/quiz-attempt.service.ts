@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {LocalstorgeService} from 'src/app/Shared/services/localstorge.service';
+import {LocalStorageService} from 'src/app/Shared/services/local-storage.service';
 import {environment} from 'src/environments/environment';
 import {QuizAttempt} from '../Model/quiz-attempt';
 
@@ -15,7 +15,7 @@ export class QuizAttemptService {
   private baseRoute = environment.baseUrl + '/api/QuizAttempt';
 
   constructor(private httpClient: HttpClient,
-              private localStorageService: LocalstorgeService) {
+              private localStorageService: LocalStorageService) {
   }
 
   public createQuizAttempt(quizAttempt: QuizAttempt): Observable<QuizAttempt> {

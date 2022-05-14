@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Choice } from 'src/app/question/Models/choice';
 import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq';
-import { MCQAttempt } from 'src/app/question/Models/mcq-attempt';
 import { AC_ConcreteQuestionResult } from '../ac-concrete-question-result';
+import {MCQAttempt} from "../../../Models/questionAttempt/mcq-attempt";
 
 @Component({
   selector: 'app-concrete-question-result-mcq',

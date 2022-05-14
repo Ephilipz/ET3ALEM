@@ -2,5 +2,6 @@ export enum QuestionType {
     TrueFalse,
     MCQ,
     ShortAnswer,
-    LongAnswer
+    LongAnswer,
+    OrderQuestion,
 }

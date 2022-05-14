@@ -1,4 +1,4 @@
-import {QuestionAttempt} from "src/app/question/Models/question-attempt";
+import {QuestionAttempt} from "../../Models/questionAttempt/question-attempt";
 
 export abstract class AC_ConcreteQuestionResult {
   // public isCorrectGrade(): boolean {

@@ -14,20 +14,16 @@ namespace Validation.CustomValidationAttributes
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            IList list;
-            if (value is IList)
-            {
-                list = value as IList;
-                var result = list?.Count >= minNumberofElements;
+            if (value is not IList list) return ValidationResult.Success;
+            
+            var result = list.Count >= minNumberofElements;
 
-                return result
-                    ? ValidationResult.Success
-                    : new ValidationResult(
-                        $"{validationContext.DisplayName} requires at least {minNumberofElements} element" +
-                        (minNumberofElements > 1 ? "s" : string.Empty));
-            }
+            return result
+                ? ValidationResult.Success
+                : new ValidationResult(
+                    $"{validationContext.DisplayName} requires at least {minNumberofElements} element" +
+                    (minNumberofElements > 1 ? "s" : string.Empty));
 
-            return ValidationResult.Success;
         }
     }
 }

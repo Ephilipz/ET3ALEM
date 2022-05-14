@@ -1,6 +1,6 @@
 ﻿namespace BusinessEntities.Models
 {
-    public class OrderedChoice
+    public class OrderedElement
     {
         public int Id { get; private set; }
         public OrderQuestion OrderQuestion { get; set; }

@@ -14,6 +14,8 @@ namespace BusinessEntities.AutoMapperProfiles
             CreateMap<TrueFalseQuestion, TrueFalseQuestionVM>();
             CreateMap<ShortAnswerQuestion, ShortAnswerQuestionVM>();
             CreateMap<LongAnswerQuestion, LongAnswerQuestionVM>();
+            CreateMap<OrderQuestion, OrderQuestionVM>();
+            CreateMap<OrderedElement, OrderedElementVM>();
         }
     }
 }

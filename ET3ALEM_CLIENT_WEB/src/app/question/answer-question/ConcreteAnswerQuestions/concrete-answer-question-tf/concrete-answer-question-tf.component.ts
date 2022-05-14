@@ -1,7 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TrueFalseAttempt} from 'src/app/question/Models/true-false-attempt';
 import {TrueFalseQuestion} from 'src/app/question/Models/true-false-question';
 import {AC_ConcreteAnswerQuestion} from '../ac-concrete-answer-question';
+import {
+  TrueFalseAttempt
+} from "../../../Models/questionAttempt/true-false-attempt";
 
 @Component({
   selector: 'app-concrete-answer-question-tf',

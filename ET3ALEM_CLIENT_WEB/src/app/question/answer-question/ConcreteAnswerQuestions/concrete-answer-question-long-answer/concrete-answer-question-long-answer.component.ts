@@ -1,20 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { LongAnswer } from 'src/app/question/Models/long-answer';
-import { LongAnswerAttempt } from 'src/app/question/Models/long-answer-attempt';
 import { AC_ConcreteAnswerQuestion } from '../ac-concrete-answer-question';
+import {
+  LongAnswerAttempt
+} from "../../../Models/questionAttempt/long-answer-attempt";
 
 @Component({
   selector: 'app-concrete-answer-question-long-answer',
   templateUrl: './concrete-answer-question-long-answer.component.html',
   styleUrls: ['./concrete-answer-question-long-answer.component.css']
 })
-export class ConcreteAnswerQuestionLongAnswerComponent implements OnInit, AC_ConcreteAnswerQuestion {
+export class ConcreteAnswerQuestionLongAnswerComponent extends AC_ConcreteAnswerQuestion implements OnInit {
 
   questionAttempt: LongAnswerAttempt;
   longAnswerFC = new FormControl(null);
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit(): void {
   }

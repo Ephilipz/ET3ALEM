@@ -1,0 +1,5 @@
+﻿<p>Drag and Drop The items to re-order them</p>
+<div cdkDropList class="OrderedElementList" (cdkDropListDropped)="drop($event)">
+  <mat-card class="orderedElementBox mt-4" *ngFor="let orderElement of orderedElements; let i = index"
+       cdkDrag>{{i + 1}}. {{orderElement.Text}}</mat-card>
+</div>

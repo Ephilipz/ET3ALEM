@@ -44,18 +44,23 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setIdFromRouteParams();
+
     if (this.id == -1) {
       this.router.navigate(['../'], { relativeTo: this.route });
       return;
     }
 
+    this.getQuizAttempt();
+
+    // this.setAutoSaveObservable();
+  }
+
+  private getQuizAttempt() {
     if (!this.id) {
       this.getNewQuiz();
     } else {
       this.getInProgressQuiz();
     }
-
-    this.setAutoSaveObservable();
   }
 
   private setAutoSaveObservable() {
@@ -92,10 +97,14 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   private getInProgressQuiz() {
     this.quizAttemptService.getQuizAttemptWithQuizLight(this.id).subscribe(
       (quizAttempt) => {
+        console.log(quizAttempt);
         this.quizAttempt = plainToClass(QuizAttempt, quizAttempt);
         this.quiz = plainToClass(Quiz, quizAttempt.Quiz);
-        this.endDate = DateHelper.addSeconds(DateHelper.utc(this.quizAttempt.StartTime.toString() + 'Z'), this.quiz.DurationSeconds);
+        let startDateLocalTime = DateHelper.utc(this.quizAttempt.StartTime.toString() + 'Z');
+        this.endDate = DateHelper.addSeconds(startDateLocalTime, this.quiz.DurationSeconds);
         this.isLoaded = true;
+        console.log(startDateLocalTime);
+        console.log(this.endDate);
       },
       () => this.errorLoadingQuiz()
     );

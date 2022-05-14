@@ -1,4 +1,4 @@
-import { Choice } from "./choice";
+import { Choice } from "../choice";
 import { QuestionAttempt } from "./question-attempt";
 import {Type} from "class-transformer";
 

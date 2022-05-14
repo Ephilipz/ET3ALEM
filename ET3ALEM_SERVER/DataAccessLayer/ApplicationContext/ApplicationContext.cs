@@ -17,6 +17,7 @@ namespace Server_Application.Data
         public DbSet<QuizQuestion> QuizQuestions { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Choice> Choices { get; set; }
+        public DbSet<OrderedElement> OrderedElements { get; set; }
         public DbSet<QuestionCollection> QuestionCollections { get; set; }
         public DbSet<QuizAttempt> QuizAttempts { get; set; }
         public DbSet<QuestionAttempt> QuestionAttempts { get; set; }
@@ -30,13 +31,19 @@ namespace Server_Application.Data
                 .HasValue<MultipleChoiceQuestion>(QuestionType.MCQ)
                 .HasValue<TrueFalseQuestion>(QuestionType.TrueFalse)
                 .HasValue<ShortAnswerQuestion>(QuestionType.ShortAnswer)
-                .HasValue<LongAnswerQuestion>(QuestionType.LongAnswer);
+                .HasValue<LongAnswerQuestion>(QuestionType.LongAnswer)
+                .HasValue<OrderQuestion>(QuestionType.Order);
             modelBuilder.Entity<MultipleChoiceQuestion>().HasMany(mcq => mcq.Choices).WithOne().HasForeignKey("MCQId");
+            // modelBuilder.Entity<OrderQuestion>().HasMany(orderQuestion => orderQuestion
+            // .OrderedElements).WithOne()
+            // .HasForeignKey("OrderQuestionId");
             modelBuilder.Entity<QuizQuestion>().ToTable("QuizQuestion");
 
             modelBuilder.Entity<Quiz>().ToTable("Quiz");
 
             modelBuilder.Entity<Choice>().ToTable("Choice");
+            
+            modelBuilder.Entity<OrderedElement>().ToTable("OrderedElement");
 
             modelBuilder.Entity<QuestionCollection>().ToTable("QuestionCollection");
 
@@ -47,7 +54,8 @@ namespace Server_Application.Data
                 .HasValue<MCQAttmept>(QuestionType.MCQ)
                 .HasValue<TrueFalseAttempt>(QuestionType.TrueFalse)
                 .HasValue<ShortAnswerAttempt>(QuestionType.ShortAnswer)
-                .HasValue<LongAnswerAttempt>(QuestionType.LongAnswer);
+                .HasValue<LongAnswerAttempt>(QuestionType.LongAnswer)
+                .HasValue<OrderAttempt>(QuestionType.Order);
 
             modelBuilder.Entity<MCQAttmept>()
                 .HasMany(mcqAttempt => mcqAttempt.Choices)

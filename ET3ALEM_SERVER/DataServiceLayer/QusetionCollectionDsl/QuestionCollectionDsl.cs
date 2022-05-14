@@ -41,8 +41,8 @@ namespace DataServiceLayer
             var collection = await _IQuestionCollectionDal.GetQuestionCollection(id, updatedCollection.UserId);
             collection.Name = updatedCollection.Name;
             collection.Questions = updatedCollection.Questions;
-            collection.Questions.OfType<MultipleChoiceQuestion>().ToList()
-                .ForEach(mcq => mcq.Choices.ForEach(choice => choice.Id = 0));
+            // collection.Questions.OfType<MultipleChoiceQuestion>().ToList()
+                // .ForEach(mcq => mcq.Choices.ForEach(choice => choice.Id = 0));
             await _IQuestionCollectionDal.PutQuestionCollection(collection);
         }
 

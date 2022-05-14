@@ -19,7 +19,7 @@ export class ConcreteEditQuestionMCQComponent extends AC_ConcreteEditQuestion im
 
   @Input() inputQuestion: MultipleChoiceQuestion;
 
-  constructor(private toastrService: ToastrService) {
+  constructor() {
     super();
   }
 
@@ -56,7 +56,7 @@ export class ConcreteEditQuestionMCQComponent extends AC_ConcreteEditQuestion im
     });
 
     this.inputQuestion.Choices = this.inputQuestion.Choices.concat(this.deletedChoices);
-    return this.getQuestion();
+    return this.inputQuestion;
   }
 
   protected validate() {

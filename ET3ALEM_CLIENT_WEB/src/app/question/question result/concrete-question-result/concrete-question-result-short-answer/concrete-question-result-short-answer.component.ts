@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ShortAnswerAttempt } from 'src/app/question/Models/short-answer-attempt';
 import { ShortAnswerQuestion } from 'src/app/question/Models/short-answer-question';
 import { AC_ConcreteQuestionResult } from '../ac-concrete-question-result';
+import {
+  ShortAnswerAttempt
+} from "../../../Models/questionAttempt/short-answer-attempt";
 
 @Component({
   selector: 'app-concrete-question-result-short-answer',

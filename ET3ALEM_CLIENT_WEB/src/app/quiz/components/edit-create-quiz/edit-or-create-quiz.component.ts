@@ -1,20 +1,35 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
-import { ToastrService } from 'ngx-toastr';
-import { Quiz } from '../../Model/quiz.js';
-import { QuizService } from '../../services/quiz.service.js';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RichTextEditorComponent } from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component.js';
-import { Question } from 'src/app/question/Models/question.js';
-import { MultipleChoiceQuestion } from 'src/app/question/Models/mcq.js';
-import { EditOrCreateQuestionHeaderComponent } from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
-import { QuizQuestion } from '../../Model/quizQuestion.js';
-import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper.js';
-import { plainToClass } from 'class-transformer';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatDialog } from '@angular/material/dialog';
-import { AddFromQuestionCollectionDialogComponent } from 'src/app/question-collection/components/add-from-question-collection-dialog/add-from-question-collection-dialog.component.js';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  QueryList,
+  AfterViewInit
+} from '@angular/core';
+import {FormControl, Validators} from '@angular/forms';
+import {
+  ExtraFormOptions
+} from 'src/app/Shared/Classes/forms/ExtraFormOptions.js';
+import {ToastrService} from 'ngx-toastr';
+import {Quiz} from '../../Model/quiz.js';
+import {QuizService} from '../../services/quiz.service.js';
+import {ActivatedRoute, Router} from '@angular/router';
+import {
+  RichTextEditorComponent
+} from 'src/app/Shared/modules/shared-components/rich-text-editor/rich-text-editor.component.js';
+import {Question} from 'src/app/question/Models/question.js';
+import {MultipleChoiceQuestion} from 'src/app/question/Models/mcq.js';
+import {
+  EditOrCreateQuestionHeaderComponent
+} from 'src/app/question/edit-create-question/Edit-Create-QuestionHeader/edit-or-create-questionHeader.component.js';
+import {QuizQuestion} from '../../Model/quizQuestion.js';
+import {GeneralHelper} from 'src/app/Shared/Classes/helpers/GeneralHelper.js';
+import {plainToClass} from 'class-transformer';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {MatDialog} from '@angular/material/dialog';
+import {
+  AddFromQuestionCollectionDialogComponent
+} from 'src/app/question-collection/components/add-from-question-collection-dialog/add-from-question-collection-dialog.component.js';
 import DateHelper from 'src/app/Shared/helper/date.helper.js';
 
 @Component({
@@ -69,6 +84,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
       this.mode = mode.edit;
       this.quizService.getQuiz(id).subscribe(
         res => {
+          console.log('quiz received', res);
           this.currentQuiz = plainToClass(Quiz, res);
           this.questions = this.currentQuiz.QuizQuestions.map(x => x.Question);
           this.setFormControls();
@@ -102,6 +118,10 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.includedQuestionsCount.setValidators([Validators.min(1), Validators.max(this.questions.length)]);
     this.includedQuestionsCount.updateValueAndValidity();
 
+    this.setDisabledFields();
+  }
+
+  private setDisabledFields() {
     if (this.currentQuiz.UnlimitedTime) {
       this.durationHours.disable();
       this.durationMinutes.disable();
@@ -110,14 +130,18 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     if (this.currentQuiz.NoDueDate) {
       this.dueEnd.disable();
     }
+
+    if (this.currentQuiz.UnlimitedAttempts) {
+      this.allowedAttempts.disable();
+    }
   }
 
   toggleDisable(checked: boolean, list: Array<string>) {
     list.forEach((x) => {
       if (checked) {
-        this[x].disable();
+        this[x]?.disable();
       } else {
-        this[x].enable();
+        this[x]?.enable();
       }
     });
   }
@@ -244,9 +268,9 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.createQuizWithQuizQuestions(quizQuestions);
 
     this.quizService.createQuiz(this.currentQuiz).subscribe(
-      (quiz: Quiz) => {
+      (_) => {
         this.toastr.success('Quiz Created');
-        this.router.navigate(['../manage'], { relativeTo: this.route });
+        this.router.navigate(['../manage'], {relativeTo: this.route});
       }
     );
   }
@@ -276,7 +300,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     this.quizService.updateQuiz(this.currentQuiz).subscribe(
       () => {
         this.toastr.success('Quiz Updated');
-        this.router.navigate(['../../manage'], { relativeTo: this.route });
+        this.router.navigate(['../../manage'], {relativeTo: this.route});
       }
     );
   }
