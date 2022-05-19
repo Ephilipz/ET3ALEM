@@ -21,6 +21,7 @@ export class ConcreteEditQuestionOrderComponent extends AC_ConcreteEditQuestion 
 
   ngOnInit(): void {
     this.inputQuestion = plainToClass(OrderQuestion, this.inputQuestion);
+    console.log('order question input : ', this.inputQuestion);
   }
 
   public addOrderElement() {

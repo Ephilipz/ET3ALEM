@@ -6,8 +6,7 @@ namespace BusinessEntities.Factories
 {
     public class QuestionFactory
     {
-        public static Question GetQuestionFromQuestionType
-            (QuestionType type)
+        public static Question GetQuestionFromQuestionType(QuestionType type)
         {
             return type switch
             {
