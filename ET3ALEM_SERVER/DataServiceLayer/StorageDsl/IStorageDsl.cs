@@ -9,9 +9,7 @@ namespace DataServiceLayer
 {
     public interface IStorageDsl
     {
-        /// <summary>
-        /// upload file and returns download link
-        /// </summary>
-        Task<string> UploadFile(FileUpload fileUpload);
+        Task<FileUploadResult> UploadFile(FileUpload fileUpload, string userId);
+        Task<bool> DeleteFile(FileDelete fileDelete, string userId);
     }
 }
