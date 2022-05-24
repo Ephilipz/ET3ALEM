@@ -15,7 +15,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           if ((error instanceof HttpErrorResponse && error.status === 401) || request.url.toLowerCase().includes('refresh')) {
             return throwError(error);
           }
-          const errorMessage = error?.error?.message ?? 'General Error';
+          const errorMessage = error?.error?.message ?? 'An Error Occured';
           this.toastyService.error(errorMessage);
           return of(null);
         })

@@ -28,12 +28,13 @@ export class RichTextEditorComponent implements OnInit {
     menubar: false,
     plugins: [
       'forecolor autolink lists link imagetools image',
-      'preview code advlist',
+      'preview code advlist tiny_mce_wiris',
     ],
+    external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
     toolbar:
       'undo redo | formatselect forecolor | bold italic | \
       alignleft aligncenter alignright alignjustify | \
-      bullist numlist outdent indent | link preview | \ image',
+      bullist numlist outdent indent | link preview | \ image tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry',
 
     images_upload_handler:
       (blobInfo, success, failure, progress) => {
@@ -43,7 +44,6 @@ export class RichTextEditorComponent implements OnInit {
         xhr = new XMLHttpRequest();
 
         xhr.open('POST', environment.baseUrl + '/api/Storage/UploadImage', true);
-        // xhr.setRequestHeader('Authorization', 'Client-ID ' + environment.imgurClientId)
 
         xhr.upload.onprogress = function (e) {
           progress((e.loaded / e.total * 100).toFixed(0));

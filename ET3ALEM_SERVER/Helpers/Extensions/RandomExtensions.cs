@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Helpers.Extensions
 {
     public static class RandomExtensions
     {
-        public static void Shuffle<T>(this Random rng, T[] array)
+        public static void Shuffle<T>(this Random rng, List<T> array)
         {
-            var n = array.Length;
+            var n = array.Count;
             while (n > 1)
             {
                 var k = rng.Next(n--);

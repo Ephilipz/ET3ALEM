@@ -38,6 +38,12 @@ namespace DataAccessLayer.Extensions
             }
 
             var baseEntityType = context.Model.FindEntityType(clrEntityType);
+            
+            if (baseEntityType == null)
+            {
+                yield break;
+            }
+            
             var derivedTypes = baseEntityType.GetDerivedTypes().ToList();
 
             foreach (var parentEntity in derivedTypes)

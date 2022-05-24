@@ -27,4 +27,8 @@
       <ProjectReference Include="..\Server_Application\Server_Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Unit Tests" />
+    </ItemGroup>
+
 </Project>

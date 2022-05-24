@@ -7,7 +7,6 @@ using BusinessEntities.Factories;
 using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
 using DataAccessLayer;
-using Helpers;
 using Helpers.Extensions;
 
 namespace DataServiceLayer
@@ -76,12 +75,11 @@ namespace DataServiceLayer
         }
 
 
-        public async Task<QuizAttemptVM> PostQuizAttempt(
-            QuizAttempt quizAttempt)
+        public async Task<QuizAttemptVM> PostQuizAttempt(QuizAttempt quizAttempt)
         {
             var quiz = await _IQuizDsl.GetQuiz(quizAttempt.QuizId);
-            var assignedQuizQuestions = GetAssignedQuestionsForQuiz(quiz);
-            foreach (var quizQuestion in assignedQuizQuestions)
+            SetQuizQuestionsInQuiz(quiz);
+            foreach (var quizQuestion in quiz.QuizQuestions)
             {
                 quizAttempt.QuestionsAttempts.Add(
                     QuestionAttemptFactory.GetQuestionAttemptFromQuizQuestion(
@@ -114,33 +112,33 @@ namespace DataServiceLayer
             return _IQuizAttemptDal.GetQuizAttempts(userId);
         }
 
-        private List<QuizQuestion> GetAssignedQuestionsForQuiz(Quiz quiz)
+        private void SetQuizQuestionsInQuiz(Quiz quiz)
         {
             if (!quiz.ShuffleQuestions)
-                return quiz.QuizQuestions;
-            var quizQuestions = GetShuffledQuizQuestions(quiz);
-            int? questionCount = quiz.IncludeAllQuestions
+            {
+                return;
+            }
+            
+            ShuffleQuizQuestions(quiz);
+            var questionCount = quiz.IncludeAllQuestions
                 ? quiz.QuizQuestions.Count
                 : quiz.IncludedQuestionsCount;
-            return quizQuestions
+            
+            quiz.QuizQuestions = quiz.QuizQuestions
                 .OrderBy(qQ => qQ.Sequence)
                 .Take(questionCount ?? quiz.QuizQuestions.Count)
                 .ToList();
         }
 
-        private List<QuizQuestion> GetShuffledQuizQuestions(Quiz quiz)
+        private void ShuffleQuizQuestions(Quiz quiz)
         {
-            List<QuizQuestion> quizQuestions = quiz.QuizQuestions;
-            Random rnd = new Random();
-            int[] indexes = Enumerable.Range(0, quiz.QuizQuestions.Count)
-                .ToArray();
+            var rnd = new Random();
+            var indexes = Enumerable.Range(0, quiz.QuizQuestions.Count).ToList();
             rnd.Shuffle(indexes);
-            for (int i = 0; i < indexes.Length; i++)
+            for (int i = 0; i < indexes.Count; i++)
             {
-                quizQuestions[i].Sequence = indexes[i];
+                quiz.QuizQuestions[i].Sequence = indexes[i];
             }
-
-            return quizQuestions;
         }
 
         public async Task<QuizAttemptVM> GetQuizAttemptWithQuizLight(int id)
@@ -151,8 +149,7 @@ namespace DataServiceLayer
             return _IMapper.Map<QuizAttemptVM>(attempt);
         }
 
-        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(
-            int quizId)
+        public async Task<List<QuizAttempt>> GetUngradedAttemptsForQuiz(int quizId)
         {
             return await _IQuizAttemptDal.GetUngradedAttemptsForQuiz(quizId);
         }
