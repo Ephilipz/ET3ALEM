@@ -13,11 +13,12 @@ namespace Server_Application.Controllers
     public class StorageController : ControllerBase
     {
         private readonly StorageFactory _StorageFactory;
-        private readonly string UserId;
+        private readonly IAccountHelper _AccountHelper;
         public StorageController(StorageFactory StorageFactory, IAccountHelper AccountHelper)
         {
             _StorageFactory = StorageFactory;
-            UserId = AccountHelper.GetUserId(HttpContext, User);
+            _AccountHelper = AccountHelper;
+
         }
         [HttpPost("UploadPdf")]
         public async Task<IActionResult> UploadPdf([FromForm] FileUpload fileUpload)
@@ -34,12 +35,14 @@ namespace Server_Application.Controllers
         private async Task<FileUploadResult> UploadFile(FileUpload fileUpload)
         {
             var storageDsl = _StorageFactory.GetStorageDsl(fileUpload.StorageType);
+            var UserId = _AccountHelper.GetUserId(HttpContext, User);
             return await storageDsl.UploadFile(fileUpload, UserId);
         }
         [HttpPost("DeleteFile")]
         public async Task<IActionResult> DeleteFile(FileDelete fileDelete)
         {
             var storageDsl = _StorageFactory.GetStorageDsl(fileDelete.StorageType);
+            var UserId = _AccountHelper.GetUserId(HttpContext, User);
             return Ok(await storageDsl.DeleteFile(fileDelete, UserId));
         }
     }
