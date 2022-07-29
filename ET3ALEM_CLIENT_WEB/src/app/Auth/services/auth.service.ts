@@ -1,24 +1,33 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {RegisterUser} from '../Model/User';
-import {tap} from 'rxjs/operators';
-import {environment} from 'src/environments/environment';
-import {Router} from '@angular/router';
-import {Tokens} from '../Model/Tokens';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {ToastrService} from 'ngx-toastr';
-import {LocalStorageService} from 'src/app/Shared/services/local-storage.service';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { RegisterUser } from '../Model/User';
+import { tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { Tokens } from '../Model/Tokens';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { LocalStorageService } from 'src/app/Shared/services/local-storage.service';
+import { GoogleLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { ExternalAuthDto } from '../model/ExternalAuthDto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private extAuthChangeSub = new Subject<SocialUser>();
+  public extAuthChanged = this.extAuthChangeSub.asObservable();
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private toastyService: ToastrService,
-    private localStorageService: LocalStorageService) {
+    private localStorageService: LocalStorageService,
+    private socialAuthService: SocialAuthService) {
+    this.socialAuthService.authState.subscribe((user) => {
+      console.log(user);
+      this.extAuthChangeSub.next(user);
+    });
 
   }
 
@@ -37,7 +46,7 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post<Tokens>(environment.baseUrl + '/api/Account/login', {email, password}).pipe(
+    return this.http.post<Tokens>(environment.baseUrl + '/api/Account/login', { email, password }).pipe(
       tap(
         tokens => {
           this.setSession(tokens);
@@ -97,7 +106,7 @@ export class AuthService {
   }
 
   sendRecoveryMail(email: string) {
-    return this.http.post(environment.baseUrl + '/api/Account/sendRecoveryMail', {email}).pipe(
+    return this.http.post(environment.baseUrl + '/api/Account/sendRecoveryMail', { email }).pipe(
       tap(() => this.toastyService.success('email is sent, check you inbox', 'success')));
   }
 
@@ -107,5 +116,36 @@ export class AuthService {
 
   redirectToLogin() {
     this.router.navigate(['auth/login']);
+  }
+
+  public signInWithGoogle() {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+    this.extAuthChanged.subscribe(user => {
+      const externalAuth: ExternalAuthDto = {
+        provider: user.provider,
+        idToken: user.idToken
+      };
+      this.validateExternalAuth(externalAuth);
+    });
+  }
+  public signOutExternal() {
+    this.socialAuthService.signOut();
+  }
+
+
+
+  private validateExternalAuth(externalAuth: ExternalAuthDto) {
+    this.http.post(environment.baseUrl + '/api/account/externalLogin', externalAuth).subscribe({
+      next: (tokens: any) => {
+        this.setSession(tokens);
+        this.toastyService.success('Welcome');
+        this.loginStateChanged.next(true);
+        this.router.navigate(['/quiz']);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.signOutExternal();
+      }
+    });
   }
 }

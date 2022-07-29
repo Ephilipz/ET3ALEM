@@ -31,9 +31,14 @@
             </form>
             <div class="row-12 largeHorizontalPadding text-center mt-5">
                 <p class="RecoverButtonLabel">Forgot your password?</p>
-                <button mat-flat-button class="blue recoverButton" color="primary"
-                    routerLink="../passwordRecover">Recover
+                <button mat-flat-button class="blue recoverButton" color="primary" routerLink="../passwordRecover">Recover
                     Password</button>
+            </div>
+            <div>
+                <h2>External Providers</h2>
+                <div class="row-12 text-center mt-4">
+                    <button mat-flat-button class="red loginButton" color="primary" type="button" (click)="externalLogin()">Google</button>
+                </div>
             </div>
             <mat-spinner class="my-5 mx-auto" *ngIf="isLoading"></mat-spinner>
         </div>

@@ -8,6 +8,7 @@ using BusinessEntities.Models;
 using BusinessEntities.ViewModels;
 using DataServiceLayer;
 using ExceptionHandling.CustomExceptions;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -111,16 +112,6 @@ namespace Server_Application.Controllers
             return Ok(result);
         }
 
-        private async Task<Tokens> GenerateJWTandRefreshTokens(ClaimsPrincipal principal, User user)
-        {
-            string newJWT = _tokenHandler.GenerateJwt(principal.Claims);
-            var newRefreshToken = TokenHandler.GenerateRefreshToken();
-            await DeleteToken(user, RefreshToken);
-            await SaveToken(user, newRefreshToken, RefreshToken);
-            Tokens result = new Tokens(newJWT, newRefreshToken, user.Id);
-            return result;
-        }
-
         [HttpGet("Logout")]
         public async Task Logout()
         {
@@ -154,20 +145,6 @@ namespace Server_Application.Controllers
             await SaveToken(user, recoveryToken, PasswordRecoveryToken);
             await SendPasswordRecoveryMail(recoveryToken, user);
             return Ok();
-        }
-
-        private async Task SendPasswordRecoveryMail(string recoveryToken, User user)
-        {
-            var htmlContent = GenerateRecoveryEmailHTMLContent(recoveryToken);
-            await _iEmailDsl.SendEmail("Reset Password", string.Empty, htmlContent, user.Email, user.UserName);
-        }
-
-        private string GenerateRecoveryEmailHTMLContent(string recoveryToken)
-        {
-            var resetUrl =
-                $"{_iConfiguration.GetValue<string>("ClientUrl")}/auth/reset?token={recoveryToken}";
-            var htmlContent = $@"<a href=""{resetUrl}"">follow this link to reset your ET3ALLIM password</a>";
-            return htmlContent;
         }
 
         [HttpPost("ResetPassword")]
@@ -204,6 +181,56 @@ namespace Server_Application.Controllers
             throw new CustomExceptionBase("Error changing password");
         }
 
+        [HttpPost("ExternalLogin")]
+        public async Task<IActionResult> ExternalLogin([FromBody] ExternalAuthVM externalAuth)
+        {
+            var payload = await VerifyGoogleToken(externalAuth);
+            if (payload == null)
+                return BadRequest("Invalid External Authentication.");
+            var info = new UserLoginInfo(externalAuth.Provider, payload.Subject, externalAuth.Provider);
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(payload.Email);
+                if (user == null)
+                {
+                    user = new User { FullName = payload.Name, Email = payload.Email, UserName = payload.Email };
+                    await _userManager.CreateAsync(user);
+                }
+                else
+                {
+                    await _userManager.AddLoginAsync(user, info);
+                }
+            }
+            if (user == null)
+                return BadRequest("Invalid External Authentication.");
+            await _signInManager.SignInAsync(user, false);
+
+            var claims = new List<Claim>
+                {
+                    new(JwtRegisteredClaimNames.Sub, user.Email),
+                    new(ClaimTypes.NameIdentifier, user.Id)
+                };
+            var newTokens = new Tokens(_tokenHandler.GenerateJwt(claims), TokenHandler.GenerateRefreshToken(),
+                user.Id);
+            await SaveToken(user, newTokens.RefreshToken, RefreshToken);
+            return Ok(newTokens);
+        }
+
+        private async Task SendPasswordRecoveryMail(string recoveryToken, User user)
+        {
+            var htmlContent = GenerateRecoveryEmailHTMLContent(recoveryToken);
+            await _iEmailDsl.SendEmail("Reset Password", string.Empty, htmlContent, user.Email, user.UserName);
+        }
+
+        private string GenerateRecoveryEmailHTMLContent(string recoveryToken)
+        {
+            var resetUrl =
+                $"{_iConfiguration.GetValue<string>("ClientUrl")}/auth/reset?token={recoveryToken}";
+            var htmlContent = $@"<a href=""{resetUrl}"">follow this link to reset your ET3ALLIM password</a>";
+            return htmlContent;
+        }
+
         private async Task<User> GetUserForRecoverToken(ResetPasswordVM resetPasswordVM)
         {
             var email = new JwtSecurityToken(resetPasswordVM.RecoveryToken)
@@ -237,6 +264,33 @@ namespace Server_Application.Controllers
                 RefreshToken => "UserRefresh",
                 _ => throw new CustomExceptionBase("Invalid token name")
             };
+        }
+
+        private async Task<Tokens> GenerateJWTandRefreshTokens(ClaimsPrincipal principal, User user)
+        {
+            string newJWT = _tokenHandler.GenerateJwt(principal.Claims);
+            var newRefreshToken = TokenHandler.GenerateRefreshToken();
+            await DeleteToken(user, RefreshToken);
+            await SaveToken(user, newRefreshToken, RefreshToken);
+            Tokens result = new Tokens(newJWT, newRefreshToken, user.Id);
+            return result;
+        }
+        private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalAuthVM externalAuth)
+        {
+            try
+            {
+                var settings = new GoogleJsonWebSignature.ValidationSettings()
+                {
+                    Audience = new List<string>() { "84082122503-uvr4ol00ukiponhq2rctomfd2quu31d0.apps.googleusercontent.com" }
+                };
+                var payload = await GoogleJsonWebSignature.ValidateAsync(externalAuth.IdToken, settings);
+                return payload;
+            }
+            catch (Exception ex)
+            {
+                //log an exception
+                return null;
+            }
         }
     }
 }

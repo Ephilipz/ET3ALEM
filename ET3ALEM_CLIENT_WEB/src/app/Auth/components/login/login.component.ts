@@ -1,8 +1,8 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {ExtraFormOptions} from 'src/app/Shared/Classes/forms/ExtraFormOptions';
-import {AuthService} from '../../services/auth.service';
-import {Router} from '@angular/router';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -43,5 +43,8 @@ export class LoginComponent extends ExtraFormOptions implements OnInit {
       },
       complete: () => this.isLoading = false
     });
+  }
+  externalLogin() {
+    this.authService.signInWithGoogle();
   }
 }
