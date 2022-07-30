@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
 using BusinessEntities.Models.Interfaces;
 using DataAccessLayer;
+using Helpers.Extensions;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 
 namespace DataServiceLayer
 {
@@ -15,40 +18,54 @@ namespace DataServiceLayer
             _IQuestionDal = questionDal;
         }
 
-
         public Task<List<Question>> GetQuestions()
         {
             return _IQuestionDal.GetQuestions();
         }
 
-        public async Task<Question> InsertQuestion(Question question)
+        public async Task<IEnumerable<Question>> InsertQuestions(IEnumerable<Question> questions)
         {
-            var returnedQuestion = await _IQuestionDal.InsertQuestion(question);
-            await PreformAfterSaveAction(question);
+            var questionsList = questions.ToList();
+            await _IQuestionDal.InsertQuestions(questionsList);
+            await PreformAfterSaveAction(questionsList);
 
-            return returnedQuestion;
+            return questionsList;
         }
 
-        private async Task PreformAfterSaveAction(Question question)
+        private async Task PreformAfterSaveAction(IReadOnlyCollection<Question> questions)
         {
-            if (question is not IAfterSaveAction afterSaveAction)
+            var afterSaveQuestions = questions.Where(q => q is IAfterSaveAction).ToList();
+            if (afterSaveQuestions.Count == 0)
             {
                 return;
             }
+            
+            foreach (var question in afterSaveQuestions)
+            {
+                (question as IAfterSaveAction).PreformAfterSaveAction();
+            }
 
-            afterSaveAction.PreformAfterSaveAction();
-            await _IQuestionDal.PutQuestion(question);
+            await _IQuestionDal.PutQuestions(afterSaveQuestions);
         }
 
-        public Task<Question> DeleteQuestion(int questionId)
+        public async Task<IEnumerable<Question>> PutQuestions(IEnumerable<Question> questions)
         {
-            return _IQuestionDal.DeleteQuestion(questionId);
+            var questionsList = questions.ToList();
+            await _IQuestionDal.PutQuestions(questionsList);
+            await PreformAfterSaveAction(questionsList);
+            return questionsList;
         }
 
-        public async Task PutQuestion(Question question)
+        public async Task<IEnumerable<Question>> DeleteQuestions(IEnumerable<int> questionIds)
         {
-            await _IQuestionDal.PutQuestion(question);
-            await PreformAfterSaveAction(question);
+            return await _IQuestionDal.DeleteQuestions(questionIds);
+        }
+
+        public async Task UpdateQuestionsBasedOnId(IEnumerable<Question> questions)
+        {
+            await InsertQuestions(questions.GetAddedElements().ToList());
+            await DeleteQuestions(questions.GetDeletedElements().Select(q => q.Id * -1).ToList());
+            await PutQuestions(questions.GetUpdatedElements().ToList());
         }
     }
 }

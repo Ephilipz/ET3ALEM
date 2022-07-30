@@ -35,21 +35,20 @@ public class QuizControllerTests
     }
 
     [Fact]
-    public async void GetQuiz_WithExistingQuiz_ReturnsExpectedQuiz()
+    public async void GetQuiz_WithExistingQuiz_ReturnsQuiz()
     {
         //Arrange
         var expectedQuiz = GenerateRandomQuiz();
-        dataServiceStub.Setup(dsl => dsl.GetQuiz(It.IsAny<int>()))
+        dataServiceStub.Setup(dsl => dsl.GetQuiz(expectedQuiz.Id))
             .ReturnsAsync(expectedQuiz);
         var controller = new QuizController(dataServiceStub.Object,
             accountHelperStub.Object);
 
         //Act
-        var result = await controller.GetQuiz(random.Next(1, 100));
+        var result = await controller.GetQuiz(expectedQuiz.Id);
 
         //Assert
-        result.Value.Should().BeEquivalentTo(expectedQuiz,
-            options => options.ComparingByMembers<Quiz>());
+        result.Value.Should().BeEquivalentTo(expectedQuiz);
     }
 
     [Fact]
@@ -71,8 +70,7 @@ public class QuizControllerTests
         var result = await controller.GetQuizzes();
 
         //Assert
-        result.Should().BeEquivalentTo(expectedQuizzes,
-            options => options.ComparingByMembers<Quiz>());
+        result.Should().BeEquivalentTo(expectedQuizzes);
     }
 
     [Fact]
@@ -156,8 +154,7 @@ public class QuizControllerTests
     {
         //Arrange
         var quiz = GenerateRandomQuiz();
-        dataServiceStub.Setup(dsl => dsl.GetBasicQuizByCode(quiz.Code))
-            .ReturnsAsync(quiz);
+        dataServiceStub.Setup(dsl => dsl.GetBasicQuizByCode(quiz.Code)).ReturnsAsync(quiz);
         var controller = new QuizController(dataServiceStub.Object, accountHelperStub.Object);
 
         //Act
@@ -165,7 +162,7 @@ public class QuizControllerTests
 
         //Assert
         dataServiceStub.Verify(dsl => dsl.GetBasicQuizByCode(quiz.Code), Times.Once);
-        result.Should().BeEquivalentTo((ActionResult<Quiz>) quiz);
+        result.Value.Should().BeEquivalentTo(quiz);
     }
 
     [Fact]

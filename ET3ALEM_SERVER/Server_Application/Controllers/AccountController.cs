@@ -42,7 +42,7 @@ namespace Server_Application.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterVM registerVM)
         {
             if (!ModelState.IsValid) return BadRequest(registerVM);
-            var user = new User { FullName = registerVM.Name, Email = registerVM.Email, UserName = registerVM.Email };
+            var user = new User {FullName = registerVM.Name, Email = registerVM.Email, UserName = registerVM.Email};
             var result = await _userManager.CreateAsync(user, registerVM.Password);
             if (!result.Succeeded)
             {
@@ -65,11 +65,13 @@ namespace Server_Application.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginVM loginVM)
         {
-            if (!ModelState.IsValid) return BadRequest(loginVM);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(loginVM);
+            }
 
             var user = await _userManager.FindByEmailAsync(loginVM.Email);
-            if (user != null &&
-                await _userManager.CheckPasswordAsync(user, loginVM.Password))
+            if (user != null && await _userManager.CheckPasswordAsync(user, loginVM.Password))
             {
                 await _signInManager.SignInAsync(user, false);
 
@@ -83,6 +85,7 @@ namespace Server_Application.Controllers
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role));
                 }
+
                 var newTokens = new Tokens(_tokenHandler.GenerateJwt(claims), TokenHandler.GenerateRefreshToken(),
                     user.Id);
                 await DeleteToken(user, RefreshToken);
@@ -113,11 +116,11 @@ namespace Server_Application.Controllers
 
         private async Task<Tokens> GenerateJWTandRefreshTokens(ClaimsPrincipal principal, User user)
         {
-            string newJWT = _tokenHandler.GenerateJwt(principal.Claims);
+            var newJWT = _tokenHandler.GenerateJwt(principal.Claims);
             var newRefreshToken = TokenHandler.GenerateRefreshToken();
             await DeleteToken(user, RefreshToken);
             await SaveToken(user, newRefreshToken, RefreshToken);
-            Tokens result = new Tokens(newJWT, newRefreshToken, user.Id);
+            var result = new Tokens(newJWT, newRefreshToken, user.Id);
             return result;
         }
 
@@ -132,9 +135,6 @@ namespace Server_Application.Controllers
                     await DeleteToken(await _userManager.GetUserAsync(userPrincipal), RefreshToken);
                 }
             }
-            catch (Exception)
-            {
-            }
             finally
             {
                 await _signInManager.SignOutAsync();
@@ -148,8 +148,8 @@ namespace Server_Application.Controllers
             if (user == null)
                 throw new CustomExceptionBase("No user found with this email");
             await DeleteToken(user, PasswordRecoveryToken);
-            List<Claim> claims = new List<Claim> { new(JwtRegisteredClaimNames.Sub, user.Email) };
-            string recoveryToken = _tokenHandler.GenerateJwt(claims, 15);
+            var claims = new List<Claim> {new(JwtRegisteredClaimNames.Sub, user.Email)};
+            var recoveryToken = _tokenHandler.GenerateJwt(claims);
 
             await SaveToken(user, recoveryToken, PasswordRecoveryToken);
             await SendPasswordRecoveryMail(recoveryToken, user);
@@ -179,22 +179,21 @@ namespace Server_Application.Controllers
                 throw new CustomExceptionBase("Error loading user for this token");
             }
 
-            string recoveryToken = await GetToken(user, PasswordRecoveryToken);
+            var recoveryToken = await GetToken(user, PasswordRecoveryToken);
             if (string.IsNullOrWhiteSpace(recoveryToken))
             {
                 throw new CustomExceptionBase("Expired or Invalid link");
             }
 
-            JwtSecurityToken token = new JwtSecurityToken(recoveryToken);
+            var token = new JwtSecurityToken(recoveryToken);
             if (token != null && token.ValidTo < DateTime.UtcNow)
             {
                 await DeleteToken(user, PasswordRecoveryToken);
                 throw new CustomExceptionBase("Expired or Invalid link");
             }
 
-            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            IdentityResult passwordChangeResult =
-                await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordVM.Password);
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var passwordChangeResult = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordVM.Password);
             if (passwordChangeResult.Succeeded)
             {
                 await DeleteToken(user, PasswordRecoveryToken);

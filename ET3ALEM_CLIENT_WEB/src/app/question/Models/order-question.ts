@@ -7,10 +7,12 @@ export class OrderQuestion extends Question
 {
   @Type(() => OrderedElement)
   OrderedElements: Array<OrderedElement>;
+  CorrectOrderIds: String;
 
-  constructor(Id: number = 0, Body: string = '', OrderedElements = [new OrderedElement(), new OrderedElement()], Comment: string = null) {
+  constructor(Id: number = 0, Body: string = '', OrderedElements = [new OrderedElement(), new OrderedElement()], CorrectOrderIds: String = null, Comment: string = null) {
     super(Id, Body, Comment);
     this.QuestionType = QuestionType.OrderQuestion;
     this.OrderedElements = OrderedElements;
+    this.CorrectOrderIds = CorrectOrderIds;
   }
 }

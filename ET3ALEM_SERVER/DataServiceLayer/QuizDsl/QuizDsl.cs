@@ -43,12 +43,8 @@ namespace DataServiceLayer
 
         public async Task<Quiz> InsertQuiz(Quiz quiz)
         {
-            foreach (var quizQuestion in quiz.QuizQuestions.Where(quizQuestion => quizQuestion.QuestionId <= 0))
-            {
-                var insertedQuestion = await _iQuestionDsl.InsertQuestion(quizQuestion.Question);
-                quizQuestion.QuestionId = insertedQuestion.Id;
-            }
-
+            var questions = quiz.QuizQuestions.Select(qQ => qQ.Question);
+            await _iQuestionDsl.InsertQuestions(questions);
             return await _iQuizDal.InsertQuiz(quiz);
         }
 
@@ -59,39 +55,23 @@ namespace DataServiceLayer
             if (quiz == null) return null;
 
             var questionIds = quiz.QuizQuestions.Select(quizQuestion => quizQuestion.QuestionId);
-            foreach (var questionId in questionIds)
-            {
-                await _iQuestionDsl.DeleteQuestion(questionId);
-            }
+
+            await _iQuestionDsl.DeleteQuestions(questionIds);
 
             return quiz;
         }
 
         public async Task PutQuiz(Quiz quiz)
         {
-            foreach (var quizQuestion in quiz.QuizQuestions)
-            {
-                switch (quizQuestion.Question.Id)
-                {
-                    case 0:
-                        quizQuestion.QuestionId = _iQuestionDsl.InsertQuestion(quizQuestion.Question).Id;
-                        break;
-                    case < 0:
-                        await _iQuestionDsl.DeleteQuestion(quizQuestion.Question.Id);
-                        break;
-                    default:
-                        await _iQuestionDsl.PutQuestion(quizQuestion.Question);
-                        break;
-                }
-            }
-
+            var questions = quiz.QuizQuestions.Select(quizQuestion => quizQuestion.Question).ToList();
+            await _iQuestionDsl.UpdateQuestionsBasedOnId(questions);
             await _iQuizDal.PutQuiz(quiz);
         }
 
         public async Task<List<UngradedQuizTableVM>> GetUngradedQuizzesForUser(string userId)
         {
             var ungradedAttempts = await _iQuizDal.GetUngradedQuizzesForUser(userId);
-            
+
             return ungradedAttempts
                 .GroupBy(attempt => attempt.Quiz)
                 .Select(attemptGrouping => new UngradedQuizTableVM

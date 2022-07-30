@@ -88,12 +88,8 @@ export class EditOrCreateQuestionHeaderComponent implements OnInit, OnDestroy {
     this.createQuestionComponent();
   }
 
-  public async saveQuestion(_mode: mode = mode.edit) {
+  public async saveQuestion() {
     await this.richTextComponent.removeUnusedImages();
-
-    if (_mode == mode.create) {
-      this.question.Id = 0;
-    }
 
     this.question = this.componentRef.instance.saveQuestion();
     this.question.Body = this.questionContentFC.value;

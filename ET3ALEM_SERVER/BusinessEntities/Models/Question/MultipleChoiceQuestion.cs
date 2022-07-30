@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using BusinessEntities.Enumerators;
 using BusinessEntities.Models.Interfaces;
 using Helpers.Extensions;
@@ -45,6 +48,23 @@ namespace BusinessEntities.Models
         public IEnumerable<IEnumerable<object>> GetAllChildEntities()
         {
             return new List<IEnumerable<object>> {Choices};
+        }
+
+        public void SetChildEntitiesToNull()
+        {
+            Choices = null;
+        }
+
+        public IEnumerable<IEnumerable<object>> RemoveDeletedEntitiesFromChildren()
+        {
+            var itemsToDelete = Choices.GetDeletedElements().ToList();
+            Choices.RemoveAll(choice => choice.Id < 0);
+            foreach (var choice in itemsToDelete)
+            {
+                choice.Id = Math.Abs(choice.Id);
+            }
+
+            return new List<IEnumerable<object>> {itemsToDelete};
         }
     }
 }

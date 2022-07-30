@@ -27,8 +27,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {
   AddFromQuestionCollectionDialogComponent
 } from 'src/app/question-collection/components/add-from-question-collection-dialog/add-from-question-collection-dialog.component';
-import DateHelper from 'src/app/Shared/helper/date.helper';
-import { ExtraFormOptions } from 'src/app/Shared/Classes/forms/ExtraFormOptions';
+import DateHelper from 'src/app/Shared/Classes/helpers/date.helper';
+import {ExtraFormOptions} from 'src/app/Shared/Classes/forms/ExtraFormOptions';
 
 @Component({
   selector: 'app-create-quiz',
@@ -47,7 +47,6 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   currentQuiz: Quiz;
 
   questions: Array<any> = [];
-  deletedQuizQuestions: Array<any> = [];
 
   isLoaded: boolean = false;
   richTextLoaded: boolean = false;
@@ -79,23 +78,25 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   ngOnInit(): void {
     let id: number = +this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.mode = mode.edit;
-      this.quizService.getQuiz(id).subscribe(
-        res => {
-          console.log('quiz received', res);
-          this.currentQuiz = plainToClass(Quiz, res);
-          this.questions = this.currentQuiz.QuizQuestions.map(x => x.Question);
-          this.setFormControls();
-          this.isLoaded = true;
-        },
-        err => {
-          this.toastr.error('unable to open quiz');
-          console.error(err);
-        }
-      )
-    } else {
-      this.isLoaded = true;
+      this.loadQuiz(id);
+      return;
     }
+    this.isLoaded = true;
+  }
+
+  private loadQuiz(id: number) {
+    this.mode = mode.edit;
+    this.quizService.getQuiz(id).subscribe(
+      res => {
+        this.currentQuiz = plainToClass(Quiz, res);
+        this.questions = this.currentQuiz.QuizQuestions.map(x => x.Question);
+        this.setFormControls();
+        this.isLoaded = true;
+      },
+      err => {
+        this.toastr.error('unable to open quiz');
+      }
+    )
   }
 
   setFormControls() {
@@ -214,8 +215,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
   }
 
   getGradeFromQuestion(question: Question): number {
-    if (this.mode == mode.create) return 1;
-    const grade = this.currentQuiz.QuizQuestions.find(qq => qq.QuestionId == question.Id)?.Grade;
+    const grade = this.currentQuiz?.QuizQuestions?.find(qq => qq.QuestionId == question.Id)?.Grade;
     return grade ?? 1;
   }
 
@@ -257,7 +257,7 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
     let quizQuestions: Array<QuizQuestion> = [];
 
     await Promise.all(this.createQuestionComponents.map(async (component, i) => {
-      let question = await component.saveQuestion(this.mode);
+      let question = await component.saveQuestion();
       let grade = component.getGrade();
       question.Id = 0;
       quizQuestions.push(new QuizQuestion(question, grade, 0, i));
@@ -305,21 +305,25 @@ export class EditOrCreateQuizComponent extends ExtraFormOptions implements OnIni
 
   private async getQuizQuestionsFromChildComponents() {
     await Promise.all(this.createQuestionComponents.map(async (component, i) => {
-      let question = await component.saveQuestion(this.questions[i].Id > 0 ? mode.edit : mode.create);
+      let question = await component.saveQuestion();
+      question.Id = Math.max(0, question.Id);
       this.questions[i] = GeneralHelper.deepCopy(question);
       let grade = component.getGrade();
 
-      let questionIndex = this.currentQuiz.QuizQuestions.map(x => x.Question.Id).indexOf(question.Id);
-      const questionExists = questionIndex > -1;
-      if (questionExists) {
-        let currentQuizQuestion = this.currentQuiz.QuizQuestions[questionIndex];
-        currentQuizQuestion.Question = question;
-        currentQuizQuestion.Grade = component.getGrade();
-        currentQuizQuestion.Sequence = i;
+      const questionIndex = this.currentQuiz.QuizQuestions.map(x => x.Question.Id).indexOf(question.Id);
+      const isQuestionExists = questionIndex > -1;
+      if (isQuestionExists) {
+        this.updateQuizQuestion(this.currentQuiz.QuizQuestions[questionIndex], question, grade, i);
       } else {
         this.insertQuizQuestion(question, grade, i);
       }
     }));
+  }
+
+  private updateQuizQuestion(quizQuestion: QuizQuestion, question: Question, grade: number, i: number) {
+    quizQuestion.Question = question;
+    quizQuestion.Grade = grade;
+    quizQuestion.Sequence = i;
   }
 
   private insertQuizQuestion(question: Question, grade: number, i: number) {

@@ -129,7 +129,7 @@ export class QuestionTypeResolver {
       case QuestionType.LongAnswer:
         return new LongAnswerQuestion(question.Id, question.Body, question.Comment)
       case QuestionType.OrderQuestion:
-        return new OrderQuestion(question.Id, question.Body, question.OrderedElements, question.Comment);
+        return new OrderQuestion(question.Id, question.Body, question.OrderedElements, question.CorrectOrderIds, question.Comment);
       default:
         return question;
     }

@@ -8,5 +8,7 @@ namespace BusinessEntities.Models.Interfaces
         IEnumerable<IEnumerable<object>> GetChildEntitiesToAdd();
         IEnumerable<IEnumerable<object>> GetChildEntitiesToUpdate();
         IEnumerable<IEnumerable<object>> GetAllChildEntities();
+        void SetChildEntitiesToNull();
+        IEnumerable<IEnumerable<object>> RemoveDeletedEntitiesFromChildren();
     }
 }

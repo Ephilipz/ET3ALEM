@@ -33,16 +33,13 @@ namespace DataServiceLayer
         public async Task<QuizAttempt> GetQuizAttemptWithQuiz(int id)
         {
             var attempt = await _IQuizAttemptDal.GetQuizAttemptWithQuiz(id);
-            attempt.QuestionsAttempts = attempt.QuestionsAttempts
-                .OrderBy(qA => qA.QuizQuestion.Sequence).ToList();
+            attempt.QuestionsAttempts = attempt.QuestionsAttempts.OrderBy(qA => qA.QuizQuestion.Sequence).ToList();
             return attempt;
         }
 
-        public async Task<QuizAttempt> PutQuizAttempt(string userId,
-            QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> PutQuizAttempt(string userId, QuizAttempt quizAttempt)
         {
-            var matchingQuizAttempt =
-                await _IQuizAttemptDal.GetQuizAttempt(quizAttempt.Id);
+            var matchingQuizAttempt = await _IQuizAttemptDal.GetQuizAttempt(quizAttempt.Id);
 
             if (matchingQuizAttempt.UserId != userId)
             {
@@ -58,17 +55,17 @@ namespace DataServiceLayer
 
             quizAttempt.UserId = userId;
             if (quizAttempt.Quiz.AutoGrade)
+            {
                 quizAttempt.GradeQuiz();
+            }
 
             return await _IQuizAttemptDal.PutQuizAttempt(quizAttempt);
         }
 
-        public async Task<QuizAttempt> UpdateQuizAttemptGrade(
-            QuizAttempt quizAttempt)
+        public async Task<QuizAttempt> UpdateQuizAttemptGrade(QuizAttempt quizAttempt)
         {
             quizAttempt.QuestionsAttempts.ForEach(qA => qA.IsGraded = true);
-            quizAttempt.Grade =
-                quizAttempt.QuestionsAttempts.Sum(qA => qA.Grade);
+            quizAttempt.Grade = quizAttempt.QuestionsAttempts.Sum(qA => qA.Grade);
             quizAttempt.IsGraded = true;
 
             return await _IQuizAttemptDal.UpdateQuizAttemptGrade(quizAttempt);
@@ -92,6 +89,9 @@ namespace DataServiceLayer
                         }));
             }
 
+            foreach (var orderAttempt in quizAttempt.QuestionsAttempts.Select(qA =>  qA.QuizQuestion.Question).OfType<OrderQuestion>())
+            {
+            }
             var attempt = await _IQuizAttemptDal.PostQuizAttempt(quizAttempt);
             return _IMapper.Map<QuizAttemptVM>(attempt);
         }
@@ -128,6 +128,11 @@ namespace DataServiceLayer
                 .OrderBy(qQ => qQ.Sequence)
                 .Take(questionCount ?? quiz.QuizQuestions.Count)
                 .ToList();
+
+            foreach (var orderQuestion in quiz.QuizQuestions.Select(qQ => qQ.Question).OfType<OrderQuestion>())
+            {
+                Random.Shared.Shuffle(orderQuestion.OrderedElements.ToList());
+            }
         }
 
         private void ShuffleQuizQuestions(Quiz quiz)
