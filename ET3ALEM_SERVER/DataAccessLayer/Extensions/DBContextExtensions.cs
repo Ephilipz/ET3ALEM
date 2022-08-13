@@ -9,7 +9,7 @@ namespace DataAccessLayer.Extensions
     public static class DBContextExtensions
     {
         /// <summary>
-        /// Chains include statements from an IEnumerable of strings
+        /// Chains include statements from an IEnumerable of strings
         /// For example [path1, path2] would generate source.Include(path1).include(path2)
         /// </summary>
         /// <param name="source">IQueryable</param>
@@ -38,12 +38,12 @@ namespace DataAccessLayer.Extensions
             }
 
             var baseEntityType = context.Model.FindEntityType(clrEntityType);
-            
+
             if (baseEntityType == null)
             {
                 yield break;
             }
-            
+
             var derivedTypes = baseEntityType.GetDerivedTypes().ToList();
 
             foreach (var parentEntity in derivedTypes)
@@ -92,7 +92,7 @@ namespace DataAccessLayer.Extensions
                 {
                     break;
                 }
-                
+
                 //update the type for the current entity type
                 entityType = navigationsStack.Peek()?.Current?.TargetEntityType;
             }

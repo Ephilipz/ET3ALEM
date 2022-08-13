@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { environment } from 'src/environments/environment';
-import { GeneralHelper } from 'src/app/Shared/Classes/helpers/GeneralHelper';
-import { HttpClient } from '@angular/common/http';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {environment} from 'src/environments/environment';
+import {GeneralHelper} from 'src/app/Shared/Classes/helpers/GeneralHelper';
+import {HttpClient} from '@angular/common/http';
+import {Path} from "../../../Classes/helpers/path";
 
 @Component({
   selector: 'app-rich-text-editor',
@@ -30,7 +31,7 @@ export class RichTextEditorComponent implements OnInit {
       'forecolor autolink lists link imagetools image',
       'preview code advlist tiny_mce_wiris',
     ],
-    external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
+    external_plugins: {tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js'},
     toolbar:
       'undo redo | formatselect forecolor | bold italic | \
       alignleft aligncenter alignright alignjustify | \
@@ -38,46 +39,21 @@ export class RichTextEditorComponent implements OnInit {
 
     images_upload_handler:
       (blobInfo, success, failure, progress) => {
-        let formData;
-        let xhr: XMLHttpRequest;
-
-        xhr = new XMLHttpRequest();
-
-        xhr.open('POST', environment.baseUrl + '/api/Storage/UploadImage', true);
-
-        xhr.upload.onprogress = function (e) {
-          progress((e.loaded / e.total * 100).toFixed(0));
-        };
-
-        xhr.onload = () => {
-
-          if (xhr.status < 200 || xhr.status >= 300) {
-            failure('HTTP Error: ' + xhr.status);
-            return;
-          }
-
-          this.uploadedImages.push(new ImageUrls(xhr.responseText, 'deleteHash'));
-
-          success(xhr.responseText);
-        };
-
-        xhr.onerror = function () {
-          failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
-        };
-
-        formData = new FormData();
-
-        if (GeneralHelper.BtoMB(blobInfo.blob().size) > this.imageSizeLimit) {
-          failure(`file cannot be larger than ${this.imageSizeLimit} mb`);
-          return;
-        }
-
+        let formData = new FormData();
         formData.append('File', blobInfo.blob(), blobInfo.blob().name);
         formData.append('FileName', blobInfo.blob().name);
-
-        xhr.send(formData);
+        this.http.post(Path.join(environment.baseUrl, 'api/Storage/UploadImage'), formData)
+          .subscribe(
+            (res) => {
+              console.log(res);
+              success(res['StorageLink']);
+            },
+            (err) =>
+            {
+              failure(err);
+            }
+          )
       }
-
   }
 
   Loaded() {

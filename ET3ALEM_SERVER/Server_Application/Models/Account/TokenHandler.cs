@@ -19,7 +19,7 @@ namespace Server_Application.Models.Account
             _iConfiguration = iConfiguration;
         }
 
-        public string GenerateJwt(IEnumerable<Claim> claims, int? duration = null)
+        public string GenerateJwt(IEnumerable<Claim> claims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_iConfiguration["Authentication:JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -28,7 +28,7 @@ namespace Server_Application.Models.Account
                 _iConfiguration["Authentication:JwtIssuer"],
                 _iConfiguration["Authentication:JwtIssuer"],
                 claims,
-                expires: DateTime.Now.AddMinutes(duration ?? 5),
+                expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: creds
             );
 

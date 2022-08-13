@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessEntities.Models;
@@ -30,6 +31,27 @@ namespace DataAccessLayer
             return question;
         }
 
+        public async Task<IEnumerable<Question>> InsertQuestions(IEnumerable<Question> questions)
+        {
+            var insertQuestions = questions.ToList();
+            _context.Questions.AddRange(insertQuestions);
+            await _context.SaveChangesAsync();
+            return insertQuestions;
+        }
+
+        public async Task<IEnumerable<Question>> DeleteQuestions(IEnumerable<int> questionIds)
+        {
+            var questions = _context.Questions.Where(q => questionIds.Contains(q.Id));
+            _context.Questions.RemoveRange(questions);
+            foreach (var question in questions)
+            {
+                RemoveChildEntities(question);
+            }
+
+            await _context.SaveChangesAsync();
+            return questions;
+        }
+
         public async Task<Question> DeleteQuestion(int questionId)
         {
             var question = await _context.Questions.FindAsync(questionId);
@@ -53,7 +75,10 @@ namespace DataAccessLayer
 
             foreach (var childEntityCollection in parentEntity.GetAllChildEntities())
             {
-                _context.RemoveRange(childEntityCollection);
+                foreach (var childEntity in childEntityCollection)
+                {
+                    _context.Entry(childEntity).State = EntityState.Deleted;
+                }
             }
         }
 
@@ -65,6 +90,20 @@ namespace DataAccessLayer
             await _context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Question>> PutQuestions(IEnumerable<Question> questions)
+        {
+            questions = questions.ToList();
+            foreach (var question in questions)
+            {
+                UpdateChildEntities(question);
+                RemoveOldData(question);
+                _context.Entry(question).State = EntityState.Modified;
+            }
+
+            await _context.SaveChangesAsync();
+            return questions;
+        }
+
         private void UpdateChildEntities(Question question)
         {
             if (question is not IParentEntity parentEntity)
@@ -72,26 +111,33 @@ namespace DataAccessLayer
                 return;
             }
 
-            foreach (var deleteCollection in parentEntity.GetChildEntitiesToDelete())
-            {
-                _context.RemoveRange(deleteCollection);
-            }
+            var itemsToDelete = parentEntity.RemoveDeletedEntitiesFromChildren();
 
-            foreach (var addCollection in parentEntity.GetChildEntitiesToAdd())
-            {
-                _context.AddRange(addCollection);
-            }
+            SetItemsState(itemsToDelete, EntityState.Deleted);
 
-            foreach (var updateCollection in parentEntity.GetChildEntitiesToUpdate())
+            SetItemsState(parentEntity.GetChildEntitiesToAdd(), EntityState.Added);
+            SetItemsState(parentEntity.GetChildEntitiesToUpdate(), EntityState.Modified);
+
+            //This is to avoid updating the child entities twice
+            // parentEntity.SetChildEntitiesToNull();
+        }
+
+        private void SetItemsState(IEnumerable<IEnumerable<object>> items, EntityState state)
+        {
+            foreach (var nestedItemsList in items)
             {
-                _context.UpdateRange(updateCollection);
+                var itemList = nestedItemsList.ToList();
+                foreach (var item in itemList)
+                {
+                    _context.Entry(item).State = state;
+                }
             }
         }
 
         private void RemoveOldData(Question question)
         {
             var includedChildEntities = _context.GetIncludePaths(typeof(Question));
-            
+
             var oldQuestion = _context.Questions
                 .AsNoTracking()
                 .Where(q => q.Id == question.Id)

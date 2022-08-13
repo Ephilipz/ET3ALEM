@@ -4,7 +4,7 @@ import { plainToClass } from 'class-transformer';
 import { ToastrService } from 'ngx-toastr';
 import { QuizAttempt } from 'src/app/quiz/Model/quiz-attempt';
 import { QuizAttemptService } from 'src/app/quiz/services/quiz-attempt.service';
-import DateHelper from 'src/app/Shared/helper/date.helper';
+import DateHelper from 'src/app/Shared/Classes/helpers/date.helper';
 import { Quiz } from '../../../Model/quiz';
 import { QuizService } from '../../../services/quiz.service';
 // import { documentToHtmlString } from '@contentful/rich-text-html-renderer';

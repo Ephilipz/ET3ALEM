@@ -21,7 +21,13 @@ export class ConcreteEditQuestionOrderComponent extends AC_ConcreteEditQuestion 
 
   ngOnInit(): void {
     this.inputQuestion = plainToClass(OrderQuestion, this.inputQuestion);
-    console.log('order question input : ', this.inputQuestion);
+    if(!this.inputQuestion.CorrectOrderIds)
+    {
+      return;
+    }
+    let answeredIds = this.inputQuestion.CorrectOrderIds.split(',');
+    this.inputQuestion.OrderedElements = this.inputQuestion.OrderedElements
+      .sort((a, b) => answeredIds.indexOf(String(a.Id)) - answeredIds.indexOf(String(b.Id)));
   }
 
   public addOrderElement() {
@@ -44,10 +50,7 @@ export class ConcreteEditQuestionOrderComponent extends AC_ConcreteEditQuestion 
     if (orderElement.Id <= 0) {
       return;
     }
-    const copiedOrderedElement = Object.assign({}, {
-      ...orderElement,
-      Id: -1 * orderElement.Id
-    })
+    const copiedOrderedElement = Object.assign({}, {...orderElement, Id: -1 * orderElement.Id});
     this.deletedOrderedElements.push(copiedOrderedElement);
   }
 

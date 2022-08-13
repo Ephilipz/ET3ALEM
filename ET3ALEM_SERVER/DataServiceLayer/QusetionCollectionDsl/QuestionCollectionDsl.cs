@@ -32,24 +32,21 @@ namespace DataServiceLayer
         public async Task<QuestionCollection> InsertQuestionCollection(QuestionCollection questionCollection)
         {
             questionCollection.CreatedDate = DateTime.UtcNow;
+            await _IQuestionDsl.InsertQuestions(questionCollection.Questions);
             await _IQuestionCollectionDal.InsertQuestionCollection(questionCollection);
             return questionCollection;
         }
 
-        public async Task PutQuestionCollection(int id, QuestionCollection updatedCollection)
+        public async Task PutQuestionCollection(int id, QuestionCollection collection)
         {
-            var collection = await _IQuestionCollectionDal.GetQuestionCollection(id, updatedCollection.UserId);
-            collection.Name = updatedCollection.Name;
-            collection.Questions = updatedCollection.Questions;
-            // collection.Questions.OfType<MultipleChoiceQuestion>().ToList()
-                // .ForEach(mcq => mcq.Choices.ForEach(choice => choice.Id = 0));
+            await _IQuestionDsl.UpdateQuestionsBasedOnId(collection.Questions.ToList());
             await _IQuestionCollectionDal.PutQuestionCollection(collection);
         }
 
         public async Task<QuestionCollection> DeleteQuestionCollection(int id)
         {
             var collection = await _IQuestionCollectionDal.DeleteQuestionCollection(id);
-            foreach (var question in collection.Questions) await _IQuestionDsl.DeleteQuestion(question.Id);
+            await _IQuestionDsl.DeleteQuestions(collection.Questions.Select(q => q.Id));
             return collection;
         }
 

@@ -83,18 +83,18 @@ namespace DataAccessLayer
         {
             foreach (var quizQuestion in quiz.QuizQuestions)
             {
-                if (quizQuestion.Id == 0)
+                switch (quizQuestion.Id)
                 {
-                    _context.QuizQuestions.Add(quizQuestion);
-                }
-                else if (quizQuestion.Id < 0)
-                {
-                    quizQuestion.Id *= -1;
-                    _context.QuizQuestions.Remove(quizQuestion);
-                }
-                else
-                {
-                    _context.Entry(quizQuestion).State = EntityState.Modified;
+                    case 0:
+                        _context.QuizQuestions.Add(quizQuestion);
+                        break;
+                    case < 0:
+                        quizQuestion.Id *= -1;
+                        _context.QuizQuestions.Remove(quizQuestion);
+                        break;
+                    default:
+                        _context.Entry(quizQuestion).State = EntityState.Modified;
+                        break;
                 }
             }
 
@@ -113,7 +113,7 @@ namespace DataAccessLayer
 
         public Task<Quiz> GetFullQuizByCode(string code)
         {
-            var id = _context.Quizzes.First(q => q.Code.ToLower() == code)?.Id;
+            var id = _context.Quizzes.FirstOrDefault(q => q.Code.ToLower() == code)?.Id;
             if (!id.HasValue)
             {
                 return null;
