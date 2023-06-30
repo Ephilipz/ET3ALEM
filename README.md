@@ -15,7 +15,3 @@
     - Language : C# (.NET CORE)
 - ### DB :
     - Language : MySQL
-- ### DEV OPS :
-    - Docker
-    - Kubernetes
-    - Github Actions
